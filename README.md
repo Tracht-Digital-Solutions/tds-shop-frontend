@@ -99,7 +99,12 @@ click-redirect links are built from.
 
 ## Not built yet
 
-Der Kopplungs-Assistent liegt unter `/install`. Es fehlen: Pagination, tag pages, guides (`/ratgeber/*`), search, the cart and checkout,
+Pagination, tag pages, guides (`/ratgeber/*`), search, the cart and checkout,
 and per-product OG images. The routes reserved for them are already excluded
 from the cache and the index, so adding them does not require revisiting those
 decisions.
+
+The pairing wizard **is** here, at `/install` — prerendered, noindex,
+disallowed in robots.txt. It is how the site gets its site key without a
+rebuild; setting `TDS_SITE_KEY` on the host by hand is the one-release
+fallback, not the intended route.
