@@ -1,0 +1,33 @@
+---
+/**
+ * `/install` — the host-side setup wizard.
+ *
+ * Connects this deployed site to the API without a rebuild: the operator pastes
+ * the site key issued in the panel, the wizard exchanges it at `/tds/connect`,
+ * and the credential is written outside the checkout so a deploy can neither
+ * publish nor remove it.
+ *
+ * Without this page there is no way to pair the site short of setting
+ * `TDS_SITE_KEY` on the host by hand — which is the one-release fallback, not
+ * the intended route (see `tds-core-frontend-api/SITES.md` §1).
+ *
+ * `noindex` via the Layout and disallowed in robots.txt. German only: it is an
+ * operator page, and the Layout emits no hreflang on a noindex page anyway.
+ */
+import { InstallWizard, shop } from "@tracht-digital-solutions/tds-shared/install";
+
+import Layout from "../layouts/Layout.astro";
+
+// Prerendered: nothing here varies with catalogue content, so it is built once
+// at deploy time and served as a plain file.
+export const prerender = true;
+---
+
+<Layout
+  title="Einrichtung — TDShop"
+  description="Verbindet diese Site mit der API. Interne Seite, nicht für Besucher."
+  lang="de"
+  noindex
+>
+  <InstallWizard client:load profile={shop} />
+</Layout>

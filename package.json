@@ -22,7 +22,7 @@
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
     "@tailwindcss/postcss": "^4.3.3",
-    "@tracht-digital-solutions/tds-shared": "^0.35.1",
+    "@tracht-digital-solutions/tds-shared": "^0.35.2",
     "astro": "^7.2.5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
