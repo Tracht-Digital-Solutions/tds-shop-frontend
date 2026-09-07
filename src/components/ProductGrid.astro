@@ -1,0 +1,44 @@
+---
+import { ProductCard } from "@tracht-digital-solutions/tds-shared/components";
+
+import type { CatalogProduct } from "../lib/types";
+import type { Lang } from "../lib/i18n";
+import { tx } from "../lib/i18n";
+
+interface Props {
+  products: CatalogProduct[];
+  lang: Lang;
+  /** Attribution for the click counter — which slot these cards came from. */
+  placement?: string | null;
+}
+
+const { products, lang, placement = null } = Astro.props;
+const t = tx(lang);
+
+/**
+ * `offer.url` already points at this site's `/go/{id}` redirect — the API
+ * builds it, so the partner tag lives in one row rather than in every card.
+ * Only the attribution is appended here, because only the rendering context
+ * knows which surface and slot the click came from.
+ */
+const attributed = products.map((product) => ({
+  ...product,
+  offers: product.offers.map((offer) => {
+    const params = new URLSearchParams({ source: "shop", lang });
+    if (placement) params.set("placement", placement);
+    return { ...offer, url: `${offer.url}?${params}` };
+  }),
+}));
+---
+
+{
+  attributed.length === 0 ? (
+    <p class="shop-empty">{t.noProducts}</p>
+  ) : (
+    <div class="tds-product-grid">
+      {attributed.map((product) => (
+        <ProductCard product={product} lang={lang} variant="card" />
+      ))}
+    </div>
+  )
+}

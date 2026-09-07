@@ -1,0 +1,50 @@
+# build output
+dist/
+.output/
+
+# astro
+.astro/
+
+# deps
+node_modules/
+
+# og:smoke output — rendered locally to eyeball the cards, never committed
+scripts/og-smoke-*.png
+
+# logs / os / editor
+*.log
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Windows-generated npm lockfile is win32-only; CI uses npm install --no-package-lock
+package-lock.json
+
+# env
+.env
+.env.production
+
+# OCR engine, copied out of node_modules at prebuild (scripts/sync-ocr.mjs).
+# The language data under public/ocr/lang/ IS committed on purpose: a build that
+# downloads it from a third-party host fails whenever that host does, and the
+# failure mode is a premium tool that silently stops recognising anything.
+public/ocr/*
+!public/ocr/lang/
+
+# The deployable tree scripts/pack-release.mjs assembles from dist/.
+# CI publishes it to the release branch; it is never committed here.
+release/
+
+# Local page-cache store. On the host this lives outside the checkout
+# (TDS_CACHE_DIR); locally it defaults to <root>/var/page-cache.
+var/
+
+# page cache written by a local run
+var/
+
+# assembled by pack-release.mjs
+release/

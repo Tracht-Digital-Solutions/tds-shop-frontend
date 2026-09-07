@@ -1,0 +1,161 @@
+@import "tailwindcss/index.css";
+
+/* Shared design library — this site renders the **blog** surface
+   (`data-surface="blog"` on <html> in Layout.astro), the same layer
+   `blog.tracht-digital.de` and `tools.tracht-digital.de` render: the flat
+   "kantig" kit — every radius 0, nothing elevated, the display voice at 800,
+   separation through colour blocks rather than borders.
+
+   THAT IS THE ANSWER TO "the design should resemble the blog". Not a copy of
+   the blog's geometry — the same file. A fourth `surfaces/shop.css` would by
+   definition be a second copy of the journal's kit, and that drift is exactly
+   what moving the geometry into the shared layer was meant to end.
+
+   WHAT THAT MEANS HERE: `--tds-panel-*` carries no panel value on this
+   surface. `surfaces/panel.css` is not imported and base.css's declarations of
+   that family are deliberately inert, so a stale reference neither errors nor
+   goes blank — it renders in the panel's fallback navy, a plausible wrong
+   colour. `src/lib/surface.test.ts` fails the build on one. Use
+   `--color-accent`, `--color-primary` and the fixed-dark `--color-surface-navy`.
+
+   The @fontsource imports live in Layout.astro, NOT here: @tailwindcss/postcss
+   inlines CSS @imports without rebasing the packages' relative
+   url(./files/*.woff2) references, so Vite would never emit the woff2 and
+   every font 404s.
+
+   NOT imported, deliberately:
+     app.css    dashboard + editorial chrome, every generic rule in it scoped
+                to [data-surface="panel"]. Dead weight here.
+     prose.css  long-form article typography. A product page is structured
+                data — a teaser, an assessment, an offer list — each part
+                wanting its own treatment, not the descendants of one markdown
+                blob. Importing it would mean overriding it in three places. */
+@import "@tracht-digital-solutions/tds-shared/styles/base.css";
+@import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
+@import "@tracht-digital-solutions/tds-shared/styles/surfaces/blog.css";
+
+/* Tailwind ignores node_modules by default, so the utility classes used inside
+   the shared React components would never be generated. MUST come AFTER the
+   @imports — @source before @import is a build error. */
+@source "../../node_modules/@tracht-digital-solutions/tds-shared";
+
+/* --- shell -------------------------------------------------------------- */
+
+.shop-shell {
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+.shop-header {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.shop-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  padding-block: 1rem;
+}
+
+.shop-header__brand {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.shop-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-inline-start: auto;
+}
+
+.shop-header__nav a {
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.shop-header__nav a:hover,
+.shop-header__nav a[aria-current="page"] {
+  color: var(--color-accent);
+}
+
+.shop-main {
+  display: block;
+  padding-block: clamp(1.5rem, 5vw, 3rem);
+}
+
+.shop-footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--color-line);
+  padding-block: 2rem;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+/* --- page furniture ------------------------------------------------------ */
+
+.shop-lede {
+  max-width: 44rem;
+  margin: 0 0 2rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.shop-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.1;
+  margin: 0 0 0.75rem;
+  color: var(--color-ink);
+}
+
+.shop-section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin: 2.5rem 0 1rem;
+}
+
+/* The standing affiliate disclosure. Above the fold on every page that can
+   carry a partner link — § 5a Abs. 4 UWG wants the commercial intent legible
+   before the reader engages with the offer, not in a footnote after it. */
+.shop-disclosure {
+  margin: 0 0 1.5rem;
+  padding: 0.625rem 0.875rem;
+  background: var(--color-soft);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.shop-breadcrumbs {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.shop-breadcrumbs a {
+  color: inherit;
+}
+
+/* Wraps by default — a pager is a row of more than two things. */
+.shop-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.shop-empty {
+  padding: 2rem 0;
+  color: var(--color-muted);
+}

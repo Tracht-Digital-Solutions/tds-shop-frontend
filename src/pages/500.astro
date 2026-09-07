@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { homePath, tx } from "../lib/i18n";
+
+export const prerender = false;
+
+const lang = Astro.url.pathname.startsWith("/en/") ? "en" : "de";
+const t = tx(lang);
+---
+
+<Layout
+  title={lang === "de" ? "Etwas ist schiefgelaufen" : "Something went wrong"}
+  description={t.notFoundBody}
+  lang={lang}
+  noindex
+>
+  <h1 class="shop-title">
+    {lang === "de" ? "Etwas ist schiefgelaufen" : "Something went wrong"}
+  </h1>
+  <p class="shop-lede">
+    {
+      lang === "de"
+        ? "Der Fehler ist protokolliert. Versuch es in einem Moment noch einmal."
+        : "The error has been logged. Please try again in a moment."
+    }
+  </p>
+  <p class="shop-pager">
+    <a class="btn btn-primary" href={homePath(lang)}>{t.backToCatalogue}</a>
+  </p>
+</Layout>

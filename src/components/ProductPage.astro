@@ -1,0 +1,142 @@
+---
+import { ProductCard } from "@tracht-digital-solutions/tds-shared/components";
+import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
+
+import Layout from "../layouts/Layout.astro";
+import ProductGrid from "./ProductGrid.astro";
+import { listProducts } from "../lib/content-api";
+import { categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
+import { describe } from "../lib/metaDescription";
+import { isIndexable } from "../lib/indexing";
+import { asGraph, breadcrumbSchema, productSchema, websiteSchema } from "../lib/jsonld";
+import { canonical, site } from "../lib/seo";
+import type { ProductPage as ProductPageData } from "../lib/types";
+
+/**
+ * The product is fetched by the PAGE and handed in here, never fetched here.
+ *
+ * That is not tidiness — `Astro.rewrite()` only produces a response when it is
+ * returned from a page. Returning it from a component's frontmatter simply
+ * stops that component rendering, and the page answers **200 with an empty
+ * document**: fifteen bytes, no error, and the page cache stores it. A missing
+ * product would have been served as a blank success page for as long as the
+ * entry lived. So the 404 decision belongs where it can actually be made.
+ */
+interface Props {
+  lang: Lang;
+  product: ProductPageData;
+}
+
+const { lang, product } = Astro.props;
+const t = tx(lang);
+
+/**
+ * A product without its own written assessment renders and is reachable, but
+ * carries `noindex, follow` and is absent from the sitemap.
+ *
+ * That is the whole answer to the thin-affiliate problem, and it is one
+ * function so the two halves cannot drift: `sitemap.ts` filters on the same
+ * `isIndexable()`. A URL submitted for indexing whose page says `noindex` is a
+ * self-inflicted crawl-budget hole that reports nothing anywhere.
+ */
+const indexable = isIndexable(product);
+
+const description = describe(
+  product.metaDescription ?? product.teaser,
+  product.category,
+  site.description[lang],
+);
+
+const related = indexable
+  ? (await listProducts({ lang, limit: 4, category: product.category })).products.filter(
+      (p) => p.slug !== product.slug,
+    )
+  : [];
+
+/**
+ * Attribution for the click counter. `offer.url` already points at `/go/{id}`;
+ * only the source and language are added here.
+ */
+const offers = product.offers.map((offer) => ({
+  ...offer,
+  url: `${offer.url}?source=shop&lang=${lang}`,
+}));
+
+const hasAffiliate = offers.some((offer) => offer.kind === "affiliate");
+
+/**
+ * The assessment body.
+ *
+ * Only the markdown format is rendered for now. A blocks document needs the
+ * journal's `BlockRenderer`, which is not in this repository yet — and showing
+ * a raw JSON blob would be worse than showing nothing, so an unrendered format
+ * yields no section at all rather than a broken one.
+ */
+const body = product.body && product.bodyFormat === "markdown" ? renderMarkdown(product.body) : "";
+
+const jsonLd = asGraph([
+  websiteSchema(lang),
+  productSchema(product, lang),
+  breadcrumbSchema([
+    { name: t.brand, path: homePath(lang) },
+    { name: product.category, path: categoryPath(product.category, lang) },
+    { name: product.title, path: productPath(product.slug, lang) },
+  ]),
+]);
+---
+
+<Layout
+  title={product.title}
+  description={description}
+  lang={lang}
+  noindex={!indexable}
+  ogImage={product.imageUrl}
+  jsonLd={jsonLd}
+>
+  <nav class="shop-breadcrumbs" aria-label="Breadcrumb">
+    <a href={homePath(lang)}>{t.brand}</a>
+    {" · "}
+    <a href={categoryPath(product.category, lang)}>{product.category}</a>
+  </nav>
+
+  <h1 class="shop-title">{product.title}</h1>
+  <p class="shop-lede">{product.teaser}</p>
+
+  {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
+
+  {/* The offer list. `ProductCard` carries the advertising label and drops a
+      price older than 24 hours by itself — this page decides neither. */}
+  <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
+
+  {
+    /* The written assessment. Rendered through tds-shared's escape-first
+       markdown renderer, NOT `set:html` on the raw field: the body is authored
+       in a panel and stored verbatim, so it is untrusted as far as this page is
+       concerned. `renderMarkdown` escapes everything before it transforms
+       anything and allow-lists link schemes, which is the whole security model
+       — there is no sanitizer to misconfigure. */
+    body ? (
+      <>
+        <h2 class="shop-section-title">{t.ourAssessment}</h2>
+        <div set:html={body} />
+      </>
+    ) : null
+  }
+
+  {
+    related.length > 0 ? (
+      <>
+        <h2 class="shop-section-title">{t.relatedCategory}</h2>
+        <ProductGrid products={related} lang={lang} />
+      </>
+    ) : null
+  }
+
+  <p class="shop-pager">
+    <a class="btn btn-ghost" href={categoryPath(product.category, lang)}>
+      {t.backToCatalogue}
+    </a>
+  </p>
+
+  <link rel="prefetch" href={canonical(homePath(lang))} />
+</Layout>

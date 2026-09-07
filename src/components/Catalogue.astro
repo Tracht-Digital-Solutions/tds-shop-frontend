@@ -1,0 +1,73 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductGrid from "./ProductGrid.astro";
+import { listCategories, listProducts } from "../lib/content-api";
+import { categoryPath, homePath, tx, type Lang } from "../lib/i18n";
+import { describe } from "../lib/metaDescription";
+import { asGraph, collectionPageSchema, itemListSchema, websiteSchema } from "../lib/jsonld";
+import { site } from "../lib/seo";
+
+/**
+ * The catalogue, shared by the German and English index routes.
+ *
+ * Both language entry points are thin wrappers over this, exactly as the
+ * journal's `[slug].astro` pair wraps one `Article.astro`: the two differ only
+ * in the language they pass, and a second copy is a second set of SEO
+ * decisions to keep in step.
+ */
+interface Props {
+  lang: Lang;
+  category?: string | null;
+}
+
+const { lang, category = null } = Astro.props;
+const t = tx(lang);
+
+const [page, categories] = await Promise.all([
+  listProducts({ lang, limit: 24, category }),
+  listCategories(lang),
+]);
+
+const heading = category ?? t.catalogue;
+const description = describe(
+  category
+    ? lang === "de"
+      ? `Kuratierte Technik aus der Kategorie ${category}: mit eigener Einschätzung statt Herstellertext.`
+      : `Curated technology in the ${category} category, with our own assessment rather than vendor copy.`
+    : site.description[lang],
+  site.description[lang],
+);
+
+const path = category ? categoryPath(category, lang) : homePath(lang);
+
+const jsonLd = asGraph([
+  websiteSchema(lang),
+  collectionPageSchema(heading, path, lang),
+  itemListSchema(page.products, lang),
+]);
+---
+
+<Layout title={heading} description={description} lang={lang} jsonLd={jsonLd}>
+  <h1 class="shop-title">{heading}</h1>
+  <p class="shop-lede">{site.description[lang]}</p>
+
+  {/* The standing disclosure, above the products rather than under them. */}
+  <p class="shop-disclosure">{t.affiliateNotice}</p>
+
+  {
+    categories.length > 0 ? (
+      <nav class="shop-breadcrumbs" aria-label={t.categories}>
+        {categories.map(({ category: name, total }, index) => (
+          <>
+            {index > 0 ? " · " : ""}
+            <a href={categoryPath(name, lang)}>
+              {name} ({total})
+            </a>
+          </>
+        ))}
+      </nav>
+    ) : null
+  }
+
+  <ProductGrid products={page.products} lang={lang} />
+</Layout>

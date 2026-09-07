@@ -1,0 +1,18 @@
+---
+import ProductPage from "../../components/ProductPage.astro";
+import { getProduct } from "../../lib/content-api";
+
+export const prerender = false;
+
+// The fetch and the 404 live HERE, not in the component: `Astro.rewrite()`
+// only produces a response when returned from a page. From a component it just
+// stops rendering, and the page answers 200 with an empty document — which the
+// cache then stores. See ProductPage.astro's note.
+const slug = String(Astro.params.slug ?? "").trim();
+if (!/^[a-z0-9-]{2,120}$/.test(slug)) return Astro.rewrite("/404");
+
+const product = await getProduct(slug, "de");
+if (!product) return Astro.rewrite("/404");
+---
+
+<ProductPage lang="de" product={product} />

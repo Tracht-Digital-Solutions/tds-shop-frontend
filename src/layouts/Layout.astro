@@ -1,0 +1,143 @@
+---
+import "@fontsource/lato/400.css";
+import "@fontsource/lato/700.css";
+import "@fontsource/lato/900.css";
+import "@fontsource-variable/plus-jakarta-sans/index.css";
+import "@fontsource-variable/jetbrains-mono/index.css";
+
+import { CookieNotice } from "@tracht-digital-solutions/tds-shared/components";
+import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
+
+import "../styles/global.css";
+import { canonical, pageTitle, site } from "../lib/seo";
+import { homePath, tx, type Lang } from "../lib/i18n";
+import { isExcludedPath } from "../lib/indexing";
+
+interface Props {
+  /** The subject of the page. `pageTitle()` composes the brand around it. */
+  title: string;
+  description: string;
+  lang?: Lang;
+  /**
+   * The counterpart page in the other language.
+   *
+   * `undefined` means "look it up" — but there is nothing to look up here, so
+   * it renders NO hreflang. `null` suppresses it explicitly. A string is a
+   * resolved alternate.
+   *
+   * Never derived by pasting `/en/` in front of the current path: the taxonomy
+   * segments differ per language (`kategorie` ↔ `category`), so the derived
+   * URL would be a 404 on every listing page, and hreflang pointing at a 404
+   * is worse than no hreflang.
+   */
+  altUrl?: string | null;
+  /** Force `noindex` regardless of path (a product without its own text). */
+  noindex?: boolean;
+  ogImage?: string | null;
+  /** JSON-LD graph, already wrapped by `asGraph`. */
+  jsonLd?: Record<string, unknown> | null;
+}
+
+const {
+  title,
+  description,
+  lang = "de",
+  altUrl = null,
+  noindex = false,
+  ogImage = null,
+  jsonLd = null,
+} = Astro.props;
+
+const t = tx(lang);
+const path = Astro.url.pathname;
+const url = canonical(path);
+const robots = noindex || isExcludedPath(path) ? "noindex, follow" : "index, follow";
+const image = ogImage ?? `${site.url}/og-default.png`;
+---
+
+<!--
+  data-surface selects the geometry layer from tds-shared's design library.
+  This site renders the JOURNAL surface — the same file blog.tracht-digital.de
+  and tools.tracht-digital.de render — so the three read as one property rather
+  than three that resemble each other. Do not author radii locally.
+-->
+<html lang={lang} data-surface="blog" data-flat>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle(title, lang)}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <meta name="robots" content={robots} />
+
+    {
+      altUrl ? (
+        <>
+          <link
+            rel="alternate"
+            hreflang={lang === "de" ? "en" : "de"}
+            href={altUrl}
+          />
+          <link rel="alternate" hreflang={lang} href={url} />
+          <link rel="alternate" hreflang="x-default" href={lang === "de" ? url : altUrl} />
+        </>
+      ) : null
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle(title, lang)} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content={lang === "en" ? "en_GB" : "de_DE"} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.png" />
+
+    {/* Raw, never wrapped in {`…`} — a template body leaks the literal braces
+        into dist/ and the script never runs. */}
+    <script is:inline set:html={themeBootstrapScript} />
+
+    {
+      jsonLd ? (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+      ) : null
+    }
+  </head>
+
+  <body>
+    <header class="shop-header">
+      <div class="shop-shell shop-header__inner">
+        <a class="shop-header__brand" href={homePath(lang)}>{t.brand}</a>
+        <nav class="shop-header__nav" aria-label={t.nav.categories}>
+          <a href={homePath(lang)}>{t.nav.home}</a>
+          <a href={lang === "en" ? "/" : "/en/"} hreflang={lang === "en" ? "de" : "en"}>
+            {lang === "en" ? "Deutsch" : "English"}
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="shop-shell shop-main">
+      <slot />
+    </main>
+
+    <footer class="shop-footer">
+      <div class="shop-shell">
+        <p>{t.tagline}</p>
+        <p>
+          <a href={`https://tracht-digital.de${lang === "en" ? "/en" : ""}/legal/impressum`}>
+            Impressum
+          </a>
+          {" · "}
+          <a href={`https://tracht-digital.de${lang === "en" ? "/en" : ""}/legal/datenschutz`}>
+            Datenschutz
+          </a>
+        </p>
+      </div>
+    </footer>
+
+    <CookieNotice client:idle lang={lang} />
+  </body>
+</html>
