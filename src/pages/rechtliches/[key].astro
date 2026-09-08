@@ -1,0 +1,15 @@
+---
+import LegalPage from "../../components/LegalPage.astro";
+import { getLegalMarkdown, isLegalSlug } from "../../lib/legal";
+
+export const prerender = false;
+
+// Fetch and 404 in the PAGE: a rewrite returned from the component would not
+// produce a response, it would answer 200 with an empty document.
+const key = String(Astro.params.key ?? "").trim();
+if (!isLegalSlug(key)) return Astro.rewrite("/404");
+
+const markdown = await getLegalMarkdown(key, "de");
+---
+
+<LegalPage lang="de" slug={key} markdown={markdown} />

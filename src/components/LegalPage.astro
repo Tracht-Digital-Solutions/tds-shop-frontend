@@ -1,0 +1,53 @@
+---
+import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
+
+import Layout from "../layouts/Layout.astro";
+import { homePath, tx, type Lang } from "../lib/i18n";
+import { LEGAL_TITLES, type LegalSlug } from "../lib/legal";
+
+/**
+ * One legal document.
+ *
+ * Rendered through tds-shared's escape-first markdown renderer, not `set:html`
+ * on the raw field: the text is panel-authored and therefore untrusted here.
+ * `renderMarkdown` escapes everything before it transforms anything and
+ * allow-lists link schemes — that is the whole security model, with no
+ * sanitizer to misconfigure.
+ *
+ * Indexable, unlike most operator pages: terms and a withdrawal policy are
+ * meant to be findable, and a consumer looking for them should not have to
+ * start at the shop's front page.
+ */
+interface Props {
+  lang: Lang;
+  slug: LegalSlug;
+  markdown: string | null;
+}
+
+const { lang, slug, markdown } = Astro.props;
+const t = tx(lang);
+const title = LEGAL_TITLES[lang][slug];
+const html = markdown === null ? null : renderMarkdown(markdown);
+
+const missing = lang === "de"
+  ? "Dieser Text ist noch nicht veröffentlicht. Bitte wenden Sie sich an kontakt@tracht-digital.de."
+  : "This text has not been published yet. Please write to kontakt@tracht-digital.de.";
+---
+
+<Layout title={title} description={title} lang={lang} noindex={markdown === null}>
+  <h1 class="shop-title">{title}</h1>
+
+  {
+    /* A blank legal page reads as a legal page with nothing in it, which is a
+       worse claim than admitting the text is missing. */
+    html === null ? (
+      <p class="shop-lede">{missing}</p>
+    ) : (
+      <div class="legal-doc" set:html={html} />
+    )
+  }
+
+  <p class="shop-pager">
+    <a class="btn btn-ghost" href={homePath(lang)}>{t.backToCatalogue}</a>
+  </p>
+</Layout>

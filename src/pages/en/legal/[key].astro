@@ -1,0 +1,13 @@
+---
+import LegalPage from "../../../components/LegalPage.astro";
+import { getLegalMarkdown, isLegalSlug } from "../../../lib/legal";
+
+export const prerender = false;
+
+const key = String(Astro.params.key ?? "").trim();
+if (!isLegalSlug(key)) return Astro.rewrite("/404");
+
+const markdown = await getLegalMarkdown(key, "en");
+---
+
+<LegalPage lang="en" slug={key} markdown={markdown} />

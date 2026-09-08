@@ -26,6 +26,9 @@ import { categoryPath, prefix, productPath, type Lang } from "./i18n";
  */
 export const contentCache = createGenerationCache();
 
+/** The legal documents this site renders, as URL segments. */
+const LEGAL_SLUGS = ["impressum", "datenschutz", "agb", "widerruf", "zahlung", "affiliate"];
+
 /** Entry points rebuilt whatever changed. */
 export const alwaysPaths: string[] = ["/", "/en/", "/sitemap-0.xml", "/sitemap-index.xml"];
 
@@ -66,13 +69,38 @@ export const cacheEvents: EventMap = {
   /** A slot was re-filled. Placements can appear anywhere, so rebuild the lot. */
   placement: () => alwaysPaths,
 
-  /** The legal texts live in the website-CMS and are shared across properties. */
-  legal: () => ["/rechtliches/agb", "/rechtliches/widerruf", "/en/legal/agb", "/en/legal/widerruf"],
+  /**
+   * A content block was saved — which is what a legal text IS.
+   *
+   * The texts live in the website CMS as `cms_block` rows (`legal_agb`,
+   * `legal_widerruf`, …), so saving one fires `block`, not `legal`. Mapping
+   * only `legal` would have left every edit invisible on this site with
+   * nothing to see: the rebuild would report success having rebuilt nothing.
+   *
+   * A block event without an id, or one naming a section this site does not
+   * render, rebuilds nothing rather than everything — the marketing site's
+   * hero is not our concern.
+   */
+  block: (event: CacheEvent) => {
+    const key = (event.id ?? "").replace(/^legal_/, "");
+    if (!LEGAL_SLUGS.includes(key)) return [];
+    return forLanguages(event, (lang) => [
+      lang === "en" ? `/en/legal/${key}` : `/rechtliches/${key}`,
+    ]);
+  },
+
+  /**
+   * The uploaded-PDF channel of the website CMS. This site publishes its legal
+   * texts as blocks rather than documents (a consumer has to be able to read
+   * the terms on the page), so a `legal` event names nothing here — but the
+   * key is listed rather than omitted, because an unmapped event type is
+   * indistinguishable from a typo in one.
+   */
+  legal: () => [],
 
   sitemap: () => ["/sitemap-0.xml", "/sitemap-index.xml"],
 
   /** These belong to the sibling sites. Naming them keeps a typo visible. */
   post: () => [],
-  block: () => [],
   tool: () => [],
 };

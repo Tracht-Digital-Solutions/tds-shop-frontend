@@ -12,6 +12,7 @@ import "../styles/global.css";
 import { canonical, pageTitle, site } from "../lib/seo";
 import { homePath, tx, type Lang } from "../lib/i18n";
 import { isExcludedPath } from "../lib/indexing";
+import { LEGAL_TITLES } from "../lib/legal";
 
 interface Props {
   /** The subject of the page. `pageTitle()` composes the brand around it. */
@@ -53,6 +54,11 @@ const path = Astro.url.pathname;
 const url = canonical(path);
 const robots = noindex || isExcludedPath(path) ? "noindex, follow" : "index, follow";
 const image = ogImage ?? `${site.url}/og-default.png`;
+
+const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
+const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "affiliate"] as const).map(
+  (slug) => ({ href: `${legalBase}/${slug}`, label: LEGAL_TITLES[lang][slug] }),
+);
 ---
 
 <!--
@@ -126,15 +132,20 @@ const image = ogImage ?? `${site.url}/og-default.png`;
     <footer class="shop-footer">
       <div class="shop-shell">
         <p>{t.tagline}</p>
-        <p>
-          <a href={`https://tracht-digital.de${lang === "en" ? "/en" : ""}/legal/impressum`}>
-            Impressum
-          </a>
-          {" · "}
-          <a href={`https://tracht-digital.de${lang === "en" ? "/en" : ""}/legal/datenschutz`}>
-            Datenschutz
-          </a>
-        </p>
+        {/* Every one of these has to be reachable from every page: § 5 DDG for
+            the Impressum, § 312i BGB for the terms and the withdrawal policy —
+            a consumer must be able to read them BEFORE ordering, not only
+            somewhere in the checkout. */}
+        <nav class="shop-footer__legal" aria-label={lang === "de" ? "Rechtliches" : "Legal"}>
+          {
+            legalLinks.map((link, index) => (
+              <>
+                {index > 0 ? " · " : ""}
+                <a href={link.href}>{link.label}</a>
+              </>
+            ))
+          }
+        </nav>
       </div>
     </footer>
 

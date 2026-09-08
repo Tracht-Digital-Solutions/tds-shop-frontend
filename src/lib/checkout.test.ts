@@ -90,3 +90,46 @@ describe("price formatting", () => {
     expect(formatPrice(1000, "XYZ", "de")).toMatch(/10[.,]00/);
   });
 });
+
+/**
+ * The legal pages.
+ *
+ * They are `cms_block` rows, so saving one in the panel fires a **`block`**
+ * event, not `legal`. Mapping only `legal` would leave every edit invisible on
+ * this site — and the rebuild would report success having rebuilt nothing.
+ */
+describe("legal documents", () => {
+  it("recognises exactly the documents it renders", async () => {
+    const { isLegalSlug, LEGAL_KEYS, LEGAL_TITLES } = await import("./legal");
+    for (const slug of Object.keys(LEGAL_KEYS)) {
+      expect(isLegalSlug(slug), slug).toBe(true);
+      // A title in both languages, or the page renders a heading of
+      // `undefined` — which looks like a broken page, not a missing text.
+      expect(LEGAL_TITLES.de[slug as keyof typeof LEGAL_KEYS]).toBeTruthy();
+      expect(LEGAL_TITLES.en[slug as keyof typeof LEGAL_KEYS]).toBeTruthy();
+    }
+    expect(isLegalSlug("../etc/passwd")).toBe(false);
+    expect(isLegalSlug("impressum2")).toBe(false);
+  });
+
+  it("rebuilds a legal page when its BLOCK is saved", async () => {
+    const { cacheEvents } = await import("./cache");
+    const paths = await cacheEvents.block!({ type: "block", id: "legal_agb", lang: "de" } as never);
+    expect(paths).toEqual(["/rechtliches/agb"]);
+  });
+
+  it("ignores a block this site does not render", async () => {
+    // The marketing site's hero is not our concern; rebuilding everything on
+    // any block save would make a wording fix there cost a full rebuild here.
+    const { cacheEvents } = await import("./cache");
+    expect(await cacheEvents.block!({ type: "block", id: "hero", lang: "de" } as never)).toEqual([]);
+    expect(await cacheEvents.block!({ type: "block" } as never)).toEqual([]);
+  });
+
+  it("keeps the legal pages OUT of the never-cached list", () => {
+    // They are the same for every visitor and are linked from every page — the
+    // one kind of page that most wants to be a cache hit.
+    expect(isNeverCached("/rechtliches/agb")).toBe(false);
+    expect(isNeverCached("/en/legal/widerruf")).toBe(false);
+  });
+});

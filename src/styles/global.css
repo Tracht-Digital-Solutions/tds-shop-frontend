@@ -283,3 +283,72 @@
   line-height: 1.5;
   color: var(--color-muted);
 }
+
+/* --- legal --------------------------------------------------------------- */
+
+/* Long-form legal prose. `prose.css` is deliberately not imported on this site
+   (see the header), so the handful of rules a legal document actually needs
+   live here — headings, lists, a readable measure. */
+.legal-doc {
+  max-width: 44rem;
+  line-height: 1.65;
+}
+
+.legal-doc h1,
+.legal-doc h2,
+.legal-doc h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 2rem 0 0.75rem;
+}
+
+.legal-doc h1 {
+  font-size: 1.5rem;
+}
+.legal-doc h2 {
+  font-size: 1.1875rem;
+}
+.legal-doc h3 {
+  font-size: 1.0625rem;
+}
+
+.legal-doc p,
+.legal-doc ul,
+.legal-doc ol {
+  margin: 0 0 1rem;
+}
+
+.legal-doc ul,
+.legal-doc ol {
+  padding-inline-start: 1.25rem;
+}
+
+.legal-doc li {
+  margin-bottom: 0.35rem;
+}
+
+/* The draft notice arrives as a markdown blockquote. Made unmissable on
+   purpose: an unreviewed legal text that reads as finished is one somebody
+   publishes without reading it. */
+.legal-doc blockquote {
+  margin: 0 0 1.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--color-soft);
+  border-inline-start: 3px solid var(--color-accent);
+  font-size: 0.9375rem;
+}
+
+.legal-doc blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-doc hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.shop-footer__legal {
+  margin-top: 0.5rem;
+}
