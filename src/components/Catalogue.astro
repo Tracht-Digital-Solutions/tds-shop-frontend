@@ -40,6 +40,11 @@ const description = describe(
 
 const path = category ? categoryPath(category, lang) : homePath(lang);
 
+// The category navigation below renders as a WRAPPING ROW of distinct targets
+// (`.shop-catnav`), not a middot-separated sentence. Measured at 390px, the
+// run of text made each category a 16px-high tap target with a punctuation
+// mark sitting between two of them; the flex gap is the separator now.
+
 const jsonLd = asGraph([
   websiteSchema(lang),
   collectionPageSchema(heading, path, lang),
@@ -56,14 +61,11 @@ const jsonLd = asGraph([
 
   {
     categories.length > 0 ? (
-      <nav class="shop-breadcrumbs" aria-label={t.categories}>
-        {categories.map(({ category: name, total }, index) => (
-          <>
-            {index > 0 ? " · " : ""}
-            <a href={categoryPath(name, lang)}>
-              {name} ({total})
-            </a>
-          </>
+      <nav class="shop-catnav" aria-label={t.categories}>
+        {categories.map(({ category: name, total }) => (
+          <a href={categoryPath(name, lang)}>
+            {name} <span class="shop-catnav__count">({total})</span>
+          </a>
         ))}
       </nav>
     ) : null

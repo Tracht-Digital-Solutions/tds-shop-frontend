@@ -12,7 +12,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "postbuild": "node node_modules/@tracht-digital-solutions/tds-shared/scripts/pack-release.mjs",
-    "start": "node app.cjs"
+    "start": "node app.cjs",
+    "audit:mobile": "node scripts/mobile-audit.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
@@ -22,7 +23,7 @@
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
     "@tailwindcss/postcss": "^4.3.3",
-    "@tracht-digital-solutions/tds-shared": "^0.35.2",
+    "@tracht-digital-solutions/tds-shared": "^0.35.3",
     "astro": "^7.2.5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -35,6 +36,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "jsdom": "^30.0.1",
+    "playwright-core": "^1.56.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.11"
   },

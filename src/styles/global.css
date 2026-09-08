@@ -352,3 +352,79 @@
 .shop-footer__legal {
   margin-top: 0.5rem;
 }
+
+/* --- touch ergonomics ---------------------------------------------------- */
+
+/* Measured at 390px with a real browser, not guessed.
+ *
+ * `body { overflow-x: hidden }` in tds-shared's base.css CLAMPS
+ * `document.scrollWidth` to the viewport, so a page always reports "fits" —
+ * which is why horizontal breakage on these sites is invisible. Lifting that
+ * during measurement showed the layout genuinely wraps at 320px. What it did
+ * NOT show, because nothing about it looks wrong, is the tap targets: the
+ * header links were 23px high, the category links 16px, and the six legal
+ * links in the footer 18px, sitting in one row separated by middots.
+ *
+ * WCAG 2.2 asks for 24×24 CSS px. The library already lifts buttons and form
+ * fields to 44px at `pointer: coarse`; these are plain navigation links it
+ * knows nothing about, so they are lifted here.
+ *
+ * Scoped to coarse pointers so the desktop density is unchanged.
+ */
+@media (pointer: coarse) {
+  .shop-header__nav a,
+  .shop-footer__legal a,
+  .shop-breadcrumbs a {
+    display: inline-block;
+    min-height: 44px;
+    /* Vertically centre the label inside the enlarged target rather than
+       leaving the text at the top of a tall box. */
+    line-height: 44px;
+    padding-inline: 0.25rem;
+  }
+
+  /* A row of links needs space BETWEEN the targets too — WCAG's exception for
+     an undersized target only applies when the surrounding spacing keeps
+     neighbours from being hit by accident. */
+  .shop-header__nav {
+    gap: 0 1.25rem;
+  }
+}
+
+/* The footer's legal row. Six links is a lot for a phone, so they become a
+   wrapping list with real gaps instead of a middot-separated sentence — the
+   separators were what made them read as one run of text rather than six
+   distinct destinations. */
+.shop-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+/* Category navigation on the catalogue. A row of destinations, so it wraps and
+   the gap does the separating. */
+.shop-catnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0 0 2rem;
+  font-size: 0.9375rem;
+}
+
+.shop-catnav a {
+  color: var(--color-ink);
+}
+
+.shop-catnav__count {
+  color: var(--color-muted);
+}
+
+@media (pointer: coarse) {
+  .shop-catnav a {
+    display: inline-block;
+    min-height: 44px;
+    line-height: 44px;
+    padding-inline: 0.25rem;
+  }
+}

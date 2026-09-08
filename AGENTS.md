@@ -125,3 +125,51 @@ live in the page, and the component only ever receives something it can render.
 
 Measure response **size** as well as status when checking this site. `200 15B`
 is the fingerprint of that bug and looks like a loading glitch in a browser.
+
+## Mobile: measure, do not look
+
+`MSYS_NO_PATHCONV=1 npm run audit:mobile -- http://127.0.0.1:4361 390 / /produkt/<slug>`
+
+(The `MSYS_NO_PATHCONV=1` is not optional in Git Bash: without it the shell
+rewrites every `/path` argument into a Windows path before node sees it, and
+the failure names a directory nobody typed.)
+
+`scripts/mobile-audit.mjs` drives a real Chrome at a phone viewport and reports
+horizontal overflow plus tap targets under 24 CSS px.
+
+**Why a script and not a screenshot.** `body { overflow-x: hidden }` in
+tds-shared's `base.css` **clamps `document.scrollWidth` to the viewport**, so a
+page always reports that it fits, and an element hanging off the right edge is
+clipped rather than shown. A screenshot of a broken mobile layout looks
+correct. The audit lifts that clamp for the measurement, which is the only
+reason the numbers mean anything — and it checks each element's own rect as
+well, because the clamp is not the only way to hide the problem.
+
+Confirm the tool still bites before trusting a clean run: append a 900px-wide
+div and check the reported width moves. A silent "ok" from a broken script and
+a silent "ok" from a good layout read identically.
+
+### Measure against realistic content, not the demo fallback
+
+`src/lib/demoContent.ts` carries no prices and no offers — deliberately, so an
+outage cannot invent either. That also means measuring against it proves only
+that an *empty* card fits. The rows that overflow are the ones with four things
+in them: merchant, price, retrieval timestamp, button. Point `PUBLIC_API_URL`
+at a stub that serves long German compound titles and several offers per
+product.
+
+### What the first pass found (2026-09-08)
+
+No horizontal overflow at 320px or 390px — the wrapping in
+`.tds-product-offer`, `.shop-pager` and `.tds-field-row` holds. What it did
+find was tap targets, which nothing about the page makes look wrong: header
+links 23px high, category links 16px, the six footer legal links 18px in a
+middot-separated run. All are plain navigation links, so the library's
+`pointer: coarse` block (which already lifts `.btn` and `.field-boxed` to 44px
+and inputs to 16px against iOS auto-zoom) knew nothing about them. Lifted here;
+`.tds-product-card__title` was lifted in tds-shared, because three surfaces
+render it.
+
+Middot-separated link runs became wrapping rows in the same pass. Six links
+joined by punctuation read as one sentence, and the separator sits between two
+targets that are already too small.

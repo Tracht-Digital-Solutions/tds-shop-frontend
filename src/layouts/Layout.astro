@@ -136,15 +136,12 @@ const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "
             the Impressum, § 312i BGB for the terms and the withdrawal policy —
             a consumer must be able to read them BEFORE ordering, not only
             somewhere in the checkout. */}
+        {/* A wrapping row, not a middot-separated sentence: six links read as
+            one run of text that way, and on a phone the separators sit
+            between two 18px targets. The gap in the stylesheet is the
+            separator now. */}
         <nav class="shop-footer__legal" aria-label={lang === "de" ? "Rechtliches" : "Legal"}>
-          {
-            legalLinks.map((link, index) => (
-              <>
-                {index > 0 ? " · " : ""}
-                <a href={link.href}>{link.label}</a>
-              </>
-            ))
-          }
+          {legalLinks.map((link) => <a href={link.href}>{link.label}</a>)}
         </nav>
       </div>
     </footer>
