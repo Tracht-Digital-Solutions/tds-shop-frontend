@@ -1,0 +1,10 @@
+---
+import OrderPage from "../../../components/OrderPage.astro";
+
+export const prerender = false;
+
+const token = String(Astro.params.token ?? "").trim();
+if (!/^[a-f0-9]{32}$/.test(token)) return Astro.rewrite("/404");
+---
+
+<OrderPage lang="en" token={token} />

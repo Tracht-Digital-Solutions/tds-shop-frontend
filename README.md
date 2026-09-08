@@ -99,8 +99,8 @@ click-redirect links are built from.
 
 ## Not built yet
 
-Pagination, tag pages, guides (`/ratgeber/*`), search, the cart and checkout,
-and per-product OG images. The routes reserved for them are already excluded
+Pagination, tag pages, guides (`/ratgeber/*`), search, a cart, and per-product
+OG images. The routes reserved for them are already excluded
 from the cache and the index, so adding them does not require revisiting those
 decisions.
 

@@ -81,3 +81,47 @@ lockfile does not resolve on a Linux runner.
   article that ever mentioned the offer.
 - Don't add a path under `/kasse`, `/warenkorb`, `/bestellung` or `/konto`
   without checking all three cache mechanisms listed above.
+
+## The checkout
+
+`/kasse/[slug]` and `/bestellung/[token]`, plus their `/en/` mirrors. None of
+them is ever cached — see the cache boundary above.
+
+**The order button lives here, not at Stripe.** § 312j Abs. 3 BGB requires a
+button reading "Zahlungspflichtig bestellen" with the mandatory details
+immediately above it. Stripe's hosted page says "Bezahlen" and is not ours to
+relabel, so the declaration is made on our page and Stripe is only the payment
+step that follows. That is also why `CheckoutPage.astro` is server-rendered:
+the details have to be in the document the reader receives, not assembled
+afterwards by a script that may not run.
+
+**The withdrawal checkbox is a precondition.** For a digital service the right
+of withdrawal lapses on full performance only if the customer expressly agreed
+beforehand (§ 356 Abs. 4 BGB). It is never pre-ticked, the button stays
+disabled without it, and the **server refuses too** — the browser check is a
+courtesy, the server check is the rule. The exact wording travels with the
+request so the order records the sentence the customer actually read.
+
+**The VAT split is computed twice and must agree.** `src/lib/sellable.ts`
+mirrors `OrderRepository::price()`: round the tax, then add. A page showing a
+total the customer is not charged is worse than either rounding on its own, and
+nothing flags it — both numbers look plausible. `checkout.test.ts` pins the
+arithmetic on both sides of that boundary.
+
+**`/bestellung/{token}` is also Stripe's `success_url`.** So it is the first
+page after paying, and the webhook may not have arrived yet. A `pending` order
+therefore renders as "payment received, confirmation follows" — never as a
+failure. Telling a paying customer their order does not exist because of a race
+is the worst thing that page could do.
+
+### The redirect trap, again
+
+`Astro.redirect()` has the same limitation as `Astro.rewrite()`: it only
+produces a response when returned from a **page**. `/kasse/[slug]` originally
+looked the product up inside `CheckoutPage.astro` and redirected from there —
+which answered **200 with an empty document**, fifteen bytes, for every product
+that is not for sale. The lookup now lives in `src/lib/sellable.ts`, both exits
+live in the page, and the component only ever receives something it can render.
+
+Measure response **size** as well as status when checking this site. `200 15B`
+is the fingerprint of that bug and looks like a loading glitch in a browser.

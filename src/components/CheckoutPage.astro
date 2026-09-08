@@ -1,0 +1,57 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CheckoutForm from "./CheckoutForm.tsx";
+import { productPath, type Lang } from "../lib/i18n";
+import { describe } from "../lib/metaDescription";
+import type { Sellable } from "../lib/sellable";
+
+/**
+ * The order page.
+ *
+ * The lookup and the redirect live in the PAGE, not here — `Astro.redirect()`
+ * from a component's frontmatter does not produce a response, it just stops
+ * this component rendering, and the page then answers 200 with an empty
+ * document. This repository has shipped that once already (see
+ * `ProductPage.astro`); a checkout doing it would greet a would-be buyer with
+ * a blank success page.
+ *
+ * Never cached — `src/lib/noCache.ts`, the middleware and `.htaccess` all
+ * exclude `/kasse`. A cached checkout would show the next visitor the previous
+ * one's order, and it would look like a working page.
+ *
+ * Server-rendered rather than a client-only island because the mandatory
+ * details (§ 312j Abs. 3 BGB) have to be in the document the reader receives,
+ * not assembled afterwards by a script that may not run.
+ */
+interface Props {
+  lang: Lang;
+  slug: string;
+  sellable: Sellable;
+}
+
+const { lang, slug, sellable } = Astro.props;
+const { product, offer, netCents, vatRateBp, taxCents, grossCents } = sellable;
+---
+
+<Layout
+  title={product.title}
+  description={describe(product.teaser, product.category)}
+  lang={lang}
+  noindex
+>
+  <nav class="shop-breadcrumbs">
+    <a href={productPath(slug, lang)}>{product.title}</a>
+  </nav>
+
+  <CheckoutForm
+    client:load
+    slug={slug}
+    title={product.title}
+    lang={lang}
+    netCents={netCents}
+    taxCents={taxCents}
+    grossCents={grossCents}
+    vatRateBp={vatRateBp}
+    currency={offer.currency}
+  />
+</Layout>

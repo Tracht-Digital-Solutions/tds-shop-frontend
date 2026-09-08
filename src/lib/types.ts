@@ -1,4 +1,8 @@
-import type { ShopProduct, ShopProductRef } from "@tracht-digital-solutions/tds-shared/schemas";
+import type {
+  ShopOffer,
+  ShopProduct,
+  ShopProductRef,
+} from "@tracht-digital-solutions/tds-shared/schemas";
 
 /**
  * Repo-local widenings of the shared read model.
@@ -16,7 +20,24 @@ import type { ShopProduct, ShopProductRef } from "@tracht-digital-solutions/tds-
 
 export type EditorialStatus = "none" | "stub" | "published";
 
-export type CatalogProduct = ShopProductRef & {
+/**
+ * An offer plus the VAT split.
+ *
+ * Served only for OUR OWN offers — somebody else's tax is not ours to state —
+ * and read only by the checkout page, which has to show the mandatory
+ * breakdown (§ 312j Abs. 3 BGB) in the document itself. The journal's product
+ * block and the portal's placement widget have no use for it, which is exactly
+ * why it is widened here rather than added to the shared schema: that would
+ * cost a shared minor and a repin round across seven repositories to carry a
+ * field six of them ignore.
+ */
+export type SellableOffer = ShopOffer & {
+  netCents?: number | null;
+  vatRateBp?: number | null;
+};
+
+export type CatalogProduct = Omit<ShopProductRef, "offers"> & {
+  offers: SellableOffer[];
   /** Absent on a payload from an older API build; treated as `none`. */
   editorialStatus?: EditorialStatus;
   /**
@@ -28,6 +49,7 @@ export type CatalogProduct = ShopProductRef & {
   tags?: string[];
 };
 
-export type ProductPage = ShopProduct & {
+export type ProductPage = Omit<ShopProduct, "offers"> & {
+  offers: SellableOffer[];
   editorialStatus?: EditorialStatus;
 };

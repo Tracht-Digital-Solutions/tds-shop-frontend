@@ -159,3 +159,127 @@
   padding: 2rem 0;
   color: var(--color-muted);
 }
+
+/* --- checkout ------------------------------------------------------------ */
+
+/* The order form. Only spacing and the emphasis that makes the mandatory
+   details read as a block — the controls themselves are shared primitives. */
+.checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 34rem;
+}
+
+.checkout label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.checkout small {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+/* § 312j Abs. 3 BGB wants the mandatory details immediately above the order
+   button. The tint is what makes that adjacency legible rather than merely
+   true in the source order. */
+.checkout__summary {
+  padding: 1rem;
+  background: var(--color-soft);
+}
+
+.checkout__item {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.checkout__summary dl {
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.checkout__summary dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9375rem;
+}
+
+.checkout__summary dt,
+.checkout__summary dd {
+  margin: 0;
+}
+
+.checkout__total {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line);
+  font-weight: 700;
+}
+
+.checkout__delivery {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+/* The withdrawal confirmation. A row, so the checkbox stays beside the text
+   rather than above a paragraph it is meant to qualify. */
+.checkout__consent {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.checkout__consent input {
+  margin-top: 0.2rem;
+  flex: none;
+}
+
+.checkout__error {
+  margin: 0;
+  padding: 0.625rem 0.875rem;
+  background: var(--color-soft);
+  color: var(--color-ink);
+  font-size: 0.9375rem;
+}
+
+/* --- order --------------------------------------------------------------- */
+
+.order-summary {
+  max-width: 34rem;
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.order-summary > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.order-summary dt,
+.order-summary dd {
+  margin: 0;
+}
+
+.order-summary__total {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line);
+  font-weight: 700;
+}
+
+.order-summary__consent {
+  max-width: 44rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
