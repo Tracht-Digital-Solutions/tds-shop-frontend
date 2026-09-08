@@ -35,6 +35,19 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@tracht-digital-solutions'
 
+      - name: Pin npm
+        # Node 22 ships npm 10, whose arborist crashes with
+        # "Cannot read properties of null (reading 'edgesOut')" on some
+        # dependency graphs — it killed tds-ext-shop-pkg's very first release,
+        # at Install, before a single test ran.
+        #
+        # It bites here and not everywhere because `--no-package-lock` below
+        # makes every run re-resolve the tree from scratch, so the npm doing the
+        # resolving has to be current. The journal and the landing page carry
+        # the same step; this workflow was seeded from the tools site, which
+        # does not, and inherited the gap.
+        run: npm install -g npm@11
+
       - name: Install
         # Windows-generated lockfile is win32-only; --no-package-lock resolves
         # the right native binaries on the Linux runner (npm/cli#4828).
@@ -46,16 +59,16 @@ jobs:
         run: npm run type-check
 
       - name: Lint primitives
-        # This site renders on the `blog` surface (moved there 2026-08-17), so
-        # its geometry has to come from that layer's tokens. Hand-authored radii
-        # bypass them: the gate box and the tool box were both `rounded-2xl`
-        # (16px) while the card token is 8px. Scoped to src/ — dist/ is output.
+        # This site renders the `blog` surface, so its geometry must come from
+        # that layer's tokens — a hand-authored radius bypasses them silently.
+        # Scoped to src/; dist/ and release/ are output.
         run: npm run lint:primitives
 
       - name: Test
-        # 171 tests that only ever ran on a developer machine. Four of them are
-        # the design freeze (surface/header/marketing/seo); a suite that gates
-        # nothing cannot hold a freeze.
+        # The rules whose failure is invisible in a rendered page: the indexing
+        # gate, the cache boundary that keeps a checkout out of a shared cache,
+        # the structured-data decision, and the VAT arithmetic that has to match
+        # the server's to the cent.
         run: npm run test:run
 
       - name: Configure demo mode

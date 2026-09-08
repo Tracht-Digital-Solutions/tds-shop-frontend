@@ -1,4 +1,5 @@
 import { contentApiBase } from "./connection";
+import { DEMO_MODE } from "./demoContent";
 import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
 import type { Lang } from "./i18n";
 
@@ -67,6 +68,11 @@ interface BlockResponse {
  * marketing site's, it would serve the marketing site's Impressum here.
  */
 export async function getLegalMarkdown(slug: LegalSlug, lang: Lang): Promise<string | null> {
+  // A demo build ships no legal texts, and inventing one would be the worst
+  // possible fixture: a plausible-looking set of terms nobody wrote. The page
+  // renders its "not published yet" notice instead.
+  if (DEMO_MODE) return null;
+
   const url = `${contentApiBase()}/landing?lang=${lang}`;
   try {
     const res = await fetch(url, { headers: siteKeyHeaders() });

@@ -1,0 +1,48 @@
+name: Dev build → dev branch
+
+# The push-to-main build gate, and the continuously-built developer artifact.
+#
+# Every push to `main` builds with `PUBLIC_DEMO_MODE=true` and force-publishes
+# the assembled `release/` tree to the orphan `dev` branch. **Not deployed** —
+# production goes out through release.yml, on the manual button.
+#
+# ── Why a demo build rather than a production one ───────────────────────────
+#
+# The dev artifact must be runnable by whoever pulls it, and it must not reach
+# out. With `PUBLIC_DEMO_MODE=true` the content client serves
+# `src/lib/demoContent.ts` and makes no request at all — so the branch can be
+# checked out and started without a site key, without the API being up, and
+# without any chance of a developer build touching production.
+#
+# ── Why this branch exists at all, given ci.yml ─────────────────────────────
+#
+# `ci.yml` gates pull requests. Nothing gated a direct push to `main`, which is
+# how most work lands here. This is that gate — and the reason it publishes
+# rather than merely building is that a tree which assembles is not the same as
+# a tree that starts: `pack-release.mjs` refuses to produce one that could not
+# boot on the host, so publishing exercises the part that actually breaks.
+#
+# Pipeline body in _build.yml.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  # Per-ref and cancellable: two pushes in a minute should leave one artifact,
+  # the newer one. The release group deliberately does the opposite.
+  group: dev-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/_build.yml
+    with:
+      demo_mode: true
+      publish_branch: dev
+    secrets: inherit

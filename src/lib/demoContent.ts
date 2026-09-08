@@ -4,6 +4,20 @@ import { productPath, type Lang } from "./i18n";
 import { site } from "./seo";
 
 /**
+ * Whether this build serves demo content INSTEAD of asking the API.
+ *
+ * Set by `dev.yml` for the `dev` branch artifact, so that tree can be checked
+ * out and started without a site key, without the API being up, and with no
+ * chance of a developer build reaching production. Distinct from the outage
+ * fallback below, which is what happens when a real build cannot get an answer.
+ *
+ * Read through `import.meta.env` because Astro inlines `PUBLIC_*` names at
+ * build time — this is a build-time decision, not a runtime one, and the value
+ * has to survive into the bundle.
+ */
+export const DEMO_MODE = import.meta.env.PUBLIC_DEMO_MODE === "true";
+
+/**
  * What the site renders when the API cannot be reached.
  *
  * ### Two rules learned elsewhere

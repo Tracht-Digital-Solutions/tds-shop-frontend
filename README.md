@@ -85,6 +85,37 @@ indexable, so an outage cannot bake placeholder pages into an index.
 If a page renders oddly after a failed run, clear `var/page-cache` — a broken
 render gets stored like any other.
 
+## Branches and the pipeline
+
+Four workflows, the same shape the journal and the landing page use.
+
+| Workflow | Trigger | Builds | Publishes | Deploys |
+|---|---|---|---|---|
+| `ci.yml` | pull request | production config | nothing | no |
+| `dev.yml` | push to `main` | `PUBLIC_DEMO_MODE=true` | orphan `dev` branch | **no** |
+| `release.yml` | manual button | production config | orphan `release` branch | yes, webhook |
+
+The body is `_build.yml`; the three above only choose inputs.
+
+**`dev` is the push-to-main gate.** `ci.yml` gates pull requests, and nothing
+gated a direct push — which is how most work lands here. It publishes rather
+than merely building because a tree that *assembles* is not the same as a tree
+that *starts*: `pack-release.mjs` refuses to produce one that could not boot on
+the host, so publishing exercises the part that actually breaks.
+
+**The dev artifact reaches nothing.** `PUBLIC_DEMO_MODE=true` makes the content
+client return its fixtures *without a request* — see `src/lib/demoContent.ts`.
+So the branch can be checked out and started with no site key, no API, and no
+way for a developer build to touch production. The outage fallback is a
+different path: that one fires when a real build cannot get an answer.
+
+**Deploying is a decision, not a side effect.** This is a Node application
+behind Passenger; the tree only works on a host configured for it (Node app on,
+document root `client/`, startup `app.cjs`, restart after the pull). A push to
+`main` that deploys would take the site down from a commit that never mentioned
+deployment. Content changes need no deploy at all — they go live through a
+cache rebuild.
+
 ## Deploy
 
 `npm run build` produces `release/`: `app.cjs`, a minimal package.json with

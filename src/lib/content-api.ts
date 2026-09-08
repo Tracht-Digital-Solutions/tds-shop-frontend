@@ -7,7 +7,7 @@ import type { CatalogProduct, ProductPage } from "./types";
 
 import { contentApiBase } from "./connection";
 import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
-import { demoCategories, demoProduct, demoProducts } from "./demoContent";
+import { DEMO_MODE, demoCategories, demoProduct, demoProducts } from "./demoContent";
 import type { Lang } from "./i18n";
 
 /**
@@ -36,6 +36,12 @@ export interface CatalogPage {
 }
 
 async function readJson<T>(path: string, fallback: T, label: string): Promise<T> {
+  // In a demo build there is nothing to ask. Returning the fallback WITHOUT a
+  // request is the point: the dev-branch artifact must run with no site key,
+  // no API, and no chance of reaching production. Relying on the outage path
+  // instead would mean every page waited for a connection to fail first.
+  if (DEMO_MODE) return fallback;
+
   const url = `${contentApiBase()}${path}`;
   try {
     const res = await fetch(url, { headers: siteKeyHeaders() });
@@ -72,6 +78,10 @@ export async function listProducts(query: CatalogQuery): Promise<CatalogPage> {
 }
 
 export async function getProduct(slug: string, lang: Lang): Promise<ProductPage | null> {
+  // A demo build answers from the fixtures, and a slug that is not among them
+  // is a genuine 404 — not an outage to fall back from.
+  if (DEMO_MODE) return demoProduct(slug, lang);
+
   const url = `${contentApiBase()}/shop/${encodeURIComponent(slug)}?lang=${lang}`;
   try {
     const res = await fetch(url, { headers: siteKeyHeaders() });
@@ -136,6 +146,10 @@ export async function resolveOfferTarget(
   id: number,
   attribution: { source?: string; placement?: string | null; lang: Lang },
 ): Promise<string | null> {
+  // A demo build has no real offers, so every click redirect 404s rather than
+  // sending somebody to a partner under an id that means nothing here.
+  if (DEMO_MODE) return null;
+
   const params = new URLSearchParams({ lang: attribution.lang });
   if (attribution.source) params.set("source", attribution.source);
   if (attribution.placement) params.set("placement", attribution.placement);
