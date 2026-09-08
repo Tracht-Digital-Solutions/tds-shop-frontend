@@ -59,7 +59,7 @@ translations on the product id. Do not "fix" that back to a 1:1 rule.
 ## Toolchain
 
 Astro 7.2.5, TypeScript 6 (TS7 is capped by `@astrojs/check`'s peer range),
-vitest 4, `tds-shared ^0.35.1`. The 0.x caret is **minor-locked** — a shared
+vitest 4, `tds-shared ^0.36.0`. The 0.x caret is **minor-locked** — a shared
 minor needs an explicit repin here and a re-verification, not just an install.
 
 Node 22 in CI with npm force-upgraded to 11: npm 10's arborist crashes
@@ -125,6 +125,46 @@ live in the page, and the component only ever receives something it can render.
 
 Measure response **size** as well as status when checking this site. `200 15B`
 is the fingerprint of that bug and looks like a loading glitch in a browser.
+
+## Accessibility: the third that a machine can check, and the two thirds it cannot
+
+```
+MSYS_NO_PATHCONV=1 npm run audit:a11y -- http://localhost:4361 / /en/ /rechtliches/impressum
+```
+
+axe-core in a real Chrome, at **WCAG 2.2 AA** — the level
+`/rechtliches/barrierefreiheit` claims, so the claim is checked rather than
+asserted. It runs in CI after the tests, against the **dev** server with a dead
+API and demo content: CI must never read production content to decide whether a
+PR is mergeable.
+
+Two notes on running it by hand. The dev server is a **daemon** (`astro dev
+stop`, `astro dev status`) — a plain `npm run dev` will happily attach to an
+instance started hours ago and serve you the old markup, which reads exactly
+like "my change did not apply". And it can end up bound to `[::1]` only when
+something already holds the IPv4 address, so prefer `localhost` over
+`127.0.0.1` in these URLs.
+
+**A green run is not compliance.** Automated checking reaches roughly a third
+of WCAG. The rest is read:
+
+- Does the focus order follow the reading order, and does every stop show a
+  ring? (`:focus-visible` is centralised in tds-shared's `base.css` — never
+  `outline: none`.)
+- Does the skip link actually move focus? It only does because `<main>` carries
+  `tabindex="-1"`; without it the browser scrolls and the next Tab continues
+  from the link, with the whole header still in the way.
+- Does an error message say how to fix the error, and is it associated with the
+  field rather than merely near it?
+- Is refusing a consent exactly as easy as granting it? The two decisions in the
+  banner carry the same class on purpose, and `tds-shared`'s `consent.test.tsx`
+  fails if that changes — but nothing can check that a later CSS override did
+  not make one of them quieter.
+- Does a link make sense read on its own, out of the sentence around it?
+- Do the decorative graphics (`.tds-wash`, `.tds-shape`, `.tds-brandbar`) carry
+  `aria-hidden="true"` at the call site? A decorative graphic announced to a
+  screen reader is worse than no graphic.
+
 
 ## Mobile: measure, do not look
 

@@ -71,6 +71,36 @@ jobs:
         # the server's to the cent.
         run: npm run test:run
 
+      - name: Accessibility audit
+        # axe-core against the real pages, at WCAG 2.2 AA — the level the
+        # accessibility statement claims, so the claim is checked rather than
+        # asserted. Runs against the DEV server with a dead API and demo
+        # content, not the built one: CI must never read production content to
+        # decide whether a PR is mergeable, and the markup under test is the
+        # same either way.
+        #
+        # `channel: chrome` resolves the runner's preinstalled Google Chrome;
+        # playwright-core ships no browser binaries on purpose.
+        #
+        # Note what this does NOT cover: automated checking reaches roughly a
+        # third of WCAG. Focus order, link text that means something, and
+        # whether refusing a consent is as easy as granting it are read, not
+        # measured.
+        env:
+          PUBLIC_DEMO_MODE: 'true'
+          PUBLIC_API_URL: 'http://127.0.0.1:9'
+        run: |
+          npx astro dev --port 4361 &
+          for i in $(seq 1 40); do
+            if curl -sf -o /dev/null http://localhost:4361/; then break; fi
+            sleep 1
+          done
+          curl -sf -o /dev/null http://localhost:4361/ || {
+            echo "::error title=Dev server never came up::the accessibility audit had nothing to audit"
+            exit 1
+          }
+          npm run audit:a11y -- http://localhost:4361 / /en/ /rechtliches/impressum
+
       - name: Configure demo mode
         if: ${{ inputs.publish_branch != '' }}
         run: echo "PUBLIC_DEMO_MODE=${{ inputs.demo_mode }}" >> "$GITHUB_ENV"

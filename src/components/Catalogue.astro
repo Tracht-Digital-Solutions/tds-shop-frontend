@@ -53,23 +53,37 @@ const jsonLd = asGraph([
 ---
 
 <Layout title={heading} description={description} lang={lang} jsonLd={jsonLd}>
-  <h1 class="shop-title">{heading}</h1>
-  <p class="shop-lede">{site.description[lang]}</p>
+{/*
+    The one wash band on the site. `.tds-wash` paints soft brand fields into a
+    ::before at z-index -1, so it needs a SECTION to sit in — never the body,
+    and never an element whose children have to stay above it by accident.
 
-  {/* The standing disclosure, above the products rather than under them. */}
-  <p class="shop-disclosure">{t.affiliateNotice}</p>
+    One band, not one per section: the journal uses this effect in a single
+    file and the landingpage in nineteen, and the whole point of the blend is
+    to land between them rather than to pick a side.
+  */}
+  <section class="shop-intro tds-wash" aria-labelledby="catalogue-heading">
+    <h1 class="shop-title" id="catalogue-heading">{heading}</h1>
+    {/* Decorative by definition — aria-hidden is required at the call site,
+        because a graphic announced to a screen reader is worse than none. */}
+    <span class="tds-brandbar tds-brandbar--sm" aria-hidden="true"></span>
+    <p class="shop-lede">{site.description[lang]}</p>
 
-  {
-    categories.length > 0 ? (
-      <nav class="shop-catnav" aria-label={t.categories}>
-        {categories.map(({ category: name, total }) => (
-          <a href={categoryPath(name, lang)}>
-            {name} <span class="shop-catnav__count">({total})</span>
-          </a>
-        ))}
-      </nav>
-    ) : null
-  }
+    {/* The standing disclosure, above the products rather than under them. */}
+    <p class="shop-disclosure">{t.affiliateNotice}</p>
+
+    {
+      categories.length > 0 ? (
+        <nav class="shop-catnav" aria-label={t.categories}>
+          {categories.map(({ category: name, total }) => (
+            <a href={categoryPath(name, lang)}>
+              {name} <span class="shop-catnav__count">({total})</span>
+            </a>
+          ))}
+        </nav>
+      ) : null
+    }
+  </section>
 
   <ProductGrid products={page.products} lang={lang} />
 </Layout>

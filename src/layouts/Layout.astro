@@ -5,7 +5,8 @@ import "@fontsource/lato/900.css";
 import "@fontsource-variable/plus-jakarta-sans/index.css";
 import "@fontsource-variable/jetbrains-mono/index.css";
 
-import { CookieNotice } from "@tracht-digital-solutions/tds-shared/components";
+import { ConsentBanner, ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
+import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
 
 import "../styles/global.css";
@@ -54,6 +55,11 @@ const path = Astro.url.pathname;
 const url = canonical(path);
 const robots = noindex || isExcludedPath(path) ? "noindex, follow" : "index, follow";
 const image = ogImage ?? `${site.url}/og-default.png`;
+/** Trailing slashes are ignored by the router (`trailingSlash: "ignore"`), so
+ *  "/en" and "/en/" are the same page and only a normalised compare can say
+ *  which nav entry is current. */
+const trimSlash = (v: string): string => (v.length > 1 && v.endsWith("/") ? v.slice(0, -1) : v);
+const isHome = trimSlash(path) === trimSlash(homePath(lang));
 
 const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
 const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "affiliate"] as const).map(
@@ -113,11 +119,23 @@ const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "
   </head>
 
   <body>
+    {/*
+      First focusable element on the page, and therefore NOT an island: an
+      island mounted `client:idle` hydrates after the first Tab has already
+      happened. Two lines of markup and a shared string instead.
+
+      The target carries `tabindex="-1"` — without it the browser scrolls but
+      does not MOVE focus, so the next Tab continues from the skip link and the
+      whole header is still in the way. That is the failure mode that makes a
+      skip link look implemented and not be.
+    */}
+    <a class="tds-skip-link" href="#main">{translations[lang].a11y.skipToContent}</a>
+
     <header class="shop-header">
       <div class="shop-shell shop-header__inner">
         <a class="shop-header__brand" href={homePath(lang)}>{t.brand}</a>
         <nav class="shop-header__nav" aria-label={t.nav.categories}>
-          <a href={homePath(lang)}>{t.nav.home}</a>
+          <a href={homePath(lang)} aria-current={isHome ? "page" : undefined}>{t.nav.home}</a>
           <a href={lang === "en" ? "/" : "/en/"} hreflang={lang === "en" ? "de" : "en"}>
             {lang === "en" ? "Deutsch" : "English"}
           </a>
@@ -125,7 +143,7 @@ const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "
       </div>
     </header>
 
-    <main class="shop-shell shop-main">
+    <main class="shop-shell shop-main" id="main" tabindex="-1">
       <slot />
     </main>
 
@@ -142,10 +160,31 @@ const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "
             separator now. */}
         <nav class="shop-footer__legal" aria-label={lang === "de" ? "Rechtliches" : "Legal"}>
           {legalLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+          {/* Not a legal PAGE, but it belongs in this row: Art. 7 Abs. 3 DSGVO
+              wants withdrawing a consent to be as easy as giving it, and a
+              banner that shows once leaves no way back without this. */}
+          <ConsentLink client:idle lang={lang} />
         </nav>
       </div>
     </footer>
 
-    <CookieNotice client:idle lang={lang} />
+    {/*
+      No `categories` — this shop sets nothing beyond what it cannot work
+      without: the theme, the language, the basket and the consent record
+      itself, all covered by § 25 Abs. 2 Nr. 2 TDDDG. So the banner STATES
+      that rather than asking a question with no content. Add a category here
+      the day something optional actually ships, and the same component turns
+      into a real gate.
+
+      `privacyUrl` points at THIS site's policy. It used to fall back to the
+      marketing domain, which sent a shop visitor to a document that does not
+      describe the shop's own processing.
+    */}
+    <ConsentBanner
+      client:idle
+      lang={lang}
+      privacyUrl={`${legalBase}/datenschutz`}
+      imprintUrl={`${legalBase}/impressum`}
+    />
   </body>
 </html>

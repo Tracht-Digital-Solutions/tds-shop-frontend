@@ -39,6 +39,94 @@
    @imports — @source before @import is a build error. */
 @source "../../node_modules/@tracht-digital-solutions/tds-shared";
 
+/* --- the blend ----------------------------------------------------------
+   THE SHOP IS THE JOURNAL'S SHOP, NOT A THIRD DESIGN.
+
+   The brief was "a mix of the landingpage and the blog". The answer is NOT a
+   fourth `surfaces/shop.css` — that would be a second copy of the journal's
+   kit and exactly the drift the shared layer was built to end (see the header
+   of this file). It is a short, app-local token override, the same move the
+   landingpage makes in its own global.css when it dials the decoration up.
+
+   WHAT STAYS FROM THE JOURNAL — everything structural. Cards, fields and
+   media keep their square corners. Nothing lifts: both elevation tokens stay
+   `none`, so separation is colour and edge, never a shadow. The display voice
+   stays at 800. `data-flat` stays on <html>. A product grid here and an
+   article list on the journal are recognisably the same furniture.
+
+   WHAT COMES FROM THE LANDINGPAGE — warmth, at exactly three points, because
+   a fourth would stop being a blend and start being the brochure:
+
+     1. Pills for ACTIONS only. A shop is a page you operate, and the round
+        button is the landingpage's most recognisable single gesture. Buttons
+        and chips get it; nothing that holds content does.
+     2. A tinted card fill instead of paper white. Lifted verbatim from the
+        landingpage's `--lp-surface-card`. On a warm ground a white card is
+        the one thing that reads as "software", and a shop wants to read as a
+        shop.
+     3. Decoration dosed BETWEEN the two — the journal runs at the shared
+        default (1 / 0.09) and uses `.tds-wash` in exactly one file; the
+        landingpage runs at 1.5 / 0.16 across nineteen. Here: a step above the
+        journal, and the wash goes on the hero band and one CTA band, nowhere
+        else. The dose is the blend; spreading it everywhere is not.
+
+   `src/lib/surface.test.ts` pins all of this. If you change a value here,
+   change it there and say why. */
+:root {
+  --tds-radius-btn: var(--tds-radius-pill);
+  --tds-radius-chip: var(--tds-radius-pill);
+
+  --shop-surface-card: color-mix(in srgb, var(--color-accent-pink) 5%, var(--color-card));
+
+  --tds-decor-field-strength: 1.15;
+  --tds-decor-shape-alpha: 0.11;
+}
+
+/* base.css lowers the decoration on phones at this same specificity, and a
+   `:root` block above would not beat it. Matching the media query is what the
+   landingpage does for the same reason; without it the shop would be quieter
+   than the journal on a phone rather than a step warmer. */
+@media (max-width: 48rem) {
+  :root {
+    --tds-decor-field-strength: 0.9;
+    --tds-decor-shape-alpha: 0.08;
+  }
+}
+
+/* The tinted fill needs a touch more presence in dark mode, where the coral
+   tint sits on a near-black ground and 5% disappears. */
+:root[data-theme="dark"] {
+  --shop-surface-card: color-mix(in srgb, var(--color-accent-pink) 8%, var(--color-card));
+}
+
+/* Where the tint actually lands. Two rules, and no more — a token nothing
+   applies is a token that drifts.
+
+   `.tds-product-card` is the shared card and paints `--color-card`, i.e. pure
+   white. With `data-flat` its hairline is 0, so on this site the FILL is the
+   only thing separating a product from the paper ground — which is why the
+   tint is load-bearing here rather than decorative: #fff on #fafaf7 is a two-
+   point difference nobody sees, and the tinted fill is the first version of
+   this card that has an edge without drawing one.
+
+   `.checkout__summary` deliberately keeps `--color-soft`. It is not a card, it
+   is the block of figures a purchase is agreed on, and giving it the same fill
+   as the browsing cards would flatten exactly the distinction that matters on
+   the one page where the visitor is deciding to pay. */
+.tds-product-card {
+  background: var(--shop-surface-card);
+}
+
+/* One wash band, at the top of the catalogue. The journal uses `.tds-wash` in
+   a single file; the landingpage uses it in nineteen. One here is the blend —
+   `isolation` and the z-index sit in primitives.css, this only gives the band
+   the air the effect needs to read. */
+.shop-intro {
+  isolation: isolate;
+  padding-block: clamp(1.5rem, 4vw, 2.75rem);
+  margin-bottom: 0.5rem;
+}
+
 /* --- shell -------------------------------------------------------------- */
 
 .shop-shell {
