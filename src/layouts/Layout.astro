@@ -5,6 +5,7 @@ import "@fontsource/lato/900.css";
 import "@fontsource-variable/plus-jakarta-sans/index.css";
 import "@fontsource-variable/jetbrains-mono/index.css";
 
+import CartBadge from "../components/CartBadge.tsx";
 import { ConsentBanner, ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
@@ -136,6 +137,10 @@ const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "
         <a class="shop-header__brand" href={homePath(lang)}>{t.brand}</a>
         <nav class="shop-header__nav" aria-label={t.nav.categories}>
           <a href={homePath(lang)} aria-current={isHome ? "page" : undefined}>{t.nav.home}</a>
+          {/* Renders nothing while the basket is empty — a permanent "0" is a
+              control that does nothing on almost every page of a catalogue.
+              client:idle, not client:load: the header is not why anyone came. */}
+          <CartBadge client:idle lang={lang} />
           <a href={lang === "en" ? "/" : "/en/"} hreflang={lang === "en" ? "de" : "en"}>
             {lang === "en" ? "Deutsch" : "English"}
           </a>

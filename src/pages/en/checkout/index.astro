@@ -1,0 +1,11 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import CheckoutForm from "../../../components/CheckoutForm.tsx";
+
+/** The English basket checkout. See `src/pages/kasse/index.astro`. */
+export const prerender = false;
+---
+
+<Layout title="Checkout" description="Complete your order." lang="en" noindex altUrl="/kasse">
+  <CheckoutForm client:load lang="en" />
+</Layout>

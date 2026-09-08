@@ -3,6 +3,7 @@ import { ProductCard } from "@tracht-digital-solutions/tds-shared/components";
 import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
 
 import Layout from "../layouts/Layout.astro";
+import AddToCart from "./AddToCart.tsx";
 import ProductGrid from "./ProductGrid.astro";
 import { listProducts } from "../lib/content-api";
 import { categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
@@ -65,6 +66,16 @@ const offers = product.offers.map((offer) => ({
 const hasAffiliate = offers.some((offer) => offer.kind === "affiliate");
 
 /**
+ * Does TDS sell this itself?
+ *
+ * Only then is a basket button honest. An affiliate product is bought at the
+ * merchant, and a basket beside it would promise a checkout this shop cannot
+ * complete — the server would refuse the order with "Dieses Angebot gibt es
+ * nicht", which reads as a bug rather than as the truth.
+ */
+const sellsDirectly = offers.some((offer) => offer.kind === "own");
+
+/**
  * The assessment body.
  *
  * Only the markdown format is rendered for now. A blocks document needs the
@@ -107,6 +118,11 @@ const jsonLd = asGraph([
   {/* The offer list. `ProductCard` carries the advertising label and drops a
       price older than 24 hours by itself — this page decides neither. */}
   <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
+
+  {/* Only for something TDS sells itself. An affiliate product is bought at
+      the merchant, and a basket button beside it would promise a checkout this
+      shop cannot honour. */}
+  {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} /> : null}
 
   {
     /* The written assessment. Rendered through tds-shared's escape-first

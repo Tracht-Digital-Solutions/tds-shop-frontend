@@ -516,3 +516,207 @@
     padding-inline: 0.25rem;
   }
 }
+
+/* --- basket ------------------------------------------------------------- */
+
+.shop-header__cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* The count. A filled pill so it reads as a badge rather than as part of the
+   word beside it — and `aria-hidden`, because the link's accessible name
+   already says "3 Artikel im Warenkorb". A bare number announced on its own
+   says nothing about three of what. */
+.shop-header__cart-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding-inline: 0.35rem;
+  border-radius: var(--tds-radius-pill);
+  background: var(--color-surface-accent);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.cart {
+  max-width: 44rem;
+}
+
+.cart--empty {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+.cart__lines {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* A grid rather than a flex row: the four columns have to line up DOWN the
+   list, and a flex row sizes each line to its own content. `auto` on the title
+   lets a long product name take the room a short one leaves. */
+.cart__line {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding-block: 0.875rem;
+  /* The one place a hairline survives `data-flat`: a line BETWEEN two things.
+     Running basket rows together is a legibility bug, not a look. */
+  border-bottom: 1px solid var(--color-line);
+}
+
+.cart__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.cart__qty input {
+  width: 4.5rem;
+  text-align: center;
+}
+
+.cart__price {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cart__totals {
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 0.35rem;
+  max-width: 22rem;
+}
+
+.cart__totals > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cart__totals dt,
+.cart__totals dd {
+  margin: 0;
+}
+
+.cart__totals dd {
+  font-variant-numeric: tabular-nums;
+}
+
+.cart__total {
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.cart__note {
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.cart__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* An `aria-disabled` link is still focusable and still announced — which is
+   the point, it explains itself — but must not look pressable. */
+.cart__actions a[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.add-to-cart {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 1.25rem;
+}
+
+.add-to-cart__link {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+/* --- checkout additions -------------------------------------------------- */
+
+.checkout__items {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.checkout__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.checkout__item-price {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.checkout__address,
+.checkout__payment {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--color-line);
+}
+
+.checkout__address legend,
+.checkout__payment legend {
+  padding-inline: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* The whole row is the target, not the 16px radio — WCAG 2.5.8, and the reason
+   nobody mis-taps a payment method on a phone. */
+.checkout__method {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+/* Not a checkbox. Shown when the basket carries only goods, where the
+   fourteen-day right is not the customer's to give up and there is therefore
+   nothing to tick — see CheckoutForm. */
+.checkout__withdrawal-info {
+  margin: 0;
+  padding: 0.875rem 1rem;
+  background: var(--color-soft);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 34rem) {
+  /* Two rows on a phone: title across the top, then the controls. Four columns
+     at 390px turns the product name into one word per line. */
+  .cart__line {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .cart__title {
+    grid-column: 1 / -1;
+  }
+}

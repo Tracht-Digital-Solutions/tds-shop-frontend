@@ -1,4 +1,5 @@
 import { apiBase } from "./connection";
+import type { CartLine } from "./cart";
 import type { Lang } from "./i18n";
 
 /**
@@ -9,25 +10,168 @@ import type { Lang } from "./i18n";
  * site-key protected: a key that ships in a client bundle is not a key.
  */
 
-/** The exact wording the customer agrees to, § 356 Abs. 4 BGB. */
-export const WITHDRAWAL_TEXT: Record<Lang, string> = {
-  de:
-    "Ich verlange ausdrücklich, dass Sie vor Ende der Widerrufsfrist mit der " +
-    "Leistung beginnen. Mir ist bekannt, dass ich mein Widerrufsrecht mit " +
-    "vollständiger Erbringung der Leistung verliere.",
-  en:
-    "I expressly request that you begin performing the service before the " +
-    "withdrawal period ends. I understand that I lose my right of withdrawal " +
-    "once the service has been performed in full.",
+/**
+ * Which right of withdrawal a basket falls under. The server decides this from
+ * what is actually in the basket and reports it on the quote — never inferred
+ * in the browser, because it decides whether a consent is legally required.
+ */
+export type WithdrawalRegime = "digital" | "goods" | "mixed";
+
+/**
+ * The exact wording the customer agrees to, per regime.
+ *
+ * There are two different rights here and only one of them involves agreeing to
+ * anything:
+ *
+ * - **goods** — fourteen days from receipt (§ 355, § 356 Abs. 2 Nr. 1 BGB).
+ *   Nothing is asked of the customer; the right is not theirs to give up. What
+ *   is stored is the INFORMATION given before the order (Art. 246a § 1 Abs. 2
+ *   EGBGB), which is why this wording contains no "I lose".
+ * - **digital** — the right lapses on full performance, but only against an
+ *   express request to begin early plus an acknowledgement of what that costs
+ *   (§ 356 Abs. 4 BGB).
+ * - **mixed** — both, said separately, or the customer has agreed to something
+ *   broader than what was meant.
+ *
+ * Whatever is displayed travels with the request, so the order records the
+ * sentence the customer actually saw rather than the server's default of the
+ * day.
+ */
+export const WITHDRAWAL_TEXT: Record<Lang, Record<WithdrawalRegime, string>> = {
+  de: {
+    digital:
+      "Ich verlange ausdrücklich, dass Sie vor Ende der Widerrufsfrist mit der " +
+      "Leistung beginnen. Mir ist bekannt, dass ich mein Widerrufsrecht mit " +
+      "vollständiger Erbringung der Leistung verliere.",
+    goods:
+      "Sie haben das Recht, binnen vierzehn Tagen ab Erhalt der Ware ohne Angabe " +
+      "von Gründen diesen Vertrag zu widerrufen. Die Widerrufsbelehrung und das " +
+      "Muster-Widerrufsformular wurden mir vor der Bestellung zur Verfügung gestellt.",
+    mixed:
+      "Ich verlange ausdrücklich, dass Sie vor Ende der Widerrufsfrist mit der " +
+      "Leistung beginnen. Mir ist bekannt, dass ich mein Widerrufsrecht mit " +
+      "vollständiger Erbringung der Leistung verliere. Für die enthaltenen Waren " +
+      "bleibt mein Widerrufsrecht von vierzehn Tagen ab Erhalt davon unberührt.",
+  },
+  en: {
+    digital:
+      "I expressly request that you begin performing the service before the " +
+      "withdrawal period ends. I understand that I lose my right of withdrawal " +
+      "once the service has been performed in full.",
+    goods:
+      "You have the right to withdraw from this contract within fourteen days of " +
+      "receiving the goods, without giving any reason. The withdrawal policy and " +
+      "the model withdrawal form were made available to me before ordering.",
+    mixed:
+      "I expressly request that you begin performing the service before the " +
+      "withdrawal period ends. I understand that I lose my right of withdrawal " +
+      "once the service has been performed in full. For any goods included, my " +
+      "fourteen-day right of withdrawal from receipt is unaffected.",
+  },
 };
 
-export interface CheckoutInput {
+/** A delivery address. All-or-nothing — a half-filled one is a parcel that does not arrive. */
+export interface DeliveryAddress {
+  shipName: string;
+  shipLine1: string;
+  shipLine2?: string;
+  shipPostcode: string;
+  shipCity: string;
+  shipCountry: string;
+}
+
+export interface QuoteLine {
   slug: string;
+  title: string;
+  quantity: number;
+  netCents: number;
+  taxCents: number;
+  grossCents: number;
+  requiresShipping: boolean;
+}
+
+export interface Quote {
+  lines: QuoteLine[];
+  shipping: {
+    netCents: number;
+    taxCents: number;
+    grossCents: number;
+    required: boolean;
+    freeFromCents: number;
+  };
+  netCents: number;
+  taxCents: number;
+  grossCents: number;
+  currency: string;
+  withdrawalRegime: WithdrawalRegime;
+  withdrawalConsentRequired: boolean;
+  addressRequired: boolean;
+}
+
+/**
+ * Price a basket without ordering anything.
+ *
+ * The basket page cannot add this up itself: the total includes delivery, which
+ * depends on the free-shipping threshold and on an apportionment of tax across
+ * the goods' VAT rates. A page that guessed would eventually show a different
+ * number than the checkout charges, and that is worse than showing none.
+ */
+export async function quoteCart(lines: CartLine[], lang: Lang): Promise<Quote | { error: string }> {
+  if (lines.length === 0) {
+    return { error: "empty" };
+  }
+  try {
+    const res = await fetch(`${apiBase()}/shop/quote`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: lines, lang }),
+    });
+    const body = (await res.json().catch(() => ({}))) as Quote & { error?: string };
+    if (!res.ok) return { error: body.error ?? `Fehler ${res.status}` };
+    return body;
+  } catch {
+    return { error: "Keine Verbindung. Bitte später erneut versuchen." };
+  }
+}
+
+export interface PaymentMethod {
+  id: string;
+  label: string;
+}
+
+/**
+ * What the shop can actually complete right now.
+ *
+ * Rendered rather than hard-coded, so a method whose credentials are missing —
+ * Wero until a provider is contracted — is simply not offered. An empty list is
+ * a valid answer and means the checkout cannot proceed.
+ */
+export async function paymentMethods(): Promise<PaymentMethod[]> {
+  try {
+    const res = await fetch(`${apiBase()}/shop/payment-methods`);
+    if (!res.ok) return [];
+    const body = (await res.json()) as { methods?: PaymentMethod[] };
+    return Array.isArray(body.methods) ? body.methods : [];
+  } catch {
+    return [];
+  }
+}
+
+export interface CheckoutInput {
+  /** The basket. A single-line order is just a basket of one. */
+  items: CartLine[];
   lang: Lang;
   email: string;
   name?: string;
   country: string;
+  /** Which regime applied, so the right wording is stored. From the quote. */
+  regime: WithdrawalRegime;
+  /** Only meaningful when the quote said one is required. */
   withdrawalConsent: boolean;
+  /** Chosen payment method id. Omitted means "whatever the shop leads with". */
+  provider?: string;
+  /** Required when the quote said so; ignored otherwise. */
+  address?: DeliveryAddress | null;
 }
 
 export interface CheckoutResult {
@@ -48,7 +192,11 @@ export async function startCheckout(input: CheckoutInput): Promise<CheckoutResul
     const res = await fetch(`${apiBase()}/shop/checkout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...input, withdrawalText: WITHDRAWAL_TEXT[input.lang] }),
+      body: JSON.stringify({
+        ...input,
+        ...(input.address ?? {}),
+        withdrawalText: WITHDRAWAL_TEXT[input.lang][input.regime],
+      }),
     });
     const body = (await res.json().catch(() => ({}))) as CheckoutResult;
     if (!res.ok) {
@@ -64,7 +212,9 @@ export async function startCheckout(input: CheckoutInput): Promise<CheckoutResul
 
 export interface OrderItem {
   title: string;
+  quantity?: number;
   gross_cents: number;
+  requires_shipping?: number | boolean;
 }
 
 export interface OrderView {
@@ -77,6 +227,13 @@ export interface OrderView {
   currency: string;
   created_at: string;
   withdrawal_consent_text: string | null;
+  shipping_gross_cents?: number;
+  ship_name?: string | null;
+  ship_line1?: string | null;
+  ship_line2?: string | null;
+  ship_postcode?: string | null;
+  ship_city?: string | null;
+  ship_country?: string | null;
   items: OrderItem[];
 }
 

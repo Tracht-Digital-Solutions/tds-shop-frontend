@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Cart from "../components/Cart.tsx";
+import { tx } from "../lib/i18n";
+
+/**
+ * The basket.
+ *
+ * Never cached and never indexed — `/warenkorb` is in `src/lib/noCache.ts`,
+ * `src/lib/indexing.ts` and `public/robots.txt` already, and has been since
+ * before there was a basket to put here. A cached basket would show the next
+ * visitor the previous one's, and it would look like a working page.
+ *
+ * The page itself is empty on the server, deliberately: the basket lives in the
+ * visitor's own browser (`src/lib/cart.ts`), so there is nothing here to render
+ * server-side and nothing to leak into a shared cache. `client:load` rather
+ * than `client:idle` because this page is nothing but the island — waiting for
+ * idle would show an empty page to somebody who came here on purpose.
+ */
+export const prerender = false;
+
+const t = tx("de").cart;
+---
+
+<Layout title={t.title} description={t.emptyBody} lang="de" noindex altUrl="/en/cart">
+  <h1 class="shop-title">{t.title}</h1>
+  <Cart client:load lang="de" checkoutHref="/kasse" />
+</Layout>

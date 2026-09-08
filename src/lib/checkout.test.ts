@@ -46,14 +46,46 @@ describe("the VAT split shown at checkout", () => {
 });
 
 describe("the withdrawal wording", () => {
-  it("exists in both languages and says what it has to", () => {
-    // § 356 Abs. 4 BGB: the customer must expressly request early performance
-    // AND acknowledge losing the right. Both halves have to be in the sentence
-    // — a text that only asks for consent to start does not extinguish it.
-    expect(WITHDRAWAL_TEXT.de).toMatch(/ausdrücklich/);
-    expect(WITHDRAWAL_TEXT.de).toMatch(/Widerrufsrecht.*verliere/);
-    expect(WITHDRAWAL_TEXT.en).toMatch(/expressly/);
-    expect(WITHDRAWAL_TEXT.en).toMatch(/right of withdrawal/);
+  it("says what § 356 Abs. 4 BGB needs, for a service", () => {
+    // The customer must expressly request early performance AND acknowledge
+    // losing the right. Both halves have to be in the sentence — a text that
+    // only asks for consent to start does not extinguish anything.
+    expect(WITHDRAWAL_TEXT.de.digital).toMatch(/ausdrücklich/);
+    expect(WITHDRAWAL_TEXT.de.digital).toMatch(/Widerrufsrecht.*verliere/);
+    expect(WITHDRAWAL_TEXT.en.digital).toMatch(/expressly/);
+    expect(WITHDRAWAL_TEXT.en.digital).toMatch(/right of withdrawal/);
+  });
+
+  it("does NOT ask a buyer of goods to give anything up", () => {
+    // The one that is wrong in most shops. A fourteen-day right on goods is not
+    // the customer's to waive, so this wording is INFORMATION under Art. 246a
+    // § 1 Abs. 2 EGBGB — and must not read like a waiver. If "verliere" ever
+    // appears here, somebody has copied the service text onto a parcel.
+    expect(WITHDRAWAL_TEXT.de.goods).not.toMatch(/verliere/);
+    expect(WITHDRAWAL_TEXT.de.goods).toMatch(/vierzehn Tagen/);
+    expect(WITHDRAWAL_TEXT.en.goods).not.toMatch(/lose/);
+    expect(WITHDRAWAL_TEXT.en.goods).toMatch(/fourteen days/);
+  });
+
+  it("keeps the two rights apart in a mixed basket", () => {
+    // Both blocks, said separately. One sentence covering both would have the
+    // customer agreeing to something broader than what was meant.
+    expect(WITHDRAWAL_TEXT.de.mixed).toMatch(/verliere/);
+    expect(WITHDRAWAL_TEXT.de.mixed).toMatch(/Waren.*unberührt/);
+    expect(WITHDRAWAL_TEXT.en.mixed).toMatch(/lose/);
+    expect(WITHDRAWAL_TEXT.en.mixed).toMatch(/goods.*unaffected/);
+  });
+
+  it("has a distinct wording for every regime, in both languages", () => {
+    for (const lang of ["de", "en"] as const) {
+      const texts = [
+        WITHDRAWAL_TEXT[lang].digital,
+        WITHDRAWAL_TEXT[lang].goods,
+        WITHDRAWAL_TEXT[lang].mixed,
+      ];
+      for (const text of texts) expect(text.trim()).not.toBe("");
+      expect(new Set(texts).size, `${lang}: a regime is reusing another one's wording`).toBe(3);
+    }
   });
 });
 

@@ -1,0 +1,25 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CheckoutForm from "../../components/CheckoutForm.tsx";
+
+/**
+ * The basket checkout.
+ *
+ * Distinct from `/kasse/[slug]`, which buys one product without touching the
+ * basket — the express path from a product page. Both render the same form;
+ * this one passes no slug, so the form reads the basket.
+ *
+ * Nothing is rendered server-side and nothing can be: the basket exists only in
+ * the visitor's browser. The form fetches its figures and does not render an
+ * order button until it has them, which is what keeps § 312j Abs. 2 satisfied —
+ * see the note in `CheckoutForm`.
+ *
+ * Never cached: `/kasse` is already in the no-cache list, the middleware and
+ * `.htaccess`.
+ */
+export const prerender = false;
+---
+
+<Layout title="Kasse" description="Bestellung abschließen." lang="de" noindex altUrl="/en/checkout">
+  <CheckoutForm client:load lang="de" />
+</Layout>

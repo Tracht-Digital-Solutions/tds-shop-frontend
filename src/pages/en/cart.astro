@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Cart from "../../components/Cart.tsx";
+import { tx } from "../../lib/i18n";
+
+/** The English basket. See `src/pages/warenkorb.astro` for the reasoning. */
+export const prerender = false;
+
+const t = tx("en").cart;
+---
+
+<Layout title={t.title} description={t.emptyBody} lang="en" noindex altUrl="/warenkorb">
+  <h1 class="shop-title">{t.title}</h1>
+  <Cart client:load lang="en" checkoutHref="/en/checkout" />
+</Layout>

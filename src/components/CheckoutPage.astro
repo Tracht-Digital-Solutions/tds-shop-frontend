@@ -19,9 +19,16 @@ import type { Sellable } from "../lib/sellable";
  * exclude `/kasse`. A cached checkout would show the next visitor the previous
  * one's order, and it would look like a working page.
  *
- * Server-rendered rather than a client-only island because the mandatory
- * details (§ 312j Abs. 3 BGB) have to be in the document the reader receives,
- * not assembled afterwards by a script that may not run.
+ * The mandatory details (§ 312j Abs. 3 BGB) are fetched by the form rather
+ * than rendered here, and the order button does not exist until they arrive —
+ * see the note in `CheckoutForm`. Server-rendering them would buy nothing:
+ * the form is a React island, so without a script there is no working button
+ * either way, and a second place computing a total is a second place for it to
+ * disagree with what is charged.
+ *
+ * The server-side lookup stays, though. It is what decides whether this page
+ * exists at all — an unsellable slug redirects to the product page from the
+ * route above, which a client-side check could not do.
  */
 interface Props {
   lang: Lang;
@@ -30,7 +37,7 @@ interface Props {
 }
 
 const { lang, slug, sellable } = Astro.props;
-const { product, offer, netCents, vatRateBp, taxCents, grossCents } = sellable;
+const { product } = sellable;
 ---
 
 <Layout
@@ -43,15 +50,5 @@ const { product, offer, netCents, vatRateBp, taxCents, grossCents } = sellable;
     <a href={productPath(slug, lang)}>{product.title}</a>
   </nav>
 
-  <CheckoutForm
-    client:load
-    slug={slug}
-    title={product.title}
-    lang={lang}
-    netCents={netCents}
-    taxCents={taxCents}
-    grossCents={grossCents}
-    vatRateBp={vatRateBp}
-    currency={offer.currency}
-  />
+  <CheckoutForm client:load slug={slug} lang={lang} />
 </Layout>
