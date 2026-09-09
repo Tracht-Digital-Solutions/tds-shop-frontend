@@ -127,7 +127,7 @@ Measure response **size** as well as status when checking this site. `200 15B`
 is the fingerprint of that bug and looks like a loading glitch in a browser.
 
 
-## Motion: five movements, each answering a question
+## Motion: four movements, each answering a question
 
 The journal's voice is that motion is **functional** — a thing moves to say
 something changed, not to be noticed. Everything in the `--- motion ---` block
@@ -139,8 +139,13 @@ uses the shared duration and easing tokens rather than a hand-picked curve.
 | Basket count pops | "Did that add?" |
 | Basket row collapses on remove | "Which row went?" — with six on screen, an instant disappearance leaves the reader checking the whole list |
 | Total washes once when it changes | "Did the total move?" — it updates after a debounced round trip, by which time the reader is looking at the row they just edited |
-| Product card grows a 2px accent bar | "Is this clickable?" — the journal's own affordance, colour only, no lift |
 | Submit button pulses while busy | `aria-busy` says it to a screen reader; this says it to everyone else |
+
+The product card's hover affordance — the 2px accent bar — is deliberately
+**not** here. `.tds-product-card` is a shared primitive, and a local `::before`
+on someone else's class is a rule that vanishes the next time that component is
+touched. It lives in `tds-shared`'s `primitives.css` (0.36.1) where the card
+does, and reaches every surface that renders one.
 
 Two of them replay by **remounting** the element with a React `key` on the
 value (`CartBadge`'s count, the basket total). Re-running a CSS animation on an
@@ -159,10 +164,6 @@ at the natural state, so clamping simply arrives there. It is not enough for
 anything that still travels after arriving: a clamped transform still moves. So
 the badge pop and the busy pulse are switched off outright, and the row exit
 loses its `transform`.
-
-The accent bar deliberately **stays**, at its end state. It is an affordance,
-not decoration; removing it would take away the signal that a card is
-interactive rather than merely make the page calmer.
 
 `src/lib/surface.test.ts` collects the `@keyframes` names from the file itself
 rather than from a hand-kept list, so a new animation cannot be added without
