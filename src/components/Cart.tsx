@@ -36,7 +36,38 @@ export default function Cart({ lang, checkoutHref }: Props) {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
+  /** The row currently animating out. Removed from storage once it has. */
+  const [leaving, setLeaving] = useState<string | null>(null);
+  const [settled, setSettled] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    },
+    [],
+  );
+
+  /**
+   * Remove a line, after letting it leave.
+   *
+   * The storage write is DEFERRED, not the animation: removing the row first
+   * and animating a copy of it would mean keeping a copy, and a basket with a
+   * ghost row in it is a worse bug than an abrupt removal. 180ms matches
+   * `--tds-dur-fast`; a reader with reduced motion simply sees it go, because
+   * base.css has already clamped the transition to nothing.
+   */
+  const removeWithExit = useCallback((slug: string, title: string) => {
+    setLeaving(slug);
+    setAnnouncement(t.removed(title));
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    leaveTimer.current = setTimeout(() => {
+      removeFromCart(slug);
+      setLeaving(null);
+    }, 180);
+  }, [t]);
 
   useEffect(() => {
     setLines(readCart());
@@ -61,6 +92,9 @@ export default function Cart({ lang, checkoutHref }: Props) {
           } else {
             setQuote(result);
             setError(null);
+            // Not the first quote: highlighting a figure the reader has not
+            // seen before says nothing.
+            setSettled((n) => n + 1);
           }
         });
       }, 250);
@@ -102,7 +136,7 @@ export default function Cart({ lang, checkoutHref }: Props) {
         {lines.map((line) => {
           const priced = quote?.lines.find((l) => l.slug === line.slug);
           return (
-            <li className="cart__line" key={line.slug}>
+            <li className="cart__line" key={line.slug} data-leaving={leaving === line.slug ? "true" : undefined}>
               <span className="cart__title">{priced?.title ?? line.slug}</span>
 
               <label className="cart__qty">
@@ -130,10 +164,7 @@ export default function Cart({ lang, checkoutHref }: Props) {
               <button
                 type="button"
                 className="btn btn-ghost cart__remove"
-                onClick={() => {
-                  setAnnouncement(t.removed(titleFor(line.slug)));
-                  removeFromCart(line.slug);
-                }}
+                onClick={() => removeWithExit(line.slug, titleFor(line.slug))}
               >
                 {t.remove}
               </button>
@@ -171,7 +202,13 @@ export default function Cart({ lang, checkoutHref }: Props) {
 
         <div className="cart__total">
           <dt>{tx(lang).cart.title}</dt>
-          <dd>{quote ? formatPrice(quote.grossCents, currency, lang) : t.loading}</dd>
+          {/* Keyed on the value so the highlight replays when it changes. The
+              total updates after a debounced round trip, by which time the
+              reader is looking at the row they just edited — without this they
+              never see the number move. */}
+          <dd key={settled} data-changed={settled > 0 ? "true" : undefined}>
+            {quote ? formatPrice(quote.grossCents, currency, lang) : t.loading}
+          </dd>
         </div>
       </dl>
 

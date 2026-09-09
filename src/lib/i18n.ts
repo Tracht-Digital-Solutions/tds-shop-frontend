@@ -68,6 +68,11 @@ export const TX = {
       empty: "Ihr Warenkorb ist leer.",
       emptyBody: "Legen Sie ein Produkt hinein, dann erscheint es hier.",
       add: "In den Warenkorb",
+      // Two different things, so two different words. `added` is the STATE the
+      // link beside the button reports ("Im Warenkorb (2)"); `justAdded` is the
+      // beat of confirmation on the button itself. Sharing one label put the
+      // same three words on two adjacent controls, one of which is not a link.
+      justAdded: "Hinzugefügt",
       added: "Im Warenkorb",
       remove: "Entfernen",
       quantity: "Menge",
@@ -111,6 +116,7 @@ export const TX = {
       empty: "Your basket is empty.",
       emptyBody: "Put a product in and it will show up here.",
       add: "Add to basket",
+      justAdded: "Added",
       added: "In your basket",
       remove: "Remove",
       quantity: "Quantity",

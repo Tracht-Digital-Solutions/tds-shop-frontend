@@ -720,3 +720,117 @@
     grid-column: 1 / -1;
   }
 }
+
+/* --- motion -------------------------------------------------------------
+   Five small movements, and no more. The journal's voice is that motion is
+   FUNCTIONAL: a thing moves to say something changed, not to be noticed. Each
+   of these answers a question the page would otherwise leave open —
+   "did that work?", "which one went?", "did the total move?" — and each uses
+   the shared duration and easing tokens rather than a hand-picked curve.
+
+   REDUCED MOTION. base.css already clamps every duration to 0.01ms under
+   `prefers-reduced-motion: reduce`, which is enough for the entrances here:
+   they END at the natural state, so clamping them simply arrives there. The
+   two that would still MOVE something after arriving — the badge pop and the
+   row collapse — are switched off explicitly below, because a clamped
+   transform still travels, and the shared layer's own note says it: duration
+   alone is not a reduced-motion implementation, the movement has to not
+   occur. */
+
+/* 1. The basket count changed. A short pop, replayed by remounting the span
+      on every new value (React `key`), because re-running an animation on an
+      element that never left the DOM needs a reflow hack otherwise. */
+@keyframes shop-pop {
+  from {
+    transform: scale(0.7);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.shop-header__cart-count {
+  animation: shop-pop var(--tds-dur-base) var(--tds-ease-out);
+}
+
+/* 2. A line left the basket. It fades and slides off the leading edge rather
+      than blinking out, so the eye can follow WHICH row went — with six lines
+      on screen, an instant disappearance leaves the reader checking the whole
+      list to work out what changed.
+
+      Opacity and transform only, both compositable. Collapsing the row's
+      HEIGHT as well would read better still, but it needs the row to be a
+      grid whose `grid-template-rows` goes to `0fr`, and `.cart__line` is a
+      flex row shared with the non-leaving state. Not worth restructuring the
+      list for the 180ms it is visible. */
+.cart__line {
+  transition:
+    opacity var(--tds-dur-fast) var(--tds-ease-out),
+    transform var(--tds-dur-fast) var(--tds-ease-out);
+}
+
+.cart__line[data-leaving="true"] {
+  opacity: 0;
+  transform: translateX(-0.75rem);
+  pointer-events: none;
+}
+
+/* 3. The total moved. A quiet wash behind the figure, once — the number
+      changes after a debounced round trip, so without this it updates while
+      the reader is looking at the row they just edited and they never see it
+      happen. */
+@keyframes shop-settle {
+  from {
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.cart__total dd[data-changed="true"],
+.checkout__total dd[data-changed="true"] {
+  animation: shop-settle var(--tds-dur-slow) var(--tds-ease-out);
+  border-radius: var(--tds-radius-sm);
+}
+
+/* 4. A product card is interactive — the hover affordance for that lives in
+      `tds-shared`, on `.tds-product-card` itself, NOT here. It is a shared
+      primitive that renders on three surfaces (the journal embeds the same
+      card in articles), so a hover gesture that only the shop had would be
+      exactly the drift the shared layer exists to prevent. See
+      `styles/primitives.css` there. */
+
+/* 5. The submit button is working. `aria-busy` already says so to a screen
+      reader; this says it to everyone else, and it is a pulse rather than a
+      spinner because the button keeps its label — swapping the label for a
+      spinner loses the one word that says what is about to happen. */
+@keyframes shop-working {
+  50% {
+    opacity: 0.62;
+  }
+}
+
+.checkout button[aria-busy="true"] {
+  animation: shop-working var(--tds-dur-pulse) var(--tds-ease-in-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Not a duration clamp — these two would still travel. */
+  .shop-header__cart-count,
+  .checkout button[aria-busy="true"] {
+    animation: none;
+  }
+
+  .cart__line[data-leaving="true"] {
+    transform: none;
+  }
+
+  /* The product card's accent bar is NOT switched off here. It is declared in
+     the shared layer outside the motion query, with only its growth opted in,
+     so a reader with reduced motion already gets the affordance without the
+     travel. Repeating it here would be a second copy of that decision. */
+}

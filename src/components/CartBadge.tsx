@@ -32,7 +32,11 @@ export default function CartBadge({ lang }: Props) {
   return (
     <a className="shop-header__cart" href={cartPath(lang)} aria-label={t.badge(count)}>
       {t.title}
-      <span className="shop-header__cart-count" aria-hidden="true">
+      {/* `key` on the value, so React REMOUNTS this span whenever the count
+          changes and the CSS animation plays again. Re-running an animation on
+          an element that never left the DOM otherwise needs a reflow hack, and
+          this is the same thing said honestly. */}
+      <span className="shop-header__cart-count" aria-hidden="true" key={count}>
         {count}
       </span>
     </a>

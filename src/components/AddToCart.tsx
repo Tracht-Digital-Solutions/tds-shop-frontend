@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { addToCart, cartPath, onCartChange, readCart } from "../lib/cart";
 import { tx, type Lang } from "../lib/i18n";
@@ -24,6 +24,14 @@ interface Props {
 export default function AddToCart({ slug, lang }: Props) {
   const t = tx(lang).cart;
   const [inCart, setInCart] = useState<number | null>(null);
+  const [justAdded, setJustAdded] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleared on unmount: a timer that fires after the island is gone sets state
+  // on nothing, and React says so in the console every time.
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
 
   useEffect(() => {
     const count = () => {
@@ -38,8 +46,21 @@ export default function AddToCart({ slug, lang }: Props) {
 
   return (
     <div className="add-to-cart">
-      <button type="button" className="btn btn-primary" onClick={() => addToCart(slug, 1)}>
-        {t.add}
+      {/* The label changes for a beat rather than the button growing a
+          spinner: nothing is loading — the basket is local and the write is
+          instantaneous — so the only open question is "did that register?",
+          and a word answers it better than a movement. */}
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={() => {
+          addToCart(slug, 1);
+          setJustAdded(true);
+          if (timer.current) clearTimeout(timer.current);
+          timer.current = setTimeout(() => setJustAdded(false), 1200);
+        }}
+      >
+        {justAdded ? t.justAdded : t.add}
       </button>
       {inCart > 0 ? (
         <a className="add-to-cart__link" href={cartPath(lang)}>
