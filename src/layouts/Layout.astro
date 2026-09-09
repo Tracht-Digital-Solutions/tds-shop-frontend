@@ -116,7 +116,14 @@ const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map(
     <meta property="og:locale" content={lang === "en" ? "en_GB" : "de_DE"} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="icon" href="/favicon.png" />
+    {/* The brand mark shared by every TDS property — byte-identical to the
+        landingpage's, the journal's and the tools site's. This site links back
+        to all three and is indexable, so a different tab icon would read as a
+        different service. `sizes="any"` stops Chrome asking for a /favicon.ico
+        that does not exist. Until now the file itself was missing: the tag was
+        here, `public/favicon.png` was not, and a 404 icon looks exactly like a
+        site that never declared one. */}
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="any" />
 
     {/* Where the islands send their requests.
         Rendered here because `src/lib/connection.ts` is SERVER-ONLY — it reads
@@ -153,7 +160,35 @@ const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map(
 
     <header class="shop-header">
       <div class="shop-shell shop-header__inner">
-        <a class="shop-header__brand" href={homePath(lang)}>{t.brand}</a>
+        {/* The mark IS the "TD" of the name — the wordmark reads TD Shop, so the
+            mark carries the first half and only "Shop" is set in type. The same
+            construction the journal and the tools header use, which is what
+            makes the properties read as one brand rather than as sites that
+            share a font.
+
+            Because the mark REPLACES text, the accessible name has to restate
+            it: the `aria-label` carries the full brand and the mark itself is
+            `aria-hidden`. Drop that and the link announces as "Shop".
+
+            `.brand-logo` is a CSS mask (tds-shared) pointed at this app's own
+            copy of the asset from `.shop-header__brand`; it needs no <img> and
+            no second asset for dark mode.
+
+            `.brand-wordmark` is required, not decoration: `.accent-italic`
+            (base.css) sets `font-style: italic`, and the ONLY rule that puts
+            the accent word back upright is `.brand-wordmark .accent-italic`
+            (primitives.css). Drop the class and the second half of the name
+            slants — the tools header carries the same pair for the same
+            reason, and a leaning wordmark on one property of four is drift
+            nobody would choose deliberately. Verified computed: `normal`. */}
+        <a
+          class="shop-header__brand brand-wordmark"
+          href={homePath(lang)}
+          aria-label={`${t.brand} — ${t.nav.home}`}
+        >
+          <span class="brand-logo" aria-hidden="true"></span>
+          <span class="accent-italic">Shop</span>
+        </a>
         <nav class="shop-header__nav" aria-label={t.nav.categories}>
           <a href={homePath(lang)} aria-current={isHome ? "page" : undefined}>{t.nav.home}</a>
           {/* Renders nothing while the basket is empty — a permanent "0" is a

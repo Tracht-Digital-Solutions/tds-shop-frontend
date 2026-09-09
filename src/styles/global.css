@@ -147,7 +147,28 @@
   padding-block: 1rem;
 }
 
+/* Logomark + wordmark, the same construction the journal and the tools site
+   carry: `.brand-logo` (tds-shared) is a CSS mask over `--color-primary`, so
+   the mark follows the theme instead of needing an inverted second asset, and
+   only the asset URL is app-local — a package cannot serve a `public/`-rooted
+   path. It is declared on the anchor rather than on `:root` because this is
+   the one place the mark appears; the tools site hoists it because its own
+   footer carries the mark too.
+
+   The RATIO is deliberately not overridden: the library default (1.476) is the
+   real aspect of this exact asset (713x483), and a box whose ratio disagrees
+   letterboxes the `contain`-fitted mask and renders the mark undersized with
+   nothing anywhere to say so. The SIZE stays at the library's `1.4em`, which
+   ties the mark to the wordmark beside it — the proportion the tools header
+   sets by hand (a 1.6rem mark against 1.0625rem type) falls out of it.
+
+   `--color-ink` stays on the anchor: the wordmark's second half is
+   `.accent-italic` in the markup and paints its own colour. */
 .shop-header__brand {
+  --tds-brand-logo-mask: url("/brand/td-logomark.webp");
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1.25rem;
