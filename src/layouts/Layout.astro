@@ -14,7 +14,7 @@ import "../styles/global.css";
 import { canonical, pageTitle, site } from "../lib/seo";
 import { homePath, tx, type Lang } from "../lib/i18n";
 import { isExcludedPath } from "../lib/indexing";
-import { LEGAL_TITLES } from "../lib/legal";
+import { LEGAL_KEYS, LEGAL_TITLES, type LegalSlug } from "../lib/legal";
 
 interface Props {
   /** The subject of the page. `pageTitle()` composes the brand around it. */
@@ -63,7 +63,15 @@ const trimSlash = (v: string): string => (v.length > 1 && v.endsWith("/") ? v.sl
 const isHome = trimSlash(path) === trimSlash(homePath(lang));
 
 const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
-const legalLinks = (["impressum", "datenschutz", "agb", "widerruf", "zahlung", "affiliate"] as const).map(
+/**
+ * Every document the registry knows, derived rather than restated.
+ *
+ * This used to be a hand-written list, and a hand-written list is how a new
+ * legal page ends up published, routed, indexed and linked from nowhere —
+ * which is the same as not having it. Adding a key to LEGAL_KEYS now adds the
+ * footer link with it.
+ */
+const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map(
   (slug) => ({ href: `${legalBase}/${slug}`, label: LEGAL_TITLES[lang][slug] }),
 );
 ---
