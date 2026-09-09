@@ -83,9 +83,32 @@ for (const path of PATHS) {
       bodyScrollWidth: document.body.scrollWidth,
       offenders: deepest.slice(0, 8),
       // Tap targets below the 24×24 CSS-px floor WCAG 2.2 asks for.
+      //
+      // EXCEPT the ones the criterion itself exempts. 2.5.8 has an "inline"
+      // exception: a target inside a sentence, whose size is constrained by the
+      // line-height of the text around it, is out of scope — and rightly, since
+      // the only way to give a link in a paragraph a 24px box is to break the
+      // line box it sits in. Without this the legal pages report every
+      // cross-reference in their prose, which is noise that trains a reader of
+      // this output to skim past the real findings.
+      //
+      // "Inline" is decided structurally, not by class: the element is an <a>,
+      // it sits in flowing text, and it is not the only thing in its block.
       smallTargets: [...document.querySelectorAll("a, button, input, select, textarea")]
         .map((el) => ({ el, r: el.getBoundingClientRect() }))
-        .filter(({ r }) => r.width > 0 && (r.height < 24 || r.width < 24))
+        .filter(({ el, r }) => {
+          if (r.width <= 0) return false;
+          if (r.height >= 24 && r.width >= 24) return false;
+          if (el.tagName !== "A") return true;
+          if (getComputedStyle(el).display !== "inline") return true;
+
+          // Is there text beside it in the same block? A lone link in an empty
+          // paragraph is a button wearing a link's clothes and stays in scope.
+          const block = el.closest("p, li, td, dd, blockquote, figcaption");
+          if (!block) return true;
+          const around = (block.textContent || "").replace(el.textContent || "", "").trim();
+          return around.length === 0;
+        })
         .slice(0, 6)
         .map(({ el, r }) => ({
           tag: el.tagName.toLowerCase(),

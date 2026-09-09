@@ -104,6 +104,30 @@ describe("the blend", () => {
     expect(code).toMatch(/\.checkout__summary\s*\{[^}]*background:\s*var\(--color-soft\)/);
   });
 
+  it("gives every movement a reduced-motion answer", () => {
+    // base.css already clamps every duration to 0.01ms under
+    // `prefers-reduced-motion: reduce`, and for an ENTRANCE that is enough —
+    // it ends at the natural state, so clamping simply arrives there. It is
+    // not enough for anything that still travels after arriving: a clamped
+    // transform still moves. The shared layer says so in its own words —
+    // "duration alone is not a reduced-motion implementation; the movement has
+    // to not occur" — and this is the test that keeps the local block honest.
+    const reduced = /@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*)\}/.exec(code);
+    expect(reduced, "no reduced-motion block at all").not.toBeNull();
+    const body = reduced?.[1] ?? "";
+
+    // Every keyframe animation this file declares has to be switched off,
+    // because a looping or overshooting one is exactly what the preference is
+    // about. Collect them from the @keyframes rules rather than a hand-kept
+    // list, so a new animation cannot be added without failing here.
+    const declared = [...code.matchAll(/@keyframes\s+([a-z-]+)/g)].map((m) => m[1]);
+    expect(declared.length, "no animations declared — delete this test").toBeGreaterThan(0);
+    expect(body).toMatch(/animation:\s*none/);
+
+    // The row exit moves something. It must stop moving, not move faster.
+    expect(body).toMatch(/transform:\s*none/);
+  });
+
   it("keeps the decoration to one band", () => {
     // The journal uses `.tds-wash` in one file, the landingpage in nineteen.
     // Landing between them means ONE — this counts the class in the markup, so

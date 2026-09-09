@@ -1,4 +1,5 @@
-import { apiBase } from "./connection";
+import { apiBase } from "@tracht-digital-solutions/tds-shared/api";
+
 import type { CartLine } from "./cart";
 import type { Lang } from "./i18n";
 
@@ -8,6 +9,24 @@ import type { Lang } from "./i18n";
  * These calls go to `/shop/*` rather than `/content/shop/*` — a different
  * prefix on purpose. They are made by a **visitor's browser**, so they are not
  * site-key protected: a key that ships in a client bundle is not a key.
+ *
+ * ### Why `apiBase` comes from tds-shared and not from `./connection`
+ *
+ * `src/lib/connection.ts` is **server-only**. It calls `siteConnection()` at
+ * module scope, which reads `process.env` and the filesystem-backed pairing
+ * state — so importing it from an island drags that module into the client
+ * bundle, where `process` does not exist and hydration dies with
+ * "ReferenceError: process is not defined". The island then renders its server
+ * HTML and never responds to a click, which is the worst shape of failure: the
+ * page looks finished.
+ *
+ * This file was importing it, and every island that touches the checkout
+ * imports this file — so the order form has never worked in a browser.
+ *
+ * The shared `apiBase()` is the browser-safe half: it reads the
+ * `tds-api-base` meta tag that `Layout.astro` renders with the server's
+ * resolved value, so runtime pairing through `/tds/connect` still applies and
+ * there is no extra request. Server code keeps using `./connection`.
  */
 
 /**
