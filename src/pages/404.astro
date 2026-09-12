@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { homePath, tx } from "../lib/i18n";
+import { siteLinks } from "../lib/seo";
 
 export const prerender = false;
 
@@ -13,6 +14,7 @@ const t = tx(lang);
   <h1 class="shop-title">{t.notFound}</h1>
   <p class="shop-lede">{t.notFoundBody}</p>
   <p class="shop-pager">
-    <a class="btn btn-primary" href={homePath(lang)}>{t.backToCatalogue}</a>
+    <a class="btn btn-primary" href={homePath(lang)}>{t.toCatalogue}</a>
+    <a class="btn btn-ghost" href={siteLinks(lang).blog}>{t.toJournal}</a>
   </p>
 </Layout>

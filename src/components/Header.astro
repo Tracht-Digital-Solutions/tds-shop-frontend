@@ -1,0 +1,177 @@
+---
+import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
+
+import CartBadge from "./CartBadge.tsx";
+import { homePath, tx, type Lang } from "../lib/i18n";
+import { siteLinks } from "../lib/seo";
+
+/**
+ * The top bar, in the journal's idiom: logomark + wordmark, the accent
+ * divider square, flat underline nav, language switch, theme toggle, and the
+ * shared `.tds-mobile-menu` sheet below `lg`. Same shape as the tools site's
+ * `Header.astro` and the journal's `JournalHeader.astro`, minus what this site
+ * has no use for (account menu, contact CTA — the action here is the basket).
+ *
+ * This replaced a hand-rolled `.shop-header` that had none of that: no DE|EN
+ * switch (a lone "English" link that never said which language you were
+ * reading), no theme toggle, no mobile menu, and no link to any sibling
+ * property. The journal links TO the shop from its own nav; a property that is
+ * only ever linked to is a dead end for a reader and an orphan for a crawler.
+ */
+interface Props {
+  lang: Lang;
+  /**
+   * The resolved counterpart page, or null. Passed through from the layout and
+   * never derived here: the taxonomy segments differ per language, so pasting
+   * `/en/` in front of a path 404s on every listing page.
+   */
+  altUrl?: string | null;
+}
+
+const { lang, altUrl = null } = Astro.props;
+const t = tx(lang);
+const links = siteLinks(lang);
+const path = Astro.url.pathname;
+
+/** Trailing slashes are ignored by the router (`trailingSlash: "ignore"`), so
+ *  "/en" and "/en/" are the same page and only a normalised compare can say
+ *  which nav entry is current. */
+const trimSlash = (v: string): string => (v.length > 1 && v.endsWith("/") ? v.slice(0, -1) : v);
+const isHome = trimSlash(path) === trimSlash(homePath(lang));
+
+/**
+ * Both halves of the DE|EN switch. The current language points at this page;
+ * the other at the resolved alternate when the page has one, and at that
+ * language's catalogue otherwise — a switch that 404s is worse than one that
+ * lands on the front page.
+ */
+const langHrefs = (["de", "en"] as const).map((code) => ({
+  code,
+  href: code === lang ? path : (altUrl ?? homePath(code)),
+}));
+
+/** Sibling properties open in the SAME tab — the journal's rule, and the reason
+ *  none of these carries `target`. */
+const nav = [
+  { href: homePath(lang), label: t.nav.catalogue, current: isHome },
+  { href: links.blog, label: "Journal", current: false },
+  { href: links.tools, label: "Tools", current: false },
+  { href: links.main, label: t.nav.main, current: false },
+];
+---
+
+{/* Fill, blur, sticky position and the warm hairline all come from
+    `.brand-header` (tds-shared). Never re-declare them here. */}
+<header class="brand-header">
+  <div class="shop-shell shop-bar">
+    {/* The mark IS the "TD" of the name, so only "Shop" is set in type and the
+        accessible name restates the whole brand. `.brand-wordmark` is what puts
+        `.accent-italic` back upright (primitives.css). */}
+    <a
+      class="shop-header__brand brand-wordmark"
+      href={homePath(lang)}
+      aria-label={`${t.brand} — ${t.nav.catalogue}`}
+    >
+      <span class="brand-logo" aria-hidden="true"></span>
+      <span class="accent-italic">Shop</span>
+    </a>
+    <span class="nav-divider shop-bar__divider" aria-hidden="true"></span>
+
+    <nav class="shop-nav" aria-label={t.nav.label}>
+      {nav.map((item) => (
+        <a
+          class="shop-nav__link link-underline"
+          href={item.href}
+          aria-current={item.current ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="shop-bar__actions">
+      {/* Visible at every width, and renders nothing while the basket is empty. */}
+      <CartBadge client:idle lang={lang} />
+
+      {/* Hidden on a WRAPPER below `lg`: tds-shared is unlayered, so a
+          `display` rule on the controls themselves would lose to theirs. */}
+      <div class="shop-bar__desktop">
+        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+          {langHrefs.map((l) => (
+            <a
+              href={l.href}
+              hreflang={l.code}
+              lang={l.code}
+              class={l.code === lang ? "on" : ""}
+              aria-current={l.code === lang ? "true" : undefined}
+            >
+              {l.code.toUpperCase()}
+            </a>
+          ))}
+        </div>
+        <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
+      </div>
+
+      {/* The breakpoint comes from `.tds-menu-toggle` itself. */}
+      <button
+        id="menu-toggle"
+        type="button"
+        class="btn btn-ghost tds-menu-toggle"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        aria-label={t.nav.menu}
+      >
+        <span class="tds-menu-bar tds-menu-bar-top" aria-hidden="true"></span>
+        <span class="tds-menu-bar tds-menu-bar-mid" aria-hidden="true"></span>
+        <span class="tds-menu-bar tds-menu-bar-bot" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  {/* The sheet, its motion and its scroll containment are `.tds-mobile-menu`;
+      only the docking offset is local (`.shop-mobile-menu`). */}
+  <div id="mobile-menu" class="tds-mobile-menu shop-mobile-menu" aria-hidden="true" aria-label={t.nav.menu}>
+    <nav aria-label={t.nav.label}>
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          data-menu-link
+          class="tds-mobile-menu__link"
+          aria-current={item.current ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="shop-mobile-menu__controls">
+      <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+        {langHrefs.map((l) => (
+          <a
+            href={l.href}
+            hreflang={l.code}
+            lang={l.code}
+            data-menu-link
+            class={l.code === lang ? "on" : ""}
+            aria-current={l.code === lang ? "true" : undefined}
+          >
+            {l.code.toUpperCase()}
+          </a>
+        ))}
+      </div>
+      <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
+    </div>
+  </div>
+</header>
+
+<script>
+  // NOT `is:inline` — an inline script is not bundled, so this import would
+  // reach the browser as a bare specifier and the hamburger would do nothing.
+  import { mountMobileNav } from "@tracht-digital-solutions/tds-shared/nav";
+
+  const toggle = document.getElementById("menu-toggle");
+  const panel = document.getElementById("mobile-menu");
+  if (toggle && panel) {
+    mountMobileNav({ toggle, panel });
+  }
+</script>

@@ -4,6 +4,7 @@ import { ProductCard } from "@tracht-digital-solutions/tds-shared/components";
 import type { CatalogProduct } from "../lib/types";
 import type { Lang } from "../lib/i18n";
 import { tx } from "../lib/i18n";
+import { siteLinks } from "../lib/seo";
 
 interface Props {
   products: CatalogProduct[];
@@ -32,8 +33,18 @@ const attributed = products.map((product) => ({
 ---
 
 {
+  /* The empty state is where a visitor decides whether to leave. It used to be
+     one grey line; it now says what is happening and offers the two places on
+     the same property where there IS something to read or use. */
   attributed.length === 0 ? (
-    <p class="shop-empty">{t.noProducts}</p>
+    <div class="shop-empty">
+      <p class="shop-empty__title">{t.empty.title}</p>
+      <p class="shop-empty__body">{t.empty.body}</p>
+      <p class="shop-empty__links">
+        <a class="link-underline shop-empty__link" href={siteLinks(lang).blog}>{t.empty.journal}</a>
+        <a class="link-underline shop-empty__link" href={siteLinks(lang).tools}>{t.empty.tools}</a>
+      </p>
+    </div>
   ) : (
     <div class="tds-product-grid">
       {attributed.map((product) => (

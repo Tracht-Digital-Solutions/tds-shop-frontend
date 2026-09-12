@@ -43,26 +43,73 @@ export const pagePath = (n: number, lang: Lang): string =>
 
 export const homePath = (lang: Lang): string => `${prefix(lang)}/` as const;
 
+/**
+ * A category slug as a reader sees it: "netzwerk" → "Netzwerk".
+ *
+ * The API serves slugs, and a lower-case German noun in a heading or a chip
+ * reads as a typo. First letter only — "smart-home" becomes "Smart home", not
+ * a guessed title case.
+ */
+export const categoryLabel = (slug: string): string => {
+  const words = slug.replace(/-/g, " ").trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};
+
 export const TX = {
   de: {
     brand: "TDShop",
     tagline: "Technik und Digitalisierung, kuratiert.",
-    nav: { home: "Start", categories: "Kategorien", about: "Über TDShop" },
+    nav: {
+      home: "Start",
+      catalogue: "Katalog",
+      categories: "Kategorien",
+      about: "Über TDShop",
+      label: "Hauptnavigation",
+      menu: "Menü",
+      /** The marketing site, by name — "Startseite" beside "Katalog" is ambiguous. */
+      main: "Tracht Digital",
+    },
+    theme: { toDark: "Zum dunklen Farbschema wechseln", toLight: "Zum hellen Farbschema wechseln" },
     catalogue: "Produkte",
+    /** The catalogue's H1. The <title> stays "Produkte" — short, and the brand follows it. */
+    catalogueHeadline: "Technik für den Betrieb, von uns eingeschätzt",
+    allCategories: "Alle",
     categories: "Kategorien",
-    noProducts: "Hier steht noch nichts.",
+    // An empty catalogue is an invitation, not a dead end: say what is coming
+    // and where the reader can go meanwhile. No free consultation, no customer
+    // names — the same copy rules the tools site pins.
+    empty: {
+      title: "Der Katalog wird gerade bestückt.",
+      body: "Bis dahin stehen unsere Einschätzungen zu Technik im Betrieb im Journal, und die Tools-Seite hat Werkzeuge, die Sie direkt im Browser nutzen können.",
+      journal: "Einschätzungen im Journal lesen",
+      tools: "Werkzeuge ausprobieren",
+    },
     older: "Ältere",
     newer: "Neuere",
     page: "Seite",
+    breadcrumb: "Pfadnavigation",
+    offers: "Angebote",
     relatedCategory: "Mehr aus dieser Kategorie",
     ourAssessment: "Unsere Einschätzung",
     adLabel: "Anzeige",
+    // "Sie", like the basket, the checkout and every legal text. This notice
+    // used to say "du" and was the one line on the page that did.
     affiliateNotice:
-      "Einige Links auf dieser Seite sind Partnerlinks. Kaufst du darüber, erhalten wir eine Provision — für dich ändert sich der Preis nicht.",
+      "Einige Links auf dieser Seite sind Partnerlinks. Kaufen Sie darüber, erhalten wir eine Provision — am Preis ändert sich für Sie nichts.",
     priceUnavailable: "Preis beim Anbieter prüfen",
     backToCatalogue: "Zurück zum Katalog",
-    notFound: "Diese Seite gibt es nicht.",
-    notFoundBody: "Vielleicht ist das Produkt umgezogen oder wurde zurückgezogen.",
+    toCatalogue: "Zum Katalog",
+    toJournal: "Zum Journal",
+    // Rendered for EVERY unknown path, legal pages included — so it must not
+    // talk about products.
+    notFound: "Diese Adresse gibt es hier nicht.",
+    notFoundBody: "Der Link ist veraltet oder vertippt. Im Katalog steht, was es gerade gibt.",
+    footer: {
+      blurb: "Kuratierte Technik für den Betrieb, jedes Produkt mit eigener Einschätzung von Tracht Digital Solutions.",
+      shop: "Shop",
+      company: "Tracht Digital",
+      legal: "Rechtliches",
+    },
     cart: {
       title: "Warenkorb",
       empty: "Ihr Warenkorb ist leer.",
@@ -95,13 +142,31 @@ export const TX = {
   en: {
     brand: "TDShop",
     tagline: "Technology and digitalisation, curated.",
-    nav: { home: "Home", categories: "Categories", about: "About TDShop" },
+    nav: {
+      home: "Home",
+      catalogue: "Catalogue",
+      categories: "Categories",
+      about: "About TDShop",
+      label: "Main navigation",
+      menu: "Menu",
+      main: "Tracht Digital",
+    },
+    theme: { toDark: "Switch to dark mode", toLight: "Switch to light mode" },
     catalogue: "Products",
+    catalogueHeadline: "Business technology, assessed by us",
+    allCategories: "All",
     categories: "Categories",
-    noProducts: "Nothing here yet.",
+    empty: {
+      title: "The catalogue is being stocked.",
+      body: "Meanwhile, our assessments of business technology are in the journal, and the tools site has utilities you can use right in your browser.",
+      journal: "Read assessments in the journal",
+      tools: "Try the tools",
+    },
     older: "Older",
     newer: "Newer",
     page: "Page",
+    breadcrumb: "Breadcrumb",
+    offers: "Offers",
     relatedCategory: "More in this category",
     ourAssessment: "Our assessment",
     adLabel: "Advertisement",
@@ -109,8 +174,16 @@ export const TX = {
       "Some links on this page are affiliate links. If you buy through them we earn a commission — the price is the same for you.",
     priceUnavailable: "Check price at the merchant",
     backToCatalogue: "Back to the catalogue",
-    notFound: "This page does not exist.",
-    notFoundBody: "The product may have moved or been withdrawn.",
+    toCatalogue: "To the catalogue",
+    toJournal: "To the journal",
+    notFound: "This address does not exist here.",
+    notFoundBody: "The link is outdated or mistyped. The catalogue shows what is currently available.",
+    footer: {
+      blurb: "Curated technology for the business, every product with its own assessment by Tracht Digital Solutions.",
+      shop: "Shop",
+      company: "Tracht Digital",
+      legal: "Legal",
+    },
     cart: {
       title: "Basket",
       empty: "Your basket is empty.",

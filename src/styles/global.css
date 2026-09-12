@@ -117,82 +117,199 @@
   background: var(--shop-surface-card);
 }
 
+/* `auto-fill`, not the shared grid's `auto-fit`. With `auto-fit` the empty
+   tracks collapse and a lone card stretches across the whole shell — measured
+   on a product page whose category held one other product: a 72rem-wide card
+   with a 4:3 image the height of the viewport. `auto-fill` keeps the empty
+   tracks, so one card stays one column wide. Belongs in tds-shared's
+   `.tds-product-grid` with its next minor; local until then. */
+.tds-product-grid {
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
 /* One wash band, at the top of the catalogue. The journal uses `.tds-wash` in
    a single file; the landingpage uses it in nineteen. One here is the blend —
    `isolation` and the z-index sit in primitives.css, this only gives the band
-   the air the effect needs to read. */
+   the air the effect needs to read.
+
+   INLINE padding as well as block padding: `.tds-wash::before` fills the
+   section box edge to edge, and with block padding alone the headline sat on
+   the exact edge of the tint and the first category link was clipped at it.
+   Headline, bar, lede, chips and disclosure share this one inner edge. */
 .shop-intro {
   isolation: isolate;
-  padding-block: clamp(1.5rem, 4vw, 2.75rem);
-  margin-bottom: 0.5rem;
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* The one large piece of type on the site. It says what the shop is, so it is
+   set as a statement: tight leading, balanced lines, and a measure short
+   enough that it breaks as a phrase rather than as a paragraph. */
+.shop-intro__title {
+  max-width: 20ch;
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.shop-intro__bar {
+  display: block;
+  margin-block: 1.25rem 1rem;
+}
+
+.shop-intro .shop-lede {
+  margin-bottom: 1.5rem;
+}
+
+.shop-intro .shop-disclosure {
+  margin: 1.25rem 0 0;
 }
 
 /* --- shell -------------------------------------------------------------- */
 
+/* 72rem, the journal's and the tools site's `max-w-6xl`. At 84rem the shop was
+   visibly wider than the two properties it links to, and the grid ran five
+   narrow columns that broke every product title over four lines. */
 .shop-shell {
-  max-width: 84rem;
+  max-width: 72rem;
   margin-inline: auto;
   padding-inline: clamp(1rem, 4vw, 2.5rem);
 }
 
-.shop-header {
-  border-bottom: 1px solid var(--color-line);
-}
+/* --- header ------------------------------------------------------------- */
 
-.shop-header__inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1.5rem;
-  padding-block: 1rem;
-}
-
-/* Logomark + wordmark, the same construction the journal and the tools site
-   carry: `.brand-logo` (tds-shared) is a CSS mask over `--color-primary`, so
-   the mark follows the theme instead of needing an inverted second asset, and
-   only the asset URL is app-local — a package cannot serve a `public/`-rooted
-   path. It is declared on the anchor rather than on `:root` because this is
-   the one place the mark appears; the tools site hoists it because its own
-   footer carries the mark too.
+/* The asset behind `.brand-logo` (tds-shared), a CSS mask over the ink token so
+   the mark follows the theme. On `:root` because header AND footer carry the
+   mark; a package cannot serve a `public/`-rooted path, so only the URL is
+   app-local.
 
    The RATIO is deliberately not overridden: the library default (1.476) is the
    real aspect of this exact asset (713x483), and a box whose ratio disagrees
    letterboxes the `contain`-fitted mask and renders the mark undersized with
-   nothing anywhere to say so. The SIZE stays at the library's `1.4em`, which
-   ties the mark to the wordmark beside it — the proportion the tools header
-   sets by hand (a 1.6rem mark against 1.0625rem type) falls out of it.
-
-   `--color-ink` stays on the anchor: the wordmark's second half is
-   `.accent-italic` in the markup and paints its own colour. */
-.shop-header__brand {
+   nothing anywhere to say so. */
+:root {
   --tds-brand-logo-mask: url("/brand/td-logomark.webp");
+}
+
+/* Sticky position, blur and hairline are `.brand-header`; this is only the row. */
+.shop-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  min-height: 3.75rem;
+  padding-block: 0.375rem;
+}
+
+.shop-header__brand {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: -0.01em;
+  padding-block: 0.5rem;
+  font-size: 1.0625rem;
   color: var(--color-ink);
   text-decoration: none;
 }
 
-.shop-header__nav {
+/* The journal's divider square. Declared locally by every site that carries it,
+   and shown only beside the desktop nav it divides — below `lg` it would be a
+   lone dot next to the wordmark. */
+.nav-divider {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  background: var(--color-accent);
+}
+
+.shop-bar__divider,
+.shop-nav,
+.shop-bar__desktop {
+  display: none;
+}
+
+/* Colour lives here, not in a utility: `.link-underline` is unlayered tds-shared
+   CSS declaring `color: inherit`, and this file comes after it. */
+.shop-nav__link {
+  padding: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+.shop-nav__link:hover,
+.shop-nav__link:focus-visible {
+  color: var(--color-ink);
+}
+
+.shop-nav__link[aria-current="page"] {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.shop-nav__link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.shop-bar__actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
+  align-items: center;
+  gap: 0.5rem;
   margin-inline-start: auto;
 }
 
-.shop-header__nav a {
-  color: var(--color-muted);
-  text-decoration: none;
-  font-size: 0.9375rem;
+/* 64rem is `.tds-menu-toggle`'s own breakpoint and `MOBILE_NAV_DESKTOP_QUERY`.
+   Change one and change the others, or the sheet hides at a width where the
+   mechanics still consider it open. */
+@media (min-width: 64rem) {
+  .shop-bar__divider {
+    display: block;
+  }
+
+  .shop-nav,
+  .shop-bar__desktop {
+    display: flex;
+    align-items: center;
+  }
+
+  .shop-nav {
+    gap: 0 0.25rem;
+  }
+
+  .shop-bar__desktop {
+    gap: 0.5rem;
+  }
 }
 
-.shop-header__nav a:hover,
-.shop-header__nav a[aria-current="page"] {
-  color: var(--color-accent);
+/* The sheet's docking offset, matched to `.shop-bar`'s min-height. The header's
+   backdrop-filter makes it the containing block for this fixed panel, so `top`
+   counts from the header; `--tds-mobile-menu-inset` stops the panel's
+   max-height at the viewport edge instead of running past it. */
+.shop-mobile-menu {
+  inset-inline: 0.5rem;
+  top: 3.75rem;
+  --tds-mobile-menu-inset: 3.75rem;
+}
+
+.shop-mobile-menu__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+/* The shared switch shrinks to 29x23px on a phone so it fits a crowded top bar
+   — below WCAG 2.2's 24px floor, which the mobile audit reports on every page.
+   In the sheet there is room, so it gets a finger-sized target here. */
+.shop-mobile-menu .tds-lang-toggle a {
+  height: 2.75rem;
+  padding-inline: 1rem;
+  font-size: 0.8125rem;
 }
 
 .shop-main {
@@ -200,12 +317,88 @@
   padding-block: clamp(1.5rem, 5vw, 3rem);
 }
 
+/* --- footer ------------------------------------------------------------- */
+
+/* `.tds-tone-navy` re-maps ink, muted and line inside the footer, so these rules
+   read the ordinary tokens and land correctly on the dark ground. */
 .shop-footer {
-  margin-top: 4rem;
-  border-top: 1px solid var(--color-line);
-  padding-block: 2rem;
+  margin-top: clamp(3rem, 8vw, 5rem);
   font-size: 0.875rem;
+}
+
+.shop-footer__grid {
+  display: grid;
+  gap: 2.25rem;
+  padding-block: 3rem;
+}
+
+@media (min-width: 48rem) {
+  .shop-footer__grid {
+    grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+  }
+}
+
+.shop-footer__wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.875rem;
+  font-size: 1.125rem;
+  color: var(--color-ink);
+}
+
+.shop-footer__accent {
+  color: var(--color-accent-pink);
+}
+
+.shop-footer__blurb {
+  max-width: 34ch;
+  margin: 1rem 0 0;
+  line-height: 1.6;
   color: var(--color-muted);
+}
+
+.shop-footer__head {
+  margin: 0 0 0.875rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.shop-footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shop-footer__link {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.shop-footer__link:hover,
+.shop-footer__link:focus-visible {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.shop-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+  padding-block: 1rem 2rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.shop-footer__base p {
+  margin: 0;
 }
 
 /* --- page furniture ------------------------------------------------------ */
@@ -234,26 +427,60 @@
   margin: 2.5rem 0 1rem;
 }
 
-/* The standing affiliate disclosure. Above the fold on every page that can
-   carry a partner link — § 5a Abs. 4 UWG wants the commercial intent legible
-   before the reader engages with the offer, not in a footnote after it. */
+/* The standing affiliate disclosure. Above the fold on every page that carries
+   a partner link — § 5a Abs. 4 UWG wants the commercial intent legible before
+   the reader engages with the offer, not in a footnote after it. A quiet line
+   on the text edge rather than a tinted strip: inside the wash band the strip's
+   own padding put its words on a second left edge. */
 .shop-disclosure {
+  max-width: 44rem;
   margin: 0 0 1.5rem;
-  padding: 0.625rem 0.875rem;
-  background: var(--color-soft);
   font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--color-muted);
 }
 
 .shop-breadcrumbs {
-  margin: 0 0 1rem;
+  margin: 0 0 1.25rem;
   font-size: 0.8125rem;
   color: var(--color-muted);
 }
 
+.shop-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shop-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .shop-breadcrumbs a {
   color: inherit;
+}
+
+.shop-breadcrumbs__sep {
+  opacity: 0.5;
+}
+
+.shop-breadcrumbs [aria-current="page"] {
+  color: var(--color-ink);
+}
+
+/* On a phone the current step is the H1 directly below it, wrapped over three
+   lines. The separator lives inside the item, so nothing dangles. */
+@media (max-width: 40rem) {
+  .shop-breadcrumbs [aria-current="page"] {
+    display: none;
+  }
 }
 
 /* Wraps by default — a pager is a row of more than two things. */
@@ -264,9 +491,46 @@
   margin-top: 2.5rem;
 }
 
+/* An empty catalogue — the live state while it is being stocked. The flat
+   kit's own device (a `--color-soft` fill, no outline), a sentence that says
+   what is happening, and two ways onward. */
 .shop-empty {
-  padding: 2rem 0;
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  max-width: 44rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--color-soft);
+}
+
+.shop-empty__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: var(--color-ink);
+}
+
+.shop-empty__body {
+  margin: 0;
+  line-height: 1.6;
   color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+.shop-empty__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0.5rem 0 0;
+}
+
+/* After `.link-underline` in the cascade, so the accent wins over its
+   `color: inherit`. */
+.shop-empty__link {
+  font-weight: 600;
+  color: var(--color-accent);
 }
 
 /* --- checkout ------------------------------------------------------------ */
@@ -395,52 +659,54 @@
 
 /* --- legal --------------------------------------------------------------- */
 
-/* Long-form legal prose. `prose.css` is deliberately not imported on this site
-   (see the header), so the handful of rules a legal document actually needs
-   live here — headings, lists, a readable measure. */
-.legal-doc {
+/* Long-form markdown: the legal documents AND a product's written assessment.
+   `prose.css` is deliberately not imported on this site (see the header), so
+   the handful of rules such a text actually needs live here — headings, lists,
+   links, a readable measure. One class for both, because the assessment used
+   to have none at all and rendered its subheadings and bullets as body text. */
+.shop-doc {
   max-width: 44rem;
   line-height: 1.65;
 }
 
-.legal-doc h1,
-.legal-doc h2,
-.legal-doc h3 {
+.shop-doc h1,
+.shop-doc h2,
+.shop-doc h3 {
   font-family: var(--font-display);
   font-weight: 800;
   line-height: 1.25;
   margin: 2rem 0 0.75rem;
 }
 
-.legal-doc h1 {
+.shop-doc h1 {
   font-size: 1.5rem;
 }
-.legal-doc h2 {
+.shop-doc h2 {
   font-size: 1.1875rem;
 }
-.legal-doc h3 {
+.shop-doc h3 {
   font-size: 1.0625rem;
 }
 
-.legal-doc p,
-.legal-doc ul,
-.legal-doc ol {
+.shop-doc p,
+.shop-doc ul,
+.shop-doc ol {
   margin: 0 0 1rem;
 }
 
-.legal-doc ul,
-.legal-doc ol {
+.shop-doc ul,
+.shop-doc ol {
   padding-inline-start: 1.25rem;
 }
 
-.legal-doc li {
+.shop-doc li {
   margin-bottom: 0.35rem;
 }
 
 /* The draft notice arrives as a markdown blockquote. Made unmissable on
    purpose: an unreviewed legal text that reads as finished is one somebody
    publishes without reading it. */
-.legal-doc blockquote {
+.shop-doc blockquote {
   margin: 0 0 1.5rem;
   padding: 0.875rem 1rem;
   background: var(--color-soft);
@@ -448,18 +714,109 @@
   font-size: 0.9375rem;
 }
 
-.legal-doc blockquote p:last-child {
+.shop-doc blockquote p:last-child {
   margin-bottom: 0;
 }
 
-.legal-doc hr {
+.shop-doc hr {
   margin: 2rem 0;
   border: 0;
   border-top: 1px solid var(--color-line);
 }
 
-.shop-footer__legal {
+/* What Tailwind's preflight took away from rendered markdown: list markers,
+   links that look like links, and no stray top margin on the first block. */
+.shop-doc > :first-child {
+  margin-top: 0;
+}
+
+.shop-doc ul {
+  list-style: disc;
+}
+
+.shop-doc ol {
+  list-style: decimal;
+}
+
+.shop-doc li::marker {
+  color: var(--color-accent);
+}
+
+.shop-doc a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.shop-doc strong {
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* --- product ------------------------------------------------------------- */
+
+/* Head, offers, assessment. One column on a phone, in that order — the offers
+   come straight after the lede, before the long text. From `lg` the offers take
+   a column of their own beside the reading measure. Areas rather than source
+   reordering, so the DOM order (and the tab order) stays the reading order. */
+.shop-product {
+  display: grid;
+  gap: 1.5rem 3rem;
+  grid-template-areas:
+    "head"
+    "offers"
+    "body";
+}
+
+/* Grid items default to `min-width: auto`: one long unbroken title would widen
+   the track past the viewport, and body{overflow-x:hidden} would hide it. */
+.shop-product > * {
+  min-width: 0;
+}
+
+.shop-product__head {
+  grid-area: head;
+}
+
+.shop-product__offers {
+  grid-area: offers;
+}
+
+.shop-product__body {
+  grid-area: body;
+}
+
+.shop-product__head .shop-title {
+  font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+  text-wrap: balance;
+}
+
+.shop-product__head .shop-lede {
+  margin-bottom: 1.25rem;
+}
+
+.shop-product__body .shop-section-title {
   margin-top: 0.5rem;
+}
+
+@media (min-width: 64rem) {
+  .shop-product {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "head offers"
+      "body offers";
+    align-items: start;
+  }
+}
+
+/* The card beside the text repeats nothing the page already says: its title
+   and teaser ARE this page's H1 and lede. What remains is what the column is
+   for — image, advertising label, offers, the partner note. Scoped to this
+   aside, so the grids and the journal's embeds keep the full card. */
+.shop-product__offers .tds-product-card__title,
+.shop-product__offers .tds-product-card__teaser {
+  display: none;
 }
 
 /* --- touch ergonomics ---------------------------------------------------- */
@@ -481,61 +838,69 @@
  * Scoped to coarse pointers so the desktop density is unchanged.
  */
 @media (pointer: coarse) {
-  .shop-header__nav a,
-  .shop-footer__legal a,
-  .shop-breadcrumbs a {
-    display: inline-block;
+  /* inline-flex rather than a 44px line-height: a footer label that wraps
+     onto two lines keeps its own leading instead of doubling to 88px. */
+  .shop-nav__link,
+  .shop-footer__link,
+  .shop-breadcrumbs a,
+  .shop-empty__link {
+    display: inline-flex;
+    align-items: center;
     min-height: 44px;
-    /* Vertically centre the label inside the enlarged target rather than
-       leaving the text at the top of a tall box. */
-    line-height: 44px;
-    padding-inline: 0.25rem;
   }
 
-  /* A row of links needs space BETWEEN the targets too — WCAG's exception for
-     an undersized target only applies when the surrounding spacing keeps
-     neighbours from being hit by accident. */
-  .shop-header__nav {
-    gap: 0 1.25rem;
+  .shop-chip {
+    min-height: 44px;
+  }
+
+  /* Stacked 44px targets are already apart; the gap would only stretch the list. */
+  .shop-footer__list {
+    gap: 0;
   }
 }
 
-/* The footer's legal row. Six links is a lot for a phone, so they become a
-   wrapping list with real gaps instead of a middot-separated sentence — the
-   separators were what made them read as one run of text rather than six
-   distinct destinations. */
-.shop-footer__legal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
-  margin-top: 0.75rem;
-}
-
-/* Category navigation on the catalogue. A row of destinations, so it wraps and
-   the gap does the separating. */
+/* Category navigation on the catalogue: chips. A row of destinations, so it
+   wraps and the gap does the separating; the pill radius is the blend's one
+   borrowed gesture for things you press (`--tds-radius-chip`, set above). The
+   current category is the filled one — `aria-current` carries the state, the
+   fill only paints it. */
 .shop-catnav {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.25rem;
-  margin: 0 0 2rem;
-  font-size: 0.9375rem;
+  gap: 0.5rem;
+  margin: 0;
 }
 
-.shop-catnav a {
+.shop-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.25rem;
+  padding-inline: 0.875rem;
+  border-radius: var(--tds-radius-chip);
+  background: var(--color-card);
   color: var(--color-ink);
+  font-size: 0.9375rem;
+  text-decoration: none;
 }
 
-.shop-catnav__count {
+.shop-chip:hover {
+  color: var(--color-accent);
+}
+
+.shop-chip[aria-current="page"] {
+  background: var(--color-surface-navy);
+  color: #fff;
+}
+
+.shop-chip__count {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
   color: var(--color-muted);
 }
 
-@media (pointer: coarse) {
-  .shop-catnav a {
-    display: inline-block;
-    min-height: 44px;
-    line-height: 44px;
-    padding-inline: 0.25rem;
-  }
+.shop-chip[aria-current="page"] .shop-chip__count {
+  color: rgb(255 255 255 / 0.7);
 }
 
 /* --- basket ------------------------------------------------------------- */
@@ -544,6 +909,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 2.75rem;
+  padding-inline: 0.25rem;
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+  text-decoration: none;
 }
 
 /* The count. A filled pill so it reads as a badge rather than as part of the

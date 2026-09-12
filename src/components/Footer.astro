@@ -1,0 +1,115 @@
+---
+import { ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
+
+import { cartPath } from "../lib/cart";
+import { homePath, tx, type Lang } from "../lib/i18n";
+import { LEGAL_KEYS, LEGAL_TITLES, type LegalSlug } from "../lib/legal";
+import { siteLinks } from "../lib/seo";
+
+/**
+ * The footer, on the journal's fixed-dark ground.
+ *
+ * `.tds-tone-navy` (tds-shared) carries the fill AND re-maps the page tokens
+ * inside it, so `--color-muted` and `--color-line` read on navy without a
+ * single hard-coded white here. The same construction as the tools site's
+ * `Footer.astro` and the journal's `JournalFooter.astro` — the bottom of the
+ * page is where three properties most obviously look like one brand or not.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = tx(lang);
+const links = siteLinks(lang);
+
+const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
+/**
+ * Every document the registry knows, derived rather than restated.
+ *
+ * A hand-written list is how a new legal page ends up published, routed,
+ * indexed and linked from nowhere — which is the same as not having it. And
+ * every one of them has to be reachable from every page: § 5 DDG for the
+ * Impressum, § 312i BGB for the terms and the withdrawal policy.
+ */
+const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map((slug) => ({
+  href: `${legalBase}/${slug}`,
+  label: LEGAL_TITLES[lang][slug],
+}));
+
+const groups = [
+  {
+    id: "footer-shop",
+    head: t.footer.shop,
+    items: [
+      { href: homePath(lang), label: t.nav.catalogue },
+      { href: cartPath(lang), label: t.cart.title },
+    ],
+  },
+  {
+    id: "footer-company",
+    head: t.footer.company,
+    items: [
+      { href: links.blog, label: "Journal" },
+      { href: links.tools, label: "Tools" },
+      { href: links.main, label: t.nav.main },
+    ],
+  },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="shop-footer tds-tone-navy">
+  <div class="shop-shell shop-footer__grid">
+    <div>
+      {/* `--inverse`: the mask paints in the page's ink token otherwise, which
+          disappears on navy. The "TD" the mark stands for is restated for
+          assistive tech, or the block announces as the bare word "Shop". */}
+      <p class="brand-wordmark shop-footer__wordmark">
+        <span class="brand-logo brand-logo--inverse" aria-hidden="true"></span>
+        <span><span class="sr-only">TD </span><span class="shop-footer__accent">Shop</span></span>
+      </p>
+      <span class="tds-brandbar tds-brandbar--sm tds-brandbar--on-dark" aria-hidden="true"></span>
+      <p class="shop-footer__blurb">{t.footer.blurb}</p>
+    </div>
+
+    {
+      groups.map((group) => (
+        <nav aria-labelledby={group.id}>
+          <p class="shop-footer__head" id={group.id}>{group.head}</p>
+          <ul class="shop-footer__list">
+            {group.items.map((item) => (
+              <li>
+                <a class="shop-footer__link" href={item.href}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+
+    <nav aria-labelledby="footer-legal">
+      <p class="shop-footer__head" id="footer-legal">{t.footer.legal}</p>
+      <ul class="shop-footer__list">
+        {legalLinks.map((link) => (
+          <li>
+            <a class="shop-footer__link" href={link.href}>{link.label}</a>
+          </li>
+        ))}
+        {/* Not a legal PAGE, but it belongs here: Art. 7 Abs. 3 DSGVO wants
+            withdrawing a consent to be as easy as giving it. */}
+        <li>
+          <ConsentLink client:idle lang={lang} className="shop-footer__link" />
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  {/* A hairline, not a tone step: a line BETWEEN two things keeps its 1px on
+      the flat surface. */}
+  <div class="shop-shell shop-footer__base">
+    <p>© {year} Tracht Digital Solutions</p>
+    <p>{t.tagline}</p>
+  </div>
+</footer>

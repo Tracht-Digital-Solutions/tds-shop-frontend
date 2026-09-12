@@ -6,7 +6,7 @@ import Layout from "../layouts/Layout.astro";
 import AddToCart from "./AddToCart.tsx";
 import ProductGrid from "./ProductGrid.astro";
 import { listProducts } from "../lib/content-api";
-import { categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
+import { categoryLabel, categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import { isIndexable } from "../lib/indexing";
 import { asGraph, breadcrumbSchema, productSchema, websiteSchema } from "../lib/jsonld";
@@ -104,40 +104,66 @@ const jsonLd = asGraph([
   ogImage={product.imageUrl}
   jsonLd={jsonLd}
 >
-  <nav class="shop-breadcrumbs" aria-label="Breadcrumb">
-    <a href={homePath(lang)}>{t.brand}</a>
-    {" · "}
-    <a href={categoryPath(product.category, lang)}>{product.category}</a>
+  {/* An ordered list with the current page last: a trail is a sequence, and
+      the separator is decoration, so it is hidden from assistive tech rather
+      than read out as "Punkt" between every step. */}
+  <nav class="shop-breadcrumbs" aria-label={t.breadcrumb}>
+    <ol>
+      <li><a href={homePath(lang)}>{t.nav.catalogue}</a></li>
+      <li>
+        <span class="shop-breadcrumbs__sep" aria-hidden="true">/</span>
+        <a href={categoryPath(product.category, lang)}>{categoryLabel(product.category)}</a>
+      </li>
+      <li aria-current="page">
+        <span class="shop-breadcrumbs__sep" aria-hidden="true">/</span>
+        {product.title}
+      </li>
+    </ol>
   </nav>
 
-  <h1 class="shop-title">{product.title}</h1>
-  <p class="shop-lede">{product.teaser}</p>
+  {/* Two columns from `lg`: the text on the reading measure, the offers beside
+      it. On a phone the offers come straight after the lede, BEFORE the long
+      assessment — someone who already knows the product should not have to
+      scroll through our opinion to reach the price. Grid areas carry that
+      reordering; the source order stays head → offers → assessment. */}
+  <div class="shop-product">
+    <div class="shop-product__head">
+      <h1 class="shop-title">{product.title}</h1>
+      <p class="shop-lede">{product.teaser}</p>
 
-  {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
+      {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
 
-  {/* The offer list. `ProductCard` carries the advertising label and drops a
-      price older than 24 hours by itself — this page decides neither. */}
-  <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
+      {/* Only for something TDS sells itself. An affiliate product is bought at
+          the merchant, and a basket button beside it would promise a checkout
+          this shop cannot honour. */}
+      {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} /> : null}
+    </div>
 
-  {/* Only for something TDS sells itself. An affiliate product is bought at
-      the merchant, and a basket button beside it would promise a checkout this
-      shop cannot honour. */}
-  {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} /> : null}
+    {/* The offer list. `ProductCard` carries the advertising label and drops a
+        price older than 24 hours by itself — this page decides neither. */}
+    <aside class="shop-product__offers" aria-label={t.offers}>
+      <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
+    </aside>
 
-  {
-    /* The written assessment. Rendered through tds-shared's escape-first
-       markdown renderer, NOT `set:html` on the raw field: the body is authored
-       in a panel and stored verbatim, so it is untrusted as far as this page is
-       concerned. `renderMarkdown` escapes everything before it transforms
-       anything and allow-lists link schemes, which is the whole security model
-       — there is no sanitizer to misconfigure. */
-    body ? (
-      <>
-        <h2 class="shop-section-title">{t.ourAssessment}</h2>
-        <div set:html={body} />
-      </>
-    ) : null
-  }
+    {
+      /* The written assessment. Rendered through tds-shared's escape-first
+         markdown renderer, NOT `set:html` on the raw field: the body is
+         authored in a panel and stored verbatim, so it is untrusted as far as
+         this page is concerned. `renderMarkdown` escapes everything before it
+         transforms anything and allow-lists link schemes.
+
+         `.shop-doc` is not optional. prose.css is not imported on this site and
+         Tailwind's preflight strips list markers and heading sizes, so a bare
+         container rendered "## Was uns überzeugt" and its bullet list as three
+         lines of body text. */
+      body ? (
+        <section class="shop-product__body" aria-labelledby="assessment-heading">
+          <h2 class="shop-section-title" id="assessment-heading">{t.ourAssessment}</h2>
+          <div class="shop-doc" set:html={body} />
+        </section>
+      ) : null
+    }
+  </div>
 
   {
     related.length > 0 ? (

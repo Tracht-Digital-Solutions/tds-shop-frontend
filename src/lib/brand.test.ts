@@ -21,6 +21,7 @@ const read = (rel: string): string =>
   readFileSync(fileURLToPath(new URL(rel, import.meta.url)), "utf8");
 
 const layout = read("../layouts/Layout.astro");
+const header = read("../components/Header.astro");
 const css = read("../styles/global.css");
 
 /** `public/` is the document root at runtime, so a root-relative asset URL in
@@ -51,9 +52,9 @@ describe("the brand assets", () => {
     // makes the accessible name a requirement rather than a nicety: without the
     // label the home link announces as "Shop", and the mark must not be
     // announced twice.
-    const anchor = /<a\s+class="shop-header__brand[^"]*"[\s\S]*?>/.exec(layout)?.[0] ?? "";
+    const anchor = /<a\s+class="shop-header__brand[^"]*"[\s\S]*?>/.exec(header)?.[0] ?? "";
     expect(anchor).toContain("aria-label");
-    expect(layout).toMatch(/<span class="brand-logo" aria-hidden="true">/);
+    expect(header).toMatch(/<span class="brand-logo" aria-hidden="true">/);
 
     // `.accent-italic` (base.css) is italic; `.brand-wordmark .accent-italic`
     // (primitives.css) is the ONLY rule that puts it back upright. The display

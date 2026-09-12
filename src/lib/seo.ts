@@ -42,6 +42,25 @@ export function pageTitle(subject: string, lang: Lang = "de"): string {
   return trimmed;
 }
 
+/**
+ * The sibling TDS properties this site links to, in the reader's language.
+ *
+ * One function rather than URLs inline in the header, footer and empty state:
+ * the journal links here from its own `nav.ts` (`SHOP_URL`), and a property
+ * that is only ever linked TO is a dead end for a reader and an orphan for a
+ * crawler. Absolute on purpose — these are separate hosts, and a site-relative
+ * path would resolve against this one and 404. Every sibling serves its English
+ * edition under `/en/`.
+ */
+export function siteLinks(lang: Lang): { main: string; blog: string; tools: string } {
+  const suffix = lang === "en" ? "/en/" : "/";
+  return {
+    main: `https://tracht-digital.de${suffix}`,
+    blog: `https://blog.tracht-digital.de${suffix}`,
+    tools: `https://tools.tracht-digital.de${suffix}`,
+  };
+}
+
 /** The absolute canonical for a path. */
 export function canonical(pathname: string): string {
   return new URL(pathname, site.url).toString();

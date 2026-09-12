@@ -71,6 +71,14 @@ lockfile does not resolve on a Linux runner.
 - Don't author a radius or an elevation locally. Set a token in the surface
   layer; this site renders `data-surface="blog"` and must keep matching the
   journal because they link to each other.
+- Don't hand-roll a header or footer again, and don't write a sibling URL
+  inline. `siteLinks()` is the one source. `header.test.ts` fails on a local
+  bar, on an `is:inline` mobile-menu script (its import would reach the browser
+  as a bare specifier and the hamburger would do nothing), and on a missing
+  link back to the journal, the tools site or the main site.
+- Don't trust a local render after editing a component without clearing
+  `var/page-cache`. The dev server writes it too, and the result is the OLD
+  markup styled by the NEW CSS — which reads like a half-applied change.
 - Don't reintroduce `@astrojs/sitemap`. It derives entries from routes a build
   emits, and under `output: "server"` a build emits none — it would ship a
   sitemap holding only the pages its own filter excluded, with nothing red.

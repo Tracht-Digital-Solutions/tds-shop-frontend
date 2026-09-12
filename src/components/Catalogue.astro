@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import ProductGrid from "./ProductGrid.astro";
 import { listCategories, listProducts } from "../lib/content-api";
-import { categoryPath, homePath, tx, type Lang } from "../lib/i18n";
+import { categoryLabel, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import { asGraph, collectionPageSchema, itemListSchema, websiteSchema } from "../lib/jsonld";
 import { site } from "../lib/seo";
@@ -28,22 +28,30 @@ const [page, categories] = await Promise.all([
   listCategories(lang),
 ]);
 
-const heading = category ?? t.catalogue;
+/** The subject for <title> and structured data — short, the brand follows it. */
+const heading = category ? categoryLabel(category) : t.catalogue;
+/** The visible H1. On the front page it says what the shop IS; "Produkte" said
+ *  only what kind of page it was. */
+const headline = category ? categoryLabel(category) : t.catalogueHeadline;
+
 const description = describe(
   category
     ? lang === "de"
-      ? `Kuratierte Technik aus der Kategorie ${category}: mit eigener Einschätzung statt Herstellertext.`
-      : `Curated technology in the ${category} category, with our own assessment rather than vendor copy.`
+      ? `Kuratierte Technik aus der Kategorie ${categoryLabel(category)}: mit eigener Einschätzung statt Herstellertext.`
+      : `Curated technology in the ${categoryLabel(category)} category, with our own assessment rather than vendor copy.`
     : site.description[lang],
   site.description[lang],
 );
 
 const path = category ? categoryPath(category, lang) : homePath(lang);
+const total = categories.reduce((sum, c) => sum + c.total, 0);
 
-// The category navigation below renders as a WRAPPING ROW of distinct targets
-// (`.shop-catnav`), not a middot-separated sentence. Measured at 390px, the
-// run of text made each category a 16px-high tap target with a punctuation
-// mark sitting between two of them; the flex gap is the separator now.
+/**
+ * The disclosure says "some links on this page are affiliate links" — which is
+ * only true when one is. An empty catalogue carried it anyway, a claim about
+ * links that did not exist. The product page has always made the same check.
+ */
+const hasAffiliate = page.products.some((p) => p.offers.some((o) => o.kind === "affiliate"));
 
 const jsonLd = asGraph([
   websiteSchema(lang),
@@ -55,34 +63,39 @@ const jsonLd = asGraph([
 <Layout title={heading} description={description} lang={lang} jsonLd={jsonLd}>
 {/*
     The one wash band on the site. `.tds-wash` paints soft brand fields into a
-    ::before at z-index -1, so it needs a SECTION to sit in — never the body,
-    and never an element whose children have to stay above it by accident.
-
-    One band, not one per section: the journal uses this effect in a single
-    file and the landingpage in nineteen, and the whole point of the blend is
-    to land between them rather than to pick a side.
+    ::before at z-index -1 that fills the section edge to edge, so the section
+    carries INLINE padding as well — without it the headline sat on the exact
+    edge of the tint. Everything inside shares that one inner edge.
   */}
   <section class="shop-intro tds-wash" aria-labelledby="catalogue-heading">
-    <h1 class="shop-title" id="catalogue-heading">{heading}</h1>
-    {/* Decorative by definition — aria-hidden is required at the call site,
-        because a graphic announced to a screen reader is worse than none. */}
-    <span class="tds-brandbar tds-brandbar--sm" aria-hidden="true"></span>
+    <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
+    {/* Decorative by definition — aria-hidden is required at the call site. */}
+    <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
     <p class="shop-lede">{site.description[lang]}</p>
 
-    {/* The standing disclosure, above the products rather than under them. */}
-    <p class="shop-disclosure">{t.affiliateNotice}</p>
-
     {
+      /* Chips, not a run of links: each category is a distinct target, and the
+         pill is the blend's one borrowed gesture for things you press. */
       categories.length > 0 ? (
         <nav class="shop-catnav" aria-label={t.categories}>
-          {categories.map(({ category: name, total }) => (
-            <a href={categoryPath(name, lang)}>
-              {name} <span class="shop-catnav__count">({total})</span>
+          <a class="shop-chip" href={homePath(lang)} aria-current={category === null ? "page" : undefined}>
+            {t.allCategories} <span class="shop-chip__count">{total}</span>
+          </a>
+          {categories.map(({ category: name, total: count }) => (
+            <a
+              class="shop-chip"
+              href={categoryPath(name, lang)}
+              aria-current={name === category ? "page" : undefined}
+            >
+              {categoryLabel(name)} <span class="shop-chip__count">{count}</span>
             </a>
           ))}
         </nav>
       ) : null
     }
+
+    {/* The standing disclosure, above the products rather than under them. */}
+    {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
   </section>
 
   <ProductGrid products={page.products} lang={lang} />

@@ -5,18 +5,18 @@ import "@fontsource/lato/900.css";
 import "@fontsource-variable/plus-jakarta-sans/index.css";
 import "@fontsource-variable/jetbrains-mono/index.css";
 
-import CartBadge from "../components/CartBadge.tsx";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
 import { API_BASE_META } from "@tracht-digital-solutions/tds-shared/api";
-import { ConsentBanner, ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
+import { ConsentBanner } from "@tracht-digital-solutions/tds-shared/consent";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
 
 import "../styles/global.css";
 import { apiBase } from "../lib/connection";
 import { canonical, pageTitle, site } from "../lib/seo";
-import { homePath, tx, type Lang } from "../lib/i18n";
+import type { Lang } from "../lib/i18n";
 import { isExcludedPath } from "../lib/indexing";
-import { LEGAL_KEYS, LEGAL_TITLES, type LegalSlug } from "../lib/legal";
 
 interface Props {
   /** The subject of the page. `pageTitle()` composes the brand around it. */
@@ -53,29 +53,11 @@ const {
   jsonLd = null,
 } = Astro.props;
 
-const t = tx(lang);
 const path = Astro.url.pathname;
 const url = canonical(path);
 const robots = noindex || isExcludedPath(path) ? "noindex, follow" : "index, follow";
 const image = ogImage ?? `${site.url}/og-default.png`;
-/** Trailing slashes are ignored by the router (`trailingSlash: "ignore"`), so
- *  "/en" and "/en/" are the same page and only a normalised compare can say
- *  which nav entry is current. */
-const trimSlash = (v: string): string => (v.length > 1 && v.endsWith("/") ? v.slice(0, -1) : v);
-const isHome = trimSlash(path) === trimSlash(homePath(lang));
-
 const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
-/**
- * Every document the registry knows, derived rather than restated.
- *
- * This used to be a hand-written list, and a hand-written list is how a new
- * legal page ends up published, routed, indexed and linked from nowhere —
- * which is the same as not having it. Adding a key to LEGAL_KEYS now adds the
- * footer link with it.
- */
-const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map(
-  (slug) => ({ href: `${legalBase}/${slug}`, label: LEGAL_TITLES[lang][slug] }),
-);
 ---
 
 <!--
@@ -158,74 +140,15 @@ const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map(
     */}
     <a class="tds-skip-link" href="#main">{translations[lang].a11y.skipToContent}</a>
 
-    <header class="shop-header">
-      <div class="shop-shell shop-header__inner">
-        {/* The mark IS the "TD" of the name — the wordmark reads TD Shop, so the
-            mark carries the first half and only "Shop" is set in type. The same
-            construction the journal and the tools header use, which is what
-            makes the properties read as one brand rather than as sites that
-            share a font.
-
-            Because the mark REPLACES text, the accessible name has to restate
-            it: the `aria-label` carries the full brand and the mark itself is
-            `aria-hidden`. Drop that and the link announces as "Shop".
-
-            `.brand-logo` is a CSS mask (tds-shared) pointed at this app's own
-            copy of the asset from `.shop-header__brand`; it needs no <img> and
-            no second asset for dark mode.
-
-            `.brand-wordmark` is required, not decoration: `.accent-italic`
-            (base.css) sets `font-style: italic`, and the ONLY rule that puts
-            the accent word back upright is `.brand-wordmark .accent-italic`
-            (primitives.css). Drop the class and the second half of the name
-            slants — the tools header carries the same pair for the same
-            reason, and a leaning wordmark on one property of four is drift
-            nobody would choose deliberately. Verified computed: `normal`. */}
-        <a
-          class="shop-header__brand brand-wordmark"
-          href={homePath(lang)}
-          aria-label={`${t.brand} — ${t.nav.home}`}
-        >
-          <span class="brand-logo" aria-hidden="true"></span>
-          <span class="accent-italic">Shop</span>
-        </a>
-        <nav class="shop-header__nav" aria-label={t.nav.categories}>
-          <a href={homePath(lang)} aria-current={isHome ? "page" : undefined}>{t.nav.home}</a>
-          {/* Renders nothing while the basket is empty — a permanent "0" is a
-              control that does nothing on almost every page of a catalogue.
-              client:idle, not client:load: the header is not why anyone came. */}
-          <CartBadge client:idle lang={lang} />
-          <a href={lang === "en" ? "/" : "/en/"} hreflang={lang === "en" ? "de" : "en"}>
-            {lang === "en" ? "Deutsch" : "English"}
-          </a>
-        </nav>
-      </div>
-    </header>
+    {/* The journal's chrome — see Header.astro and Footer.astro. The language
+        switch needs the resolved alternate, never a derived one. */}
+    <Header lang={lang} altUrl={altUrl} />
 
     <main class="shop-shell shop-main" id="main" tabindex="-1">
       <slot />
     </main>
 
-    <footer class="shop-footer">
-      <div class="shop-shell">
-        <p>{t.tagline}</p>
-        {/* Every one of these has to be reachable from every page: § 5 DDG for
-            the Impressum, § 312i BGB for the terms and the withdrawal policy —
-            a consumer must be able to read them BEFORE ordering, not only
-            somewhere in the checkout. */}
-        {/* A wrapping row, not a middot-separated sentence: six links read as
-            one run of text that way, and on a phone the separators sit
-            between two 18px targets. The gap in the stylesheet is the
-            separator now. */}
-        <nav class="shop-footer__legal" aria-label={lang === "de" ? "Rechtliches" : "Legal"}>
-          {legalLinks.map((link) => <a href={link.href}>{link.label}</a>)}
-          {/* Not a legal PAGE, but it belongs in this row: Art. 7 Abs. 3 DSGVO
-              wants withdrawing a consent to be as easy as giving it, and a
-              banner that shows once leaves no way back without this. */}
-          <ConsentLink client:idle lang={lang} />
-        </nav>
-      </div>
-    </footer>
+    <Footer lang={lang} />
 
     {/*
       No `categories` — this shop sets nothing beyond what it cannot work
