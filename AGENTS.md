@@ -59,7 +59,7 @@ translations on the product id. Do not "fix" that back to a 1:1 rule.
 ## Toolchain
 
 Astro 7.2.5, TypeScript 6 (TS7 is capped by `@astrojs/check`'s peer range),
-vitest 4, `tds-shared ^0.36.0`. The 0.x caret is **minor-locked** — a shared
+vitest 4, `tds-shared ^0.37.1`. The 0.x caret is **minor-locked** — a shared
 minor needs an explicit repin here and a re-verification, not just an install.
 
 Node 22 in CI with npm force-upgraded to 11: npm 10's arborist crashes
