@@ -55,6 +55,22 @@ export const categoryLabel = (slug: string): string => {
   return words.charAt(0).toUpperCase() + words.slice(1);
 };
 
+/**
+ * The name a reader sees for a category: the API's resolved name when it sent
+ * one, the capitalised slug otherwise.
+ *
+ * The API resolves the language itself (name in `lang`, then German, then the
+ * slug — `CategoryName` in tds-ext-shop), so this never picks a language; it
+ * only covers an older API build that serves no name. The slug fallback above
+ * must stay identical to `CategoryName::fromSlug()` so the two cannot disagree.
+ */
+export const categoryName = (slug: string, label?: string | null): string =>
+  label?.trim() || categoryLabel(slug);
+
+/** Shorthand for a product row or page, which carry both fields. */
+export const productCategoryName = (product: { category: string; categoryLabel?: string }): string =>
+  categoryName(product.category, product.categoryLabel);
+
 export const TX = {
   de: {
     brand: "TDShop",

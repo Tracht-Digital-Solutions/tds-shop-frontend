@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CheckoutForm from "./CheckoutForm.tsx";
-import { productPath, type Lang } from "../lib/i18n";
+import { productCategoryName, productPath, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import type { Sellable } from "../lib/sellable";
 
@@ -42,7 +42,7 @@ const { product } = sellable;
 
 <Layout
   title={product.title}
-  description={describe(product.teaser, product.category)}
+  description={describe(product.teaser, productCategoryName(product))}
   lang={lang}
   noindex
 >

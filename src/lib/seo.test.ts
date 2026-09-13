@@ -138,6 +138,17 @@ describe("structured data", () => {
     }
     expect((graph["@graph"] as unknown[]).length).toBe(1);
   });
+
+  it("names the category rather than repeating its slug", () => {
+    // The API resolves the name per language; the markup of an English page
+    // used to carry the German slug "netzwerk".
+    const named = productSchema(product({ lang: "en", categoryLabel: "Networking" }), "en", NOW);
+    expect(named.category).toBe("Networking");
+  });
+
+  it("falls back to the capitalised slug when an older API sends no name", () => {
+    expect(productSchema(product(), "de", NOW).category).toBe("Netzwerk");
+  });
 });
 
 describe("titles and descriptions", () => {

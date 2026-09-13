@@ -6,7 +6,7 @@ import Layout from "../layouts/Layout.astro";
 import AddToCart from "./AddToCart.tsx";
 import ProductGrid from "./ProductGrid.astro";
 import { listProducts } from "../lib/content-api";
-import { categoryLabel, categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
+import { categoryPath, homePath, productCategoryName, productPath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import { isIndexable } from "../lib/indexing";
 import { asGraph, breadcrumbSchema, productSchema, websiteSchema } from "../lib/jsonld";
@@ -42,9 +42,13 @@ const t = tx(lang);
  */
 const indexable = isIndexable(product);
 
+/** The category as a reader sees it, in this language. The raw slug used to
+ *  reach the meta description and the breadcrumb markup as "netzwerk". */
+const categoryName = productCategoryName(product);
+
 const description = describe(
   product.metaDescription ?? product.teaser,
-  product.category,
+  categoryName,
   site.description[lang],
 );
 
@@ -90,7 +94,7 @@ const jsonLd = asGraph([
   productSchema(product, lang),
   breadcrumbSchema([
     { name: t.brand, path: homePath(lang) },
-    { name: product.category, path: categoryPath(product.category, lang) },
+    { name: categoryName, path: categoryPath(product.category, lang) },
     { name: product.title, path: productPath(product.slug, lang) },
   ]),
 ]);
@@ -112,7 +116,7 @@ const jsonLd = asGraph([
       <li><a href={homePath(lang)}>{t.nav.catalogue}</a></li>
       <li>
         <span class="shop-breadcrumbs__sep" aria-hidden="true">/</span>
-        <a href={categoryPath(product.category, lang)}>{categoryLabel(product.category)}</a>
+        <a href={categoryPath(product.category, lang)}>{categoryName}</a>
       </li>
       <li aria-current="page">
         <span class="shop-breadcrumbs__sep" aria-hidden="true">/</span>

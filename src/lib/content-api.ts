@@ -101,6 +101,8 @@ export async function getProduct(slug: string, lang: Lang): Promise<ProductPage 
 
 export interface CategoryCount {
   category: string;
+  /** The display name in the requested language; absent on an older API build. */
+  label?: string;
   total: number;
 }
 

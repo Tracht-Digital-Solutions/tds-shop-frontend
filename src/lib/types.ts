@@ -47,9 +47,17 @@ export type CatalogProduct = Omit<ShopProductRef, "offers"> & {
    */
   publishedAt?: string | null;
   tags?: string[];
+  /**
+   * The category's display name in the requested language, resolved by the
+   * API (`CategoryName` in tds-ext-shop). Absent on an older API build — then
+   * `productCategoryName()` falls back to the capitalised slug. Widened here
+   * rather than in the shared schema for the same reason as the fields above.
+   */
+  categoryLabel?: string;
 };
 
 export type ProductPage = Omit<ShopProduct, "offers"> & {
   offers: SellableOffer[];
   editorialStatus?: EditorialStatus;
+  categoryLabel?: string;
 };

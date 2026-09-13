@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import ProductGrid from "./ProductGrid.astro";
 import { listCategories, listProducts } from "../lib/content-api";
-import { categoryLabel, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
+import { categoryName, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import { asGraph, collectionPageSchema, itemListSchema, websiteSchema } from "../lib/jsonld";
 import { site } from "../lib/seo";
@@ -28,17 +28,23 @@ const [page, categories] = await Promise.all([
   listCategories(lang),
 ]);
 
+/** The current category's name in this language — from the category list the
+ *  API already answered, so a category page needs no extra request. */
+const currentName = category
+  ? categoryName(category, categories.find((c) => c.category === category)?.label)
+  : null;
+
 /** The subject for <title> and structured data — short, the brand follows it. */
-const heading = category ? categoryLabel(category) : t.catalogue;
+const heading = currentName ?? t.catalogue;
 /** The visible H1. On the front page it says what the shop IS; "Produkte" said
  *  only what kind of page it was. */
-const headline = category ? categoryLabel(category) : t.catalogueHeadline;
+const headline = currentName ?? t.catalogueHeadline;
 
 const description = describe(
-  category
+  currentName
     ? lang === "de"
-      ? `Kuratierte Technik aus der Kategorie ${categoryLabel(category)}: mit eigener Einschätzung statt Herstellertext.`
-      : `Curated technology in the ${categoryLabel(category)} category, with our own assessment rather than vendor copy.`
+      ? `Kuratierte Technik aus der Kategorie ${currentName}: mit eigener Einschätzung statt Herstellertext.`
+      : `Curated technology in the ${currentName} category, with our own assessment rather than vendor copy.`
     : site.description[lang],
   site.description[lang],
 );
@@ -81,13 +87,13 @@ const jsonLd = asGraph([
           <a class="shop-chip" href={homePath(lang)} aria-current={category === null ? "page" : undefined}>
             {t.allCategories} <span class="shop-chip__count">{total}</span>
           </a>
-          {categories.map(({ category: name, total: count }) => (
+          {categories.map(({ category: name, label, total: count }) => (
             <a
               class="shop-chip"
               href={categoryPath(name, lang)}
               aria-current={name === category ? "page" : undefined}
             >
-              {categoryLabel(name)} <span class="shop-chip__count">{count}</span>
+              {categoryName(name, label)} <span class="shop-chip__count">{count}</span>
             </a>
           ))}
         </nav>
