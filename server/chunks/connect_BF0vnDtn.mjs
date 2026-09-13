@@ -1,0 +1,14 @@
+import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
+import { n as connectResponse } from "./connection_BxSDNEzk.mjs";
+//#region src/pages/tds/connect.ts
+var connect_exports = /* @__PURE__ */ __exportAll({
+	POST: () => POST,
+	prerender: () => false
+});
+/** One-time API pairing, driven by the /install wizard. */
+var POST = ({ request }) => connectResponse(request);
+//#endregion
+//#region \0virtual:astro:page:src/pages/tds/connect@_@ts
+var page = () => connect_exports;
+//#endregion
+export { page };
