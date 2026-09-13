@@ -132,17 +132,22 @@ const jsonLd = asGraph([
       <p class="shop-lede">{product.teaser}</p>
 
       {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
-
-      {/* Only for something TDS sells itself. An affiliate product is bought at
-          the merchant, and a basket button beside it would promise a checkout
-          this shop cannot honour. */}
-      {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} /> : null}
     </div>
 
     {/* The offer list. `ProductCard` carries the advertising label and drops a
         price older than 24 hours by itself — this page decides neither. */}
     <aside class="shop-product__offers" aria-label={t.offers}>
       <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
+
+      {/* Only for something TDS sells itself. An affiliate product is bought at
+          the merchant, and a basket button beside it would promise a checkout
+          this shop cannot honour.
+
+          Directly under the card, and the quieter of the two: the card's
+          "Kaufen" goes straight to the one-product checkout and stays the
+          filled button. Both ways to buy sit in one place — the basket button
+          used to stand under the lede, a column away from the price it adds. */}
+      {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} variant="secondary" /> : null}
     </aside>
 
     {

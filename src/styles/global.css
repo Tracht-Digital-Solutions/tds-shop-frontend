@@ -116,17 +116,6 @@
 .tds-product-card {
   background: var(--shop-surface-card);
 }
-
-/* `auto-fill`, not the shared grid's `auto-fit`. With `auto-fit` the empty
-   tracks collapse and a lone card stretches across the whole shell — measured
-   on a product page whose category held one other product: a 72rem-wide card
-   with a 4:3 image the height of the viewport. `auto-fill` keeps the empty
-   tracks, so one card stays one column wide. Belongs in tds-shared's
-   `.tds-product-grid` with its next minor; local until then. */
-.tds-product-grid {
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-}
-
 /* One wash band, at the top of the catalogue. The journal uses `.tds-wash` in
    a single file; the landingpage uses it in nineteen. One here is the blend —
    `isolation` and the z-index sit in primitives.css, this only gives the band
@@ -302,16 +291,6 @@
   padding-top: 0.75rem;
   border-top: 1px solid var(--color-line);
 }
-
-/* The shared switch shrinks to 29x23px on a phone so it fits a crowded top bar
-   — below WCAG 2.2's 24px floor, which the mobile audit reports on every page.
-   In the sheet there is room, so it gets a finger-sized target here. */
-.shop-mobile-menu .tds-lang-toggle a {
-  height: 2.75rem;
-  padding-inline: 1rem;
-  font-size: 0.8125rem;
-}
-
 .shop-main {
   display: block;
   padding-block: clamp(1.5rem, 5vw, 3rem);
@@ -817,6 +796,16 @@
 .shop-product__offers .tds-product-card__title,
 .shop-product__offers .tds-product-card__teaser {
   display: none;
+}
+
+/* The basket button under the offer card, for a product TDS sells itself —
+   full width so it lines up with the card's own "Kaufen" above it. */
+.shop-product__offers .add-to-cart {
+  margin-block: 0.75rem 0;
+}
+
+.shop-product__offers .add-to-cart .btn {
+  flex: 1 1 100%;
 }
 
 /* --- touch ergonomics ---------------------------------------------------- */

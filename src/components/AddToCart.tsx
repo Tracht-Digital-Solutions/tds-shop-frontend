@@ -6,6 +6,13 @@ import { tx, type Lang } from "../lib/i18n";
 interface Props {
   slug: string;
   lang: Lang;
+  /**
+   * `secondary` beside a direct-buy button. On a product page the offer card
+   * already carries "Kaufen" (straight to the one-product checkout) as the
+   * filled button; a second filled button for the same product asks the reader
+   * to choose between two equals.
+   */
+  variant?: "primary" | "secondary";
 }
 
 /**
@@ -21,7 +28,7 @@ interface Props {
  * wants the next product, not the checkout — the header badge and the live
  * region say what happened, and the basket link is one press away.
  */
-export default function AddToCart({ slug, lang }: Props) {
+export default function AddToCart({ slug, lang, variant = "primary" }: Props) {
   const t = tx(lang).cart;
   const [inCart, setInCart] = useState<number | null>(null);
   const [justAdded, setJustAdded] = useState(false);
@@ -52,7 +59,7 @@ export default function AddToCart({ slug, lang }: Props) {
           and a word answers it better than a movement. */}
       <button
         type="button"
-        className="btn btn-primary"
+        className={variant === "secondary" ? "btn btn-ghost" : "btn btn-primary"}
         onClick={() => {
           addToCart(slug, 1);
           setJustAdded(true);
