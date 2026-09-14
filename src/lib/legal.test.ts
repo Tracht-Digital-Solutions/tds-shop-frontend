@@ -1,3 +1,4 @@
+import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -93,5 +94,40 @@ describe("the legal registry", () => {
         expect(body === null || body.trim().length > 0, `${slug}.${lang}`).toBe(true);
       }
     }
+  });
+});
+
+describe("the committed texts, rendered", () => {
+  // They go through tds-shared's renderMarkdown, which knows paragraphs, lists,
+  // headings and hard breaks — and nothing else. A table came out as one
+  // paragraph of pipes and an address block as one run-on line; both shipped
+  // on the privacy policy and the Impressum.
+  const rendered = SLUGS.flatMap((slug) =>
+    (["de", "en"] as const).flatMap((lang) => {
+      const body = bundledLegal(slug, lang);
+      return body === null ? [] : [{ name: `${slug}.${lang}`, html: renderMarkdown(body) }];
+    }),
+  );
+
+  it("contains no markdown table, which the renderer prints as raw pipes", () => {
+    for (const { name, html } of rendered) expect(html, name).not.toMatch(/\|\s*-{3,}\s*\|/);
+  });
+
+  it("leaves no hard-break backslash on the page", () => {
+    // Also the guard that the installed tds-shared understands hard breaks at
+    // all: before 0.37.5 every one of them rendered as a literal backslash.
+    for (const { name, html } of rendered) expect(html, name).not.toMatch(/\\(?:<br>|<\/p>|\n)/);
+  });
+
+  it("keeps the Impressum's address on separate lines", () => {
+    expect(renderMarkdown(bundledLegal("impressum", "de")!)).toContain(
+      "Julian Tracht<br>Tracht Digital Solutions<br>Elbinger Straße 19<br>21493 Schwarzenbek<br>Deutschland",
+    );
+  });
+
+  it("keeps a wrapped list item whole", () => {
+    expect(renderMarkdown(bundledLegal("datenschutz", "de")!)).toMatch(
+      /<li><strong>PayPal \(Europe\)[^<]*<\/strong>[^<]*Luxemburg\./,
+    );
   });
 });

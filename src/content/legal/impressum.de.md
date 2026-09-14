@@ -7,15 +7,15 @@ review: Vor Livegang anwaltlich pruefen lassen. Diese Vorlage ist vollstaendig
 ---
 ## Angaben gemäß § 5 DDG
 
-Julian Tracht
-Tracht Digital Solutions
-Elbinger Straße 19
-21493 Schwarzenbek
+Julian Tracht\
+Tracht Digital Solutions\
+Elbinger Straße 19\
+21493 Schwarzenbek\
 Deutschland
 
 ## Kontakt
 
-Telefon: +49 178 822 4022
+Telefon: +49 178 822 4022\
 E-Mail: [kontakt@tracht-digital.de](mailto:kontakt@tracht-digital.de)
 
 Eine Kontaktaufnahme ist über beide Wege möglich; auf E-Mails antworten wir in
@@ -23,13 +23,13 @@ der Regel innerhalb eines Werktages.
 
 ## Umsatzsteuer-Identifikationsnummer
 
-Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
+Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:\
 **DE 450 639 725**
 
 ## Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
 
-Julian Tracht
-Elbinger Straße 19
+Julian Tracht\
+Elbinger Straße 19\
 21493 Schwarzenbek
 
 ## Verbraucherstreitbeilegung

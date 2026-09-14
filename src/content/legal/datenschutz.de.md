@@ -11,13 +11,13 @@ Rechtsgrundlage. Stand: September 2026.
 
 ## 1. Verantwortlicher
 
-Julian Tracht
-Tracht Digital Solutions
-Elbinger Straße 19
-21493 Schwarzenbek
+Julian Tracht\
+Tracht Digital Solutions\
+Elbinger Straße 19\
+21493 Schwarzenbek\
 Deutschland
 
-Telefon: +49 178 822 4022
+Telefon: +49 178 822 4022\
 E-Mail: [kontakt@tracht-digital.de](mailto:kontakt@tracht-digital.de)
 
 Eine datenschutzbeauftragte Person ist nicht benannt; die Voraussetzungen des
@@ -30,9 +30,9 @@ unser Hoster protokolliert: IP-Adresse, Zeitpunkt, aufgerufene Adresse,
 übertragene Datenmenge, Browser- und Betriebssystemkennung sowie die zuvor
 besuchte Seite.
 
-**Zweck:** Auslieferung der Seiten, Stabilität und Abwehr von Angriffen.
+**Zweck:** Auslieferung der Seiten, Stabilität und Abwehr von Angriffen.\
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. f DSGVO — unser berechtigtes Interesse
-am sicheren Betrieb.
+am sicheren Betrieb.\
 **Speicherdauer:** höchstens sieben Tage, danach automatische Löschung.
 
 ## 3. Speicherung auf Ihrem Gerät
@@ -40,12 +40,13 @@ am sicheren Betrieb.
 Dieser Shop setzt **keine Werbe- oder Trackingcookies**. Was gespeichert wird,
 liegt im lokalen Speicher Ihres Browsers und verlässt Ihr Gerät nicht:
 
-| Was | Wofür | Wie lange |
-|---|---|---|
-| Farbschema (hell/dunkel) | Ihre Anzeigeeinstellung | bis Sie sie ändern |
-| Sprache | Ihre Sprachwahl | bis Sie sie ändern |
-| Warenkorb | die Artikel, die Sie hineingelegt haben | bis zur Bestellung oder bis Sie ihn leeren |
-| Datenschutz-Auswahl | Ihre Entscheidung im Hinweisfeld, mit Zeitpunkt | bis Sie sie ändern |
+- **Farbschema (hell/dunkel):** Ihre Anzeigeeinstellung; gespeichert, bis Sie
+  sie ändern.
+- **Sprache:** Ihre Sprachwahl; gespeichert, bis Sie sie ändern.
+- **Warenkorb:** die Artikel, die Sie hineingelegt haben; gespeichert bis zur
+  Bestellung oder bis Sie ihn leeren.
+- **Datenschutz-Auswahl:** Ihre Entscheidung im Hinweisfeld, mit Zeitpunkt;
+  gespeichert, bis Sie sie ändern.
 
 Diese Speicherung ist für den von Ihnen ausdrücklich gewünschten Dienst
 unbedingt erforderlich und daher nach § 25 Abs. 2 Nr. 2 TDDDG
@@ -63,9 +64,9 @@ der Widerrufserklärung, dem Sie zugestimmt haben. Enthält Ihre Bestellung
 körperliche Ware, kommt die Lieferanschrift hinzu.
 
 **Zweck:** Abwicklung des Vertrages und Erfüllung unserer gesetzlichen
-Pflichten.
+Pflichten.\
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. b DSGVO (Vertrag) und Art. 6 Abs. 1
-lit. c DSGVO (handels- und steuerrechtliche Aufbewahrung).
+lit. c DSGVO (handels- und steuerrechtliche Aufbewahrung).\
 **Speicherdauer:** zehn Jahre nach § 147 AO und § 257 HGB. Eine Löschung vor
 Ablauf dieser Frist ist uns nicht möglich.
 
@@ -88,7 +89,7 @@ Server zu keinem Zeitpunkt.**
   in den USA; die Übermittlung ist durch Standardvertragsklauseln nach Art. 46
   Abs. 2 lit. c DSGVO abgesichert.
 
-**Zweck:** Durchführung der Zahlung.
+**Zweck:** Durchführung der Zahlung.\
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. b DSGVO.
 
 ## 6. Versand
@@ -97,7 +98,7 @@ Enthält Ihre Bestellung körperliche Ware, geben wir Ihren Namen und Ihre
 Lieferanschrift an das beauftragte Versandunternehmen weiter, soweit dies für
 die Zustellung erforderlich ist.
 
-**Zweck:** Lieferung.
+**Zweck:** Lieferung.\
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. b DSGVO.
 
 ## 7. Hosting
@@ -113,7 +114,7 @@ San Francisco, USA. Die Übermittlung ist durch Standardvertragsklauseln nach
 Art. 46 Abs. 2 lit. c DSGVO abgesichert.
 
 **Zweck:** die gesetzlich vorgeschriebene Bestätigung Ihrer Bestellung
-(§ 312i Abs. 1 Nr. 3 BGB).
+(§ 312i Abs. 1 Nr. 3 BGB).\
 **Rechtsgrundlage:** Art. 6 Abs. 1 lit. b und lit. c DSGVO.
 
 ## 9. Weiterleitung zu Partnershops
@@ -162,9 +163,9 @@ Wenden Sie sich dafür formlos an
 Sie können sich bei einer Datenschutz-Aufsichtsbehörde beschweren. Für uns
 zuständig ist das
 
-Unabhängige Landeszentrum für Datenschutz Schleswig-Holstein
-Holstenstraße 98
-24103 Kiel
+Unabhängige Landeszentrum für Datenschutz Schleswig-Holstein\
+Holstenstraße 98\
+24103 Kiel\
 [datenschutzzentrum.de](https://www.datenschutzzentrum.de)
 
 ## 14. Verschlüsselung

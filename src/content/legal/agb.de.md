@@ -13,8 +13,8 @@ Allgemeine Geschäftsbedingungen für Bestellungen über
 **1.1** Diese Bedingungen gelten für alle Bestellungen, die Sie über diesen
 Shop aufgeben. Vertragspartner ist
 
-Julian Tracht, Tracht Digital Solutions
-Elbinger Straße 19, 21493 Schwarzenbek
+Julian Tracht, Tracht Digital Solutions\
+Elbinger Straße 19, 21493 Schwarzenbek\
 USt-IdNr. DE 450 639 725
 
 **1.2** Der Shop richtet sich an Verbraucher (§ 13 BGB) **und** an Unternehmer
