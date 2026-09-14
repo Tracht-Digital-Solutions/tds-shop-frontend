@@ -1,22 +1,21 @@
 ---
-import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
+import { AccountMenu, ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
+import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
+import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
 
 import CartBadge from "./CartBadge.tsx";
 import { homePath, tx, type Lang } from "../lib/i18n";
-import { siteLinks } from "../lib/seo";
 
 /**
- * The top bar, in the journal's idiom: logomark + wordmark, the accent
- * divider square, flat underline nav, language switch, theme toggle, and the
- * shared `.tds-mobile-menu` sheet below `lg`. Same shape as the tools site's
- * `Header.astro` and the journal's `JournalHeader.astro`, minus what this site
- * has no use for (account menu, contact CTA — the action here is the basket).
+ * The public property bar — the one top bar the journal, the tools site and
+ * the shop share: `.tds-sitebar*` and `propertyNav()` from tds-shared.
  *
- * This replaced a hand-rolled `.shop-header` that had none of that: no DE|EN
- * switch (a lone "English" link that never said which language you were
- * reading), no theme toggle, no mobile menu, and no link to any sibling
- * property. The journal links TO the shop from its own nav; a property that is
- * only ever linked to is a dead end for a reader and an orphan for a crawler.
+ * The shop's bar used to be its own: 72rem wide where the journal ran at
+ * 120rem, "Katalog · Journal · Tools · Tracht Digital" where the tools site
+ * said "Alle Tools · Blog · Startseite", and no account menu or contact CTA.
+ * Following a link between the three moved the logo and renamed the links
+ * under the cursor. What stays here is what is the shop's own: the wordmark,
+ * the language switch to the resolved alternate, and the basket.
  */
 interface Props {
   lang: Lang;
@@ -30,12 +29,11 @@ interface Props {
 
 const { lang, altUrl = null } = Astro.props;
 const t = tx(lang);
-const links = siteLinks(lang);
 const path = Astro.url.pathname;
 
 /** Trailing slashes are ignored by the router (`trailingSlash: "ignore"`), so
  *  "/en" and "/en/" are the same page and only a normalised compare can say
- *  which nav entry is current. */
+ *  whether this is the shop's home. */
 const trimSlash = (v: string): string => (v.length > 1 && v.endsWith("/") ? v.slice(0, -1) : v);
 const isHome = trimSlash(path) === trimSlash(homePath(lang));
 
@@ -50,67 +48,78 @@ const langHrefs = (["de", "en"] as const).map((code) => ({
   href: code === lang ? path : (altUrl ?? homePath(code)),
 }));
 
-/** Sibling properties open in the SAME tab — the journal's rule, and the reason
- *  none of these carries `target`. */
-const nav = [
-  { href: homePath(lang), label: t.nav.catalogue, current: isHome },
-  { href: links.blog, label: "Journal", current: false },
-  { href: links.tools, label: "Tools", current: false },
-  { href: links.main, label: t.nav.main, current: false },
-];
+/** Journal · Tools · Shop · Tracht Digital, with the shop marked current.
+ *  Sibling properties open in the SAME tab — none of these carries `target`. */
+const nav = propertyNav("shop", lang, homePath(lang));
+const contact = propertyContact(lang);
+/** The canonical call, the same words on the landingpage and both sibling bars. */
+const cta = translations[lang].nav.cta;
 ---
 
 {/* Fill, blur, sticky position and the warm hairline all come from
     `.brand-header` (tds-shared). Never re-declare them here. */}
 <header class="brand-header">
-  <div class="shop-shell shop-bar">
+  {/* `.tds-shell` gives the bar the page's own edges — the blog surface's
+      120rem, the same on all three properties. */}
+  <div class="tds-shell tds-sitebar">
     {/* The mark IS the "TD" of the name, so only "Shop" is set in type and the
         accessible name restates the whole brand. `.brand-wordmark` is what puts
         `.accent-italic` back upright (primitives.css). */}
     <a
-      class="shop-header__brand brand-wordmark"
+      class="tds-sitebar__brand brand-wordmark"
       href={homePath(lang)}
       aria-label={`${t.brand} — ${t.nav.catalogue}`}
     >
       <span class="brand-logo" aria-hidden="true"></span>
       <span class="accent-italic">Shop</span>
     </a>
-    <span class="nav-divider shop-bar__divider" aria-hidden="true"></span>
+    <span class="tds-sitebar__divider" aria-hidden="true"></span>
 
-    <nav class="shop-nav" aria-label={t.nav.label}>
+    {/* `page` on the catalogue, `true` everywhere else in the shop: the reader
+        is inside this property there, just not on its home. */}
+    <nav class="tds-sitebar__nav" aria-label={t.nav.label}>
       {nav.map((item) => (
         <a
-          class="shop-nav__link link-underline"
+          class="tds-sitebar__link"
           href={item.href}
-          aria-current={item.current ? "page" : undefined}
+          aria-current={item.current ? (isHome ? "page" : "true") : undefined}
         >
           {item.label}
         </a>
       ))}
     </nav>
 
-    <div class="shop-bar__actions">
-      {/* Visible at every width, and renders nothing while the basket is empty. */}
-      <CartBadge client:idle lang={lang} />
-
-      {/* Hidden on a WRAPPER below `lg`: tds-shared is unlayered, so a
-          `display` rule on the controls themselves would lose to theirs. */}
-      <div class="shop-bar__desktop">
-        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
-          {langHrefs.map((l) => (
-            <a
-              href={l.href}
-              hreflang={l.code}
-              lang={l.code}
-              class={l.code === lang ? "on" : ""}
-              aria-current={l.code === lang ? "true" : undefined}
-            >
-              {l.code.toUpperCase()}
-            </a>
-          ))}
-        </div>
-        <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
+    {/* Hidden below `lg` by the shared class on the WRAPPER: tds-shared is
+        unlayered, so a `display` rule on the controls themselves would lose to
+        theirs. The CTA yields below 80rem through `.tds-sitebar__wide`, the
+        same on all three bars. */}
+    <div class="tds-sitebar__desktop">
+      <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+        {langHrefs.map((l) => (
+          <a
+            href={l.href}
+            hreflang={l.code}
+            lang={l.code}
+            class={l.code === lang ? "on" : ""}
+            aria-current={l.code === lang ? "true" : undefined}
+          >
+            {l.code.toUpperCase()}
+          </a>
+        ))}
       </div>
+      <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
+      <div class="tds-sitebar__wide">
+        <a href={contact} class="btn btn-primary">{cta}</a>
+      </div>
+    </div>
+
+    {/* Visible at every width, in the shared order: who you are, then the
+        shop's own extra, then the hamburger. The account menu renders nothing
+        for a signed-out visitor and the basket nothing while it is empty, so an
+        anonymous first visit sees just the hamburger here. */}
+    <div class="tds-sitebar__actions">
+      <AccountMenu client:idle lang={lang} />
+      <CartBadge client:idle lang={lang} />
 
       {/* The breakpoint comes from `.tds-menu-toggle` itself. */}
       <button
@@ -129,7 +138,8 @@ const nav = [
   </div>
 
   {/* The sheet, its motion and its scroll containment are `.tds-mobile-menu`;
-      only the docking offset is local (`.shop-mobile-menu`). */}
+      only the docking offset and the control row are local
+      (`.shop-mobile-menu`). */}
   <div id="mobile-menu" class="tds-mobile-menu shop-mobile-menu" aria-hidden="true" aria-label={t.nav.menu}>
     <nav aria-label={t.nav.label}>
       {nav.map((item) => (
@@ -137,7 +147,7 @@ const nav = [
           href={item.href}
           data-menu-link
           class="tds-mobile-menu__link"
-          aria-current={item.current ? "page" : undefined}
+          aria-current={item.current ? (isHome ? "page" : "true") : undefined}
         >
           {item.label}
         </a>
@@ -145,21 +155,24 @@ const nav = [
     </nav>
 
     <div class="shop-mobile-menu__controls">
-      <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
-        {langHrefs.map((l) => (
-          <a
-            href={l.href}
-            hreflang={l.code}
-            lang={l.code}
-            data-menu-link
-            class={l.code === lang ? "on" : ""}
-            aria-current={l.code === lang ? "true" : undefined}
-          >
-            {l.code.toUpperCase()}
-          </a>
-        ))}
+      <div class="shop-mobile-menu__settings">
+        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+          {langHrefs.map((l) => (
+            <a
+              href={l.href}
+              hreflang={l.code}
+              lang={l.code}
+              data-menu-link
+              class={l.code === lang ? "on" : ""}
+              aria-current={l.code === lang ? "true" : undefined}
+            >
+              {l.code.toUpperCase()}
+            </a>
+          ))}
+        </div>
+        <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
       </div>
-      <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
+      <a href={contact} data-menu-link class="btn btn-primary">{cta}</a>
     </div>
   </div>
 </header>

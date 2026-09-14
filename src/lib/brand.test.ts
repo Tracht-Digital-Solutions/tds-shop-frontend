@@ -52,7 +52,7 @@ describe("the brand assets", () => {
     // makes the accessible name a requirement rather than a nicety: without the
     // label the home link announces as "Shop", and the mark must not be
     // announced twice.
-    const anchor = /<a\s+class="shop-header__brand[^"]*"[\s\S]*?>/.exec(header)?.[0] ?? "";
+    const anchor = /<a\s+class="tds-sitebar__brand[^"]*"[\s\S]*?>/.exec(header)?.[0] ?? "";
     expect(anchor).toContain("aria-label");
     expect(header).toMatch(/<span class="brand-logo" aria-hidden="true">/);
 

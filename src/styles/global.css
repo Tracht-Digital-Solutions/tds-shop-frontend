@@ -159,13 +159,14 @@
 
 /* --- shell -------------------------------------------------------------- */
 
-/* 72rem, the journal's and the tools site's `max-w-6xl`. At 84rem the shop was
-   visibly wider than the two properties it links to, and the grid ran five
-   narrow columns that broke every product title over four lines. */
-.shop-shell {
-  max-width: 72rem;
-  margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 2.5rem);
+/* The page width is `.tds-shell` on the blog surface — 120rem, the journal's
+   and the tools site's too, so the three bars and pages share their edges. The
+   shop used to sit at a private 72rem, and before that at 84rem, where the grid
+   ran five narrow columns that broke every product title over four lines. The
+   product grid's minimum answers that now: the wider page buys wider cards,
+   never more columns of broken titles. */
+:root {
+  --tds-product-grid-min: 18rem;
 }
 
 /* --- header ------------------------------------------------------------- */
@@ -183,100 +184,28 @@
   --tds-brand-logo-mask: url("/brand/td-logomark.webp");
 }
 
-/* Sticky position, blur and hairline are `.brand-header`; this is only the row. */
-.shop-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem 1rem;
-  min-height: 3.75rem;
-  padding-block: 0.375rem;
+/* The bar itself — row, wordmark, divider, nav links, the desktop cluster and
+   the actions — is tds-shared's `.tds-sitebar*`, shared with the journal and
+   the tools site, breakpoints included. Only the sheet's docking offset and
+   its control row are local. */
+
+/* …and the blend's pill actions stop at the header's edge. The bar has to be
+   the sibling sites' bar to the pixel, and there the CTA, the language switch
+   and the sheet's buttons are square (the blog surface's own radius). Rounded
+   here, the one bar that was supposed to join the three sites was the one
+   element that told them apart. */
+.brand-header {
+  --tds-radius-btn: var(--tds-radius-none);
+  --tds-radius-chip: var(--tds-radius-none);
 }
 
-.shop-header__brand {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 0.5rem;
-  padding-block: 0.5rem;
-  font-size: 1.0625rem;
-  color: var(--color-ink);
-  text-decoration: none;
-}
-
-/* The journal's divider square. Declared locally by every site that carries it,
-   and shown only beside the desktop nav it divides — below `lg` it would be a
-   lone dot next to the wordmark. */
-.nav-divider {
-  width: 5px;
-  height: 5px;
-  flex-shrink: 0;
-  background: var(--color-accent);
-}
-
-.shop-bar__divider,
-.shop-nav,
-.shop-bar__desktop {
-  display: none;
-}
-
-/* Colour lives here, not in a utility: `.link-underline` is unlayered tds-shared
-   CSS declaring `color: inherit`, and this file comes after it. */
-.shop-nav__link {
-  padding: 0.5rem;
-  font-size: 0.9375rem;
-  color: var(--color-muted);
-}
-
-.shop-nav__link:hover,
-.shop-nav__link:focus-visible {
-  color: var(--color-ink);
-}
-
-.shop-nav__link[aria-current="page"] {
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.shop-nav__link[aria-current="page"]::after {
-  transform: scaleX(1);
-}
-
-.shop-bar__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-inline-start: auto;
-}
-
-/* 64rem is `.tds-menu-toggle`'s own breakpoint and `MOBILE_NAV_DESKTOP_QUERY`.
-   Change one and change the others, or the sheet hides at a width where the
-   mechanics still consider it open. */
-@media (min-width: 64rem) {
-  .shop-bar__divider {
-    display: block;
-  }
-
-  .shop-nav,
-  .shop-bar__desktop {
-    display: flex;
-    align-items: center;
-  }
-
-  .shop-nav {
-    gap: 0 0.25rem;
-  }
-
-  .shop-bar__desktop {
-    gap: 0.5rem;
-  }
-}
-
-/* The sheet's docking offset, matched to `.shop-bar`'s min-height. The header's
+/* The sheet's docking offset, matched to `.tds-sitebar`'s min-height, and edge
+   to edge like the journal's and the tools site's sheets. The header's
    backdrop-filter makes it the containing block for this fixed panel, so `top`
    counts from the header; `--tds-mobile-menu-inset` stops the panel's
    max-height at the viewport edge instead of running past it. */
 .shop-mobile-menu {
-  inset-inline: 0.5rem;
+  inset-inline: 0;
   top: 3.75rem;
   --tds-mobile-menu-inset: 3.75rem;
 }
@@ -291,6 +220,14 @@
   padding-top: 0.75rem;
   border-top: 1px solid var(--color-line);
 }
+
+/* The two settings stay together on the left, the CTA takes the right. */
+.shop-mobile-menu__settings {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .shop-main {
   display: block;
   padding-block: clamp(1.5rem, 5vw, 3rem);
@@ -789,6 +726,17 @@
   }
 }
 
+/* On the full-width shell the text column stops at a reading width and the
+   offers stay beside it. A `1fr` column ran them out to the far edge, with
+   half a screen of nothing between the price and the text it belongs to. */
+@media (min-width: 80rem) {
+  .shop-product {
+    grid-template-columns: minmax(0, 50rem) minmax(22rem, 26rem);
+    column-gap: clamp(3rem, 4vw, 5rem);
+    justify-content: start;
+  }
+}
+
 /* The card beside the text repeats nothing the page already says: its title
    and teaser ARE this page's H1 and lede. What remains is what the column is
    for — image, advertising label, offers, the partner note. Scoped to this
@@ -829,7 +777,6 @@
 @media (pointer: coarse) {
   /* inline-flex rather than a 44px line-height: a footer label that wraps
      onto two lines keeps its own leading instead of doubling to 88px. */
-  .shop-nav__link,
   .shop-footer__link,
   .shop-breadcrumbs a,
   .shop-empty__link {
