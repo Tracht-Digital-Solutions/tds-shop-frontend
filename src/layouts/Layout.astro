@@ -10,7 +10,7 @@ import Header from "../components/Header.astro";
 import { API_BASE_META } from "@tracht-digital-solutions/tds-shared/api";
 import { ConsentBanner } from "@tracht-digital-solutions/tds-shared/consent";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
-import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
+import { pageTransitionOptIn, themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
 
 import "../styles/global.css";
 import { apiBase } from "../lib/connection";
@@ -70,6 +70,10 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The cross-page transition switch, as early as it can be: Chrome decides the
+         incoming page's opt-in at its first render, and the stylesheet linked at the
+         end of this head often arrives later (tds-shared pageTransitionOptIn). -->
+    <style is:inline set:html={pageTransitionOptIn} />
     <title>{pageTitle(title, lang)}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={url} />

@@ -148,6 +148,7 @@ uses the shared duration and easing tokens rather than a hand-picked curve.
 | Basket row collapses on remove | "Which row went?" — with six on screen, an instant disappearance leaves the reader checking the whole list |
 | Total washes once when it changes | "Did the total move?" — it updates after a debounced round trip, by which time the reader is looking at the row they just edited |
 | Submit button pulses while busy | `aria-busy` says it to a screen reader; this says it to everyone else |
+| Pages cross-fade (tds-shared `page-transitions.css`, 2026-09) | "Did I leave the shop?" — product → basket → checkout read as one place instead of three white flashes; opacity only, off under reduced motion |
 
 The product card's hover affordance — the 2px accent bar — is deliberately
 **not** here. `.tds-product-card` is a shared primitive, and a local `::before`

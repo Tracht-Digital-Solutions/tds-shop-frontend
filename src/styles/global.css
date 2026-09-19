@@ -33,6 +33,9 @@
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
 @import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
 @import "@tracht-digital-solutions/tds-shared/styles/surfaces/blog.css";
+/* Cross-page fade between two pages of the shop — see the motion table in
+   AGENTS.md for the question it answers. */
+@import "@tracht-digital-solutions/tds-shared/styles/page-transitions.css";
 
 /* Tailwind ignores node_modules by default, so the utility classes used inside
    the shared React components would never be generated. MUST come AFTER the
