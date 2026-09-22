@@ -1164,3 +1164,27 @@
      so a reader with reduced motion already gets the affordance without the
      travel. Repeating it here would be a second copy of that decision. */
 }
+
+/* === Hard 2D shadows (2026-09-22, tds-shared >= 0.42) =====================
+   Every box and control of the public sites carries a fixed, unblurred
+   offset. The VALUES are the blog surface's tokens (`--tds-shadow-hard*`) —
+   nothing here authors an elevation, it only says which boxes wear it. The
+   product cards, buttons, dropdown and cookie notice take it in tds-shared;
+   these are the shop's own boxes and its filter chips. */
+.checkout__summary,
+.checkout__payment,
+.shop-empty {
+  box-shadow: var(--tds-shadow-hard);
+}
+.shop-chip {
+  box-shadow: var(--tds-shadow-hard-press);
+}
+.shop-chip:active {
+  translate: 1px 1px;
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-chip:active {
+    translate: none;
+  }
+}

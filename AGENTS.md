@@ -273,3 +273,13 @@ render it.
 Middot-separated link runs became wrapping rows in the same pass. Six links
 joined by punctuation read as one sentence, and the separator sits between two
 targets that are already too small.
+
+## Hard 2D shadows (2026-09-22, tds-shared ≥ 0.42)
+
+Every box and control of the public sites carries a fixed, unblurred offset.
+The values are the blog surface's `--tds-shadow-hard*` tokens; the product
+cards, buttons, account dropdown and cookie notice take them in tds-shared.
+The end of `global.css` only says which of the shop's own boxes wear them
+(`.checkout__summary`, `.checkout__payment`, `.shop-empty`, the filter chips).
+That is not authoring an elevation — `surface.test.ts` still holds the shop
+off the resting `--tds-elevation-*` shadow. Never transition a `box-shadow`.
