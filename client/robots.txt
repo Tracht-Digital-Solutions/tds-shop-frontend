@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# The click redirect. It counts a click and forwards to a partner — there is
+# nothing to index, and crawling it would inflate the counter with traffic no
+# person generated.
+Disallow: /go/
+
+# Personal or transient. None of these may be cached either; see
+# src/middleware.ts, which is the mechanism that actually enforces it.
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /en/search
+
+# The host-side setup wizard. It is admin-gated and sends X-Robots-Tag itself;
+# this keeps it out of crawl budgets and out of any index that ignores headers.
+Disallow: /install/
+
+Sitemap: https://shop.tracht-digital.de/sitemap-index.xml
