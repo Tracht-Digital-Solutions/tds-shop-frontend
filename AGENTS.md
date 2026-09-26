@@ -282,4 +282,7 @@ cards, buttons, account dropdown and cookie notice take them in tds-shared.
 The end of `global.css` only says which of the shop's own boxes wear them
 (`.checkout__summary`, `.checkout__payment`, `.shop-empty`, the filter chips).
 That is not authoring an elevation — `surface.test.ts` still holds the shop
-off the resting `--tds-elevation-*` shadow. Never transition a `box-shadow`.
+off the resting `--tds-elevation-*` shadow. Hover and keyboard focus LIFT an
+interactive element 2px up-left while its offset grows
+(`--tds-shadow-hard(-sm)-hover`, 2026-09-26; the product cards and buttons get
+it in tds-shared, the filter chips here). Never transition a `box-shadow`.

@@ -1188,3 +1188,16 @@
     translate: none;
   }
 }
+
+/* Hover LIFTS an interactive element toward the pointer (2026-09-26): 2px
+   up-left while its offset grows. The product cards and the buttons get this
+   in tds-shared; these are the shop's own controls. */
+.shop-chip:is(:hover, :focus-visible) {
+  translate: -1px -1px;
+  box-shadow: var(--tds-shadow-hard-sm);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-chip:is(:hover, :focus-visible) {
+    translate: none;
+  }
+}
