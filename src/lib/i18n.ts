@@ -22,9 +22,13 @@ export function isLang(value: unknown): value is Lang {
 
 /** Path segments, per language. Each module that builds URLs keeps its own copy. */
 export const SEGMENTS = {
-  de: { product: "produkt", category: "kategorie", tag: "thema", page: "seite", legal: "rechtliches" },
-  en: { product: "product", category: "category", tag: "topic", page: "page", legal: "legal" },
+  de: { product: "produkt", category: "kategorie", legal: "rechtliches" },
+  en: { product: "product", category: "category", legal: "legal" },
 } as const;
+
+/** The tree a path belongs to. `/en` itself counts — a bare `startsWith("/en/")` missed it. */
+export const langOfPath = (pathname: string): Lang =>
+  pathname === "/en" || pathname.startsWith("/en/") ? "en" : "de";
 
 /** The prefix a language's tree hangs under. German is the root. */
 export const prefix = (lang: Lang): string => (lang === "en" ? "/en" : "");
@@ -35,11 +39,8 @@ export const productPath = (slug: string, lang: Lang): string =>
 export const categoryPath = (category: string, lang: Lang): string =>
   `${prefix(lang)}/${SEGMENTS[lang].category}/${category}`;
 
-export const tagPath = (tag: string, lang: Lang): string =>
-  `${prefix(lang)}/${SEGMENTS[lang].tag}/${tag}`;
-
-export const pagePath = (n: number, lang: Lang): string =>
-  `${prefix(lang)}/${SEGMENTS[lang].page}/${n}`;
+export const legalPath = (slug: string, lang: Lang): string =>
+  `${prefix(lang)}/${SEGMENTS[lang].legal}/${slug}`;
 
 export const homePath = (lang: Lang): string => `${prefix(lang)}/` as const;
 
@@ -76,10 +77,7 @@ export const TX = {
     brand: "TDShop",
     tagline: "Technik und Digitalisierung, kuratiert.",
     nav: {
-      home: "Start",
       catalogue: "Katalog",
-      categories: "Kategorien",
-      about: "Über TDShop",
       label: "Hauptnavigation",
       menu: "Menü",
       /** The marketing site, by name — "Startseite" beside "Katalog" is ambiguous. */
@@ -101,19 +99,14 @@ export const TX = {
       journal: "Einschätzungen im Journal lesen",
       tools: "Werkzeuge ausprobieren",
     },
-    older: "Ältere",
-    newer: "Neuere",
-    page: "Seite",
     breadcrumb: "Pfadnavigation",
     offers: "Angebote",
     relatedCategory: "Mehr aus dieser Kategorie",
     ourAssessment: "Unsere Einschätzung",
-    adLabel: "Anzeige",
     // "Sie", like the basket, the checkout and every legal text. This notice
     // used to say "du" and was the one line on the page that did.
     affiliateNotice:
       "Einige Links auf dieser Seite sind Partnerlinks. Kaufen Sie darüber, erhalten wir eine Provision — am Preis ändert sich für Sie nichts.",
-    priceUnavailable: "Preis beim Anbieter prüfen",
     backToCatalogue: "Zurück zum Katalog",
     toCatalogue: "Zum Katalog",
     toJournal: "Zum Journal",
@@ -126,6 +119,12 @@ export const TX = {
       shop: "Shop",
       company: "Tracht Digital",
       legal: "Rechtliches",
+    },
+    checkout: { heading: "Bestellung abschließen" },
+    errors: {
+      offline: "Keine Verbindung. Bitte später erneut versuchen.",
+      status: (code: number) => `Fehler ${code}. Bitte später erneut versuchen.`,
+      unknown: "Unbekannter Fehler. Bitte später erneut versuchen.",
     },
     cart: {
       title: "Warenkorb",
@@ -144,6 +143,7 @@ export const TX = {
       // screen-reader user nothing about what three of.
       badge: (n: number) => (n === 1 ? "1 Artikel im Warenkorb" : `${n} Artikel im Warenkorb`),
       subtotal: "Zwischensumme",
+      total: "Gesamt",
       shipping: "Versand",
       shippingFree: "kostenlos",
       shippingFrom: (amount: string) => `Versandkostenfrei ab ${amount}`,
@@ -152,6 +152,9 @@ export const TX = {
       keepShopping: "Weiter einkaufen",
       loading: "Wird berechnet …",
       gone: "Mindestens ein Artikel ist nicht mehr verfügbar. Bitte entfernen Sie ihn.",
+      // A network failure or a 5xx is NOT "the item is gone": telling somebody
+      // to remove a product because the API hiccuped sends them away for nothing.
+      failed: "Die Preise konnten gerade nicht berechnet werden. Bitte versuchen Sie es gleich noch einmal.",
       updated: (title: string, n: number) => `${title}: Menge ${n}`,
       removed: (title: string) => `${title} entfernt`,
     },
@@ -160,10 +163,7 @@ export const TX = {
     brand: "TDShop",
     tagline: "Technology and digitalisation, curated.",
     nav: {
-      home: "Home",
       catalogue: "Catalogue",
-      categories: "Categories",
-      about: "About TDShop",
       label: "Main navigation",
       menu: "Menu",
       main: "Tracht Digital",
@@ -180,17 +180,12 @@ export const TX = {
       journal: "Read assessments in the journal",
       tools: "Try the tools",
     },
-    older: "Older",
-    newer: "Newer",
-    page: "Page",
     breadcrumb: "Breadcrumb",
     offers: "Offers",
     relatedCategory: "More in this category",
     ourAssessment: "Our assessment",
-    adLabel: "Advertisement",
     affiliateNotice:
       "Some links on this page are affiliate links. If you buy through them we earn a commission — the price is the same for you.",
-    priceUnavailable: "Check price at the merchant",
     backToCatalogue: "Back to the catalogue",
     toCatalogue: "To the catalogue",
     toJournal: "To the journal",
@@ -201,6 +196,12 @@ export const TX = {
       shop: "Shop",
       company: "Tracht Digital",
       legal: "Legal",
+    },
+    checkout: { heading: "Complete your order" },
+    errors: {
+      offline: "No connection. Please try again later.",
+      status: (code: number) => `Error ${code}. Please try again later.`,
+      unknown: "Unknown error. Please try again later.",
     },
     cart: {
       title: "Basket",
@@ -213,6 +214,7 @@ export const TX = {
       quantity: "Quantity",
       badge: (n: number) => (n === 1 ? "1 item in your basket" : `${n} items in your basket`),
       subtotal: "Subtotal",
+      total: "Total",
       shipping: "Delivery",
       shippingFree: "free",
       shippingFrom: (amount: string) => `Free delivery from ${amount}`,
@@ -221,6 +223,7 @@ export const TX = {
       keepShopping: "Keep shopping",
       loading: "Calculating …",
       gone: "At least one item is no longer available. Please remove it.",
+      failed: "Prices could not be calculated just now. Please try again in a moment.",
       updated: (title: string, n: number) => `${title}: quantity ${n}`,
       removed: (title: string) => `${title} removed`,
     },

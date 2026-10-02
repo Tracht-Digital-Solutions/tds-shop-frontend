@@ -11,6 +11,7 @@ import { describe } from "../lib/metaDescription";
 import { isIndexable } from "../lib/indexing";
 import { asGraph, breadcrumbSchema, productSchema, webPageSchema, websiteSchema } from "../lib/jsonld";
 import { productAlternate } from "../lib/alternates";
+import { withAttribution } from "../lib/offers";
 import { canonical, site } from "../lib/seo";
 import type { ProductPage as ProductPageData } from "../lib/types";
 
@@ -59,14 +60,8 @@ const related = indexable
     )
   : [];
 
-/**
- * Attribution for the click counter. `offer.url` already points at `/go/{id}`;
- * only the source and language are added here.
- */
-const offers = product.offers.map((offer) => ({
-  ...offer,
-  url: `${offer.url}?source=shop&lang=${lang}`,
-}));
+/** Attribution for the click counter — see `attributedOfferUrl`. */
+const { offers } = withAttribution(product, lang);
 
 const hasAffiliate = offers.some((offer) => offer.kind === "affiliate");
 
@@ -115,7 +110,7 @@ const jsonLd = asGraph([
   productSchema(product, lang),
   breadcrumbSchema(
     [
-      { name: t.brand, path: homePath(lang) },
+      { name: t.nav.catalogue, path: homePath(lang) },
       { name: categoryName, path: categoryPath(product.category, lang) },
       { name: product.title, path: selfPath },
     ],

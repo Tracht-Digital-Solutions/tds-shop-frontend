@@ -1,4 +1,5 @@
 import type { CatalogProduct, EditorialStatus } from "./types";
+import { matchesPathPrefix, NEVER_CACHED } from "./noCache";
 
 /**
  * What may be indexed — the answer to the thin-affiliate problem.
@@ -30,24 +31,13 @@ export function isIndexable(product: Indexable | null | undefined): boolean {
   return product.editorialStatus === "published";
 }
 
-/** Paths that never belong in an index, whatever they contain. */
-const NEVER_INDEXED = [
-  "/go/",
-  "/install",
-  "/tds/",
-  "/suche",
-  "/en/search",
-  "/warenkorb",
-  "/en/cart",
-  "/kasse",
-  "/en/checkout",
-  "/bestellung",
-  "/en/order",
-  "/konto",
-  "/en/account",
-];
+/**
+ * Paths that never belong in an index: everything never cached (basket,
+ * checkout, order, account, search, `/go/`, `/tds/`) plus the install page.
+ * Derived, so the two lists cannot drift apart.
+ */
+const NEVER_INDEXED = [...NEVER_CACHED, "/install"];
 
 export function isExcludedPath(pathname: string): boolean {
-  const path = pathname.replace(/\/+$/, "") || "/";
-  return NEVER_INDEXED.some((prefix) => path === prefix.replace(/\/$/, "") || path.startsWith(prefix));
+  return matchesPathPrefix(pathname, NEVER_INDEXED);
 }

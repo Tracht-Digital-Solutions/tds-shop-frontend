@@ -33,7 +33,14 @@ const copy = lang === "de"
       pending: "Zahlung eingegangen — die Bestätigung folgt in wenigen Augenblicken.",
       refunded: "Diese Bestellung wurde erstattet.",
       failed: "Die Zahlung ist nicht zustande gekommen.",
-      next: "Wir melden uns per E-Mail und beginnen mit der Leistung.",
+      next: {
+        digital: "Wir melden uns per E-Mail und beginnen mit der Leistung.",
+        goods: "Wir melden uns per E-Mail und versenden die Ware.",
+        mixed: "Wir melden uns per E-Mail, beginnen mit der Leistung und versenden die Ware.",
+      },
+      shipping: "Versand",
+      shippingFree: "kostenlos",
+      address: "Lieferanschrift",
       notFound: "Diese Bestellung konnten wir nicht finden.",
       notFoundBody: "Bitte prüfen Sie den Link aus Ihrer Bestätigungs-E-Mail.",
       number: "Bestellnummer",
@@ -48,7 +55,14 @@ const copy = lang === "de"
       pending: "Payment received — confirmation follows in a moment.",
       refunded: "This order has been refunded.",
       failed: "The payment did not go through.",
-      next: "We will be in touch by email and begin the work.",
+      next: {
+        digital: "We will be in touch by email and begin the work.",
+        goods: "We will be in touch by email and ship your goods.",
+        mixed: "We will be in touch by email, begin the work and ship your goods.",
+      },
+      shipping: "Delivery",
+      shippingFree: "free",
+      address: "Delivery address",
       notFound: "We could not find this order.",
       notFoundBody: "Please check the link from your confirmation email.",
       number: "Order number",
@@ -67,6 +81,24 @@ const statusLine = order === null
       : order.status === "failed"
         ? copy.failed
         : copy.pending;
+
+/**
+ * What happens next depends on what was bought. "We begin the work" was the
+ * only sentence, so somebody who ordered a router was told a service starts.
+ */
+const shipped = order?.items.filter((item) => Boolean(item.requires_shipping)).length ?? 0;
+const regime = !order || shipped === 0 ? "digital" : shipped === order.items.length ? "goods" : "mixed";
+
+/** The delivery address, when one was collected. Shown so a typo can be caught. */
+const addressLines = order?.ship_line1
+  ? [
+      order.ship_name,
+      order.ship_line1,
+      order.ship_line2,
+      [order.ship_postcode, order.ship_city].filter(Boolean).join(" "),
+      order.ship_country,
+    ].filter((line): line is string => Boolean(line && line.trim()))
+  : [];
 ---
 
 <Layout title={copy.title} description={copy.title} lang={lang} noindex>
@@ -85,8 +117,21 @@ const statusLine = order === null
         <dl class="order-summary">
           <div><dt>{copy.number}</dt><dd>{order.order_no}</dd></div>
           {order.items.map((item) => (
-            <div><dt>{item.title}</dt><dd>{formatPrice(item.gross_cents, order.currency, lang)}</dd></div>
+            <div>
+              <dt>{(item.quantity ?? 1) > 1 ? `${item.quantity} × ` : ""}{item.title}</dt>
+              <dd>{formatPrice(item.gross_cents, order.currency, lang)}</dd>
+            </div>
           ))}
+          {regime !== "digital" && order.shipping_gross_cents !== undefined ? (
+            <div>
+              <dt>{copy.shipping}</dt>
+              <dd>
+                {order.shipping_gross_cents === 0
+                  ? copy.shippingFree
+                  : formatPrice(order.shipping_gross_cents, order.currency, lang)}
+              </dd>
+            </div>
+          ) : null}
           <div><dt>{copy.net}</dt><dd>{formatPrice(order.net_cents, order.currency, lang)}</dd></div>
           <div><dt>{copy.vat}</dt><dd>{formatPrice(order.tax_cents, order.currency, lang)}</dd></div>
           <div class="order-summary__total">
@@ -94,7 +139,21 @@ const statusLine = order === null
           </div>
         </dl>
 
-        {order.status === "paid" ? <p>{copy.next}</p> : null}
+        {addressLines.length > 0 ? (
+          <section class="order-summary__address" aria-labelledby="order-address">
+            <h2 id="order-address">{copy.address}</h2>
+            <address>
+              {addressLines.map((line, i) => (
+                <>
+                  {i > 0 ? <br /> : null}
+                  {line}
+                </>
+              ))}
+            </address>
+          </section>
+        ) : null}
+
+        {order.status === "paid" ? <p>{copy.next[regime]}</p> : null}
 
         {/* Read back the exact sentence they agreed to — § 356 Abs. 4 BGB
             makes that wording the thing that matters, and the customer is

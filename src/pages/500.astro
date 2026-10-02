@@ -1,10 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { homePath, tx } from "../lib/i18n";
+import { homePath, langOfPath, tx } from "../lib/i18n";
 
 export const prerender = false;
 
-const lang = Astro.url.pathname.startsWith("/en/") ? "en" : "de";
+const lang = langOfPath(Astro.url.pathname);
 const t = tx(lang);
 
 // Its own sentence, not the 404's: "the link is outdated or mistyped" is the

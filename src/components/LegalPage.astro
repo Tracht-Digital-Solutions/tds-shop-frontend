@@ -2,8 +2,10 @@
 import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
 
 import Layout from "../layouts/Layout.astro";
-import { homePath, tx, type Lang } from "../lib/i18n";
-import { LEGAL_TITLES, type LegalSlug } from "../lib/legal";
+import { homePath, legalPath, tx, type Lang } from "../lib/i18n";
+import { LEGAL_TITLES, publishedLegalSlugs, type LegalSlug } from "../lib/legal";
+import { describe } from "../lib/metaDescription";
+import { site } from "../lib/seo";
 
 /**
  * One legal document.
@@ -29,12 +31,28 @@ const t = tx(lang);
 const title = LEGAL_TITLES[lang][slug];
 const html = markdown === null ? null : renderMarkdown(markdown);
 
+/**
+ * The counterpart is the same document under the other tree — `/rechtliches/x`
+ * ↔ `/en/legal/x` is 1:1. Declared only when the other language actually has a
+ * text (CMS or committed): a dangling alternate invalidates the whole set.
+ * Without it the language switch fell back to the front page.
+ */
+const other: Lang = lang === "de" ? "en" : "de";
+const altUrl =
+  markdown !== null && (await publishedLegalSlugs(other)).includes(slug) ? legalPath(slug, other) : null;
+
+/** The title alone was ~20 characters, far under the floor a result renders. */
+const description = describe(
+  lang === "de" ? `${title} von TDShop, dem Shop von Tracht Digital Solutions.` : `${title} for TDShop, the shop of Tracht Digital Solutions.`,
+  site.description[lang],
+);
+
 const missing = lang === "de"
   ? "Dieser Text ist noch nicht veröffentlicht. Bitte wenden Sie sich an kontakt@tracht-digital.de."
   : "This text has not been published yet. Please write to kontakt@tracht-digital.de.";
 ---
 
-<Layout title={title} description={title} lang={lang} noindex={markdown === null}>
+<Layout title={title} description={description} lang={lang} altUrl={altUrl} noindex={markdown === null}>
   <h1 class="shop-title">{title}</h1>
 
   {

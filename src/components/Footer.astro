@@ -2,7 +2,7 @@
 import { ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
 
 import { cartPath } from "../lib/cart";
-import { homePath, tx, type Lang } from "../lib/i18n";
+import { homePath, legalPath, tx, type Lang } from "../lib/i18n";
 import { LEGAL_KEYS, LEGAL_TITLES, type LegalSlug } from "../lib/legal";
 import { siteLinks } from "../lib/seo";
 
@@ -23,7 +23,6 @@ const { lang } = Astro.props;
 const t = tx(lang);
 const links = siteLinks(lang);
 
-const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
 /**
  * Every document the registry knows, derived rather than restated.
  *
@@ -33,7 +32,7 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
  * Impressum, § 312i BGB for the terms and the withdrawal policy.
  */
 const legalLinks = (Object.keys(LEGAL_KEYS) as LegalSlug[]).map((slug) => ({
-  href: `${legalBase}/${slug}`,
+  href: legalPath(slug, lang),
   label: LEGAL_TITLES[lang][slug],
 }));
 

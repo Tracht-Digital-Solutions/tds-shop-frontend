@@ -80,12 +80,12 @@ shared audit can check them.
 ## Toolchain
 
 Astro 7.2.5, TypeScript 6 (TS7 is capped by `@astrojs/check`'s peer range),
-vitest 4, `tds-shared ^0.43.0`. The 0.x caret is **minor-locked** — a shared
+vitest 4, `tds-shared ^0.45.4`. The 0.x caret is **minor-locked** — a shared
 minor needs an explicit repin here and a re-verification, not just an install.
 
 Node 22 in CI with npm force-upgraded to 11: npm 10's arborist crashes
-resolving Astro 7.3.0. `npm install --no-package-lock` — the committed Windows
-lockfile does not resolve on a Linux runner.
+resolving Astro 7.3.0. `npm install --no-package-lock` — the lockfile is gitignored because a
+Windows-generated one does not resolve on a Linux runner.
 
 ## Don't
 
@@ -93,7 +93,8 @@ lockfile does not resolve on a Linux runner.
   layer; this site renders `data-surface="blog"` and must keep matching the
   journal because they link to each other.
 - Don't hand-roll a header or footer again, and don't write a sibling URL
-  inline. `siteLinks()` is the one source. `header.test.ts` fails on a local
+  inline. `siteLinks()` is the one source (it reads tds-shared's
+  `PROPERTY_ORIGINS`). `header.test.ts` fails on a local
   bar, on an `is:inline` mobile-menu script (its import would reach the browser
   as a bare specifier and the hamburger would do nothing), and on a missing
   link back to the journal, the tools site or the main site.

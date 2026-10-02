@@ -15,7 +15,7 @@ import { pageTransitionOptIn, themeBootstrapScript } from "@tracht-digital-solut
 import "../styles/global.css";
 import { apiBase } from "../lib/connection";
 import { canonical, pageTitle, site } from "../lib/seo";
-import type { Lang } from "../lib/i18n";
+import { legalPath, type Lang } from "../lib/i18n";
 import { isExcludedPath } from "../lib/indexing";
 
 interface Props {
@@ -80,7 +80,6 @@ const url = canonical(path);
 const alternate = altUrl && altUrl.startsWith("/") ? canonical(altUrl) : altUrl;
 const robots = noindex || isExcludedPath(path) ? "noindex, follow" : "index, follow";
 const image = ogImage ?? `${site.url}/og-default.png`;
-const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
 ---
 
 <!--
@@ -97,7 +96,7 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
          incoming page's opt-in at its first render, and the stylesheet linked at the
          end of this head often arrives later (tds-shared pageTransitionOptIn). -->
     <style is:inline set:html={pageTransitionOptIn} />
-    <title>{pageTitle(title, lang)}</title>
+    <title>{pageTitle(title)}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={url} />
     <meta name="robots" content={robots} />
@@ -122,7 +121,7 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.name} />
-    <meta property="og:title" content={pageTitle(title, lang)} />
+    <meta property="og:title" content={pageTitle(title)} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
     <meta property="og:image" content={image} />
@@ -133,7 +132,7 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
         to whatever the scraper could guess. The three it actually reads cost
         three lines. */}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle(title, lang)} />
+    <meta name="twitter:title" content={pageTitle(title)} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <meta name="author" content={site.legalName} />
@@ -205,8 +204,8 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
     <ConsentBanner
       client:idle
       lang={lang}
-      privacyUrl={`${legalBase}/datenschutz`}
-      imprintUrl={`${legalBase}/impressum`}
+      privacyUrl={legalPath("datenschutz", lang)}
+      imprintUrl={legalPath("impressum", lang)}
     />
   </body>
 </html>

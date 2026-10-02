@@ -135,17 +135,6 @@ export function isLegalTemplate(slug: LegalSlug, lang: Lang): boolean {
   return /^---\r?\n[\s\S]*?\btemplate:\s*true\b/.test(bundledRaw(slug, lang) ?? "");
 }
 
-/** Every document that still ships as a template, for a checklist. */
-export function legalTemplates(): Array<{ slug: LegalSlug; lang: Lang }> {
-  const out: Array<{ slug: LegalSlug; lang: Lang }> = [];
-  for (const slug of Object.keys(LEGAL_KEYS) as LegalSlug[]) {
-    for (const lang of ["de", "en"] as Lang[]) {
-      if (isLegalTemplate(slug, lang)) out.push({ slug, lang });
-    }
-  }
-  return out;
-}
-
 /**
  * Fetch one legal text as markdown, or null.
  *
@@ -154,25 +143,42 @@ export function legalTemplates(): Array<{ slug: LegalSlug; lang: Lang }> {
  * marketing site's, it would serve the marketing site's Impressum here.
  */
 export async function getLegalMarkdown(slug: LegalSlug, lang: Lang): Promise<string | null> {
-  const fallback = bundledLegal(slug, lang);
+  return pickLegal(await cmsLegalBlocks(lang), slug, lang);
+}
 
+/**
+ * Every document that has a text in `lang` — CMS or committed — read with ONE
+ * request. The sitemap and the hreflang pairing use it: listing only the
+ * committed files missed every document published through the CMS alone.
+ */
+export async function publishedLegalSlugs(lang: Lang): Promise<LegalSlug[]> {
+  const blocks = await cmsLegalBlocks(lang);
+  return (Object.keys(LEGAL_KEYS) as LegalSlug[]).filter((slug) => pickLegal(blocks, slug, lang) !== null);
+}
+
+/** The CMS override if it says something, the committed text otherwise. */
+function pickLegal(blocks: BlockResponse["blocks"] | null, slug: LegalSlug, lang: Lang): string | null {
+  const markdown = blocks?.[LEGAL_KEYS[slug]]?.markdown ?? "";
+  return markdown.trim() === "" ? bundledLegal(slug, lang) : markdown;
+}
+
+/** The site's CMS blocks, or null when there are none to read (demo, outage). */
+async function cmsLegalBlocks(lang: Lang): Promise<BlockResponse["blocks"] | null> {
   // A demo build shows the committed text. It is the real one — there is no
   // fixture to invent, and a demo of a shop with no terms is not a useful demo.
-  if (DEMO_MODE) return fallback;
+  if (DEMO_MODE) return null;
 
   const url = `${contentApiBase()}/landing?lang=${lang}`;
   try {
     const res = await fetch(url, { headers: siteKeyHeaders() });
     assertKeyAccepted(res, url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const body = (await res.json()) as BlockResponse;
-    const markdown = body.blocks?.[LEGAL_KEYS[slug]]?.markdown ?? "";
-    return markdown.trim() === "" ? fallback : markdown;
+    return ((await res.json()) as BlockResponse).blocks ?? null;
   } catch (err) {
     if (err instanceof Error && err.name === "SiteKeyRejectedError") throw err;
     // Fail SOFT onto the committed text rather than to null. An unreachable
     // CMS must not be able to take a shop's withdrawal policy off the internet.
-    console.warn(`[tds-shop] legal ${slug} unreachable, serving the committed text:`, err);
-    return fallback;
+    console.warn(`[tds-shop] legal texts (${lang}) unreachable, serving the committed text:`, err);
+    return null;
   }
 }

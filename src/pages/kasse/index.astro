@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CheckoutForm from "../../components/CheckoutForm.tsx";
+import { tx } from "../../lib/i18n";
 
 /**
  * The basket checkout.
@@ -21,5 +22,6 @@ export const prerender = false;
 ---
 
 <Layout title="Kasse" description="Bestellung abschließen." lang="de" noindex altUrl="/en/checkout">
+  <h1 class="shop-title">{tx("de").checkout.heading}</h1>
   <CheckoutForm client:load lang="de" />
 </Layout>

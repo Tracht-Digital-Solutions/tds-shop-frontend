@@ -1,7 +1,7 @@
 import { apiBase } from "@tracht-digital-solutions/tds-shared/api";
 
 import type { CartLine } from "./cart";
-import type { Lang } from "./i18n";
+import { tx, type Lang } from "./i18n";
 
 /**
  * The checkout's client-side half.
@@ -128,6 +128,25 @@ export interface Quote {
 }
 
 /**
+ * Why a basket could not be priced.
+ *
+ * - `empty`: nothing to price; not an error to show.
+ * - `unavailable`: the server refused the basket (4xx) — an item is gone.
+ * - `failed`: a network error or a 5xx. Reporting that as "an item is no
+ *   longer available" sent people to remove products for an API hiccup.
+ */
+export interface QuoteFailure {
+  error: "empty" | "unavailable" | "failed";
+}
+
+/** The sentence a reader sees for a failure, or null when there is nothing to say. */
+export function quoteFailureMessage(failure: QuoteFailure, lang: Lang): string | null {
+  const t = tx(lang).cart;
+  if (failure.error === "empty") return null;
+  return failure.error === "unavailable" ? t.gone : t.failed;
+}
+
+/**
  * Price a basket without ordering anything.
  *
  * The basket page cannot add this up itself: the total includes delivery, which
@@ -135,7 +154,7 @@ export interface Quote {
  * the goods' VAT rates. A page that guessed would eventually show a different
  * number than the checkout charges, and that is worse than showing none.
  */
-export async function quoteCart(lines: CartLine[], lang: Lang): Promise<Quote | { error: string }> {
+export async function quoteCart(lines: CartLine[], lang: Lang): Promise<Quote | QuoteFailure> {
   if (lines.length === 0) {
     return { error: "empty" };
   }
@@ -145,11 +164,10 @@ export async function quoteCart(lines: CartLine[], lang: Lang): Promise<Quote | 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items: lines, lang }),
     });
-    const body = (await res.json().catch(() => ({}))) as Quote & { error?: string };
-    if (!res.ok) return { error: body.error ?? `Fehler ${res.status}` };
-    return body;
+    if (!res.ok) return { error: res.status >= 500 ? "failed" : "unavailable" };
+    return (await res.json()) as Quote;
   } catch {
-    return { error: "Keine Verbindung. Bitte später erneut versuchen." };
+    return { error: "failed" };
   }
 }
 
@@ -207,6 +225,7 @@ export interface CheckoutResult {
  * server's default happens to be today.
  */
 export async function startCheckout(input: CheckoutInput): Promise<CheckoutResult> {
+  const errors = tx(input.lang).errors;
   try {
     const res = await fetch(`${apiBase()}/shop/checkout`, {
       method: "POST",
@@ -221,11 +240,11 @@ export async function startCheckout(input: CheckoutInput): Promise<CheckoutResul
     if (!res.ok) {
       // Carry the server's own message: "nur nach Deutschland" is actionable,
       // "Fehler 422" is not.
-      return { error: body.error ?? `Fehler ${res.status}` };
+      return { error: body.error ?? errors.status(res.status) };
     }
     return body;
   } catch {
-    return { error: "Keine Verbindung. Bitte später erneut versuchen." };
+    return { error: errors.offline };
   }
 }
 

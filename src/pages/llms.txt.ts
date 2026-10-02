@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { listCategories, listProducts } from "~/lib/content-api";
+import { listAllProducts, listCategories } from "~/lib/content-api";
 import { isIndexable } from "~/lib/indexing";
 import { renderLlmsTxt } from "~/lib/llmsTxt";
 
@@ -28,12 +28,12 @@ export const prerender = false;
 export const GET: APIRoute = async () => {
   // German is the root tree and this file is German; the English URLs are
   // derived per entry, so one language's read is enough.
-  const [page, categories] = await Promise.all([
-    listProducts({ lang: "de", limit: 48 }),
+  const [all, categories] = await Promise.all([
+    listAllProducts({ lang: "de" }),
     listCategories("de"),
   ]);
 
-  const products = page.products.filter(isIndexable).map((product) => ({
+  const products = all.filter(isIndexable).map((product) => ({
     slug: product.slug,
     title: product.title,
     teaser: product.teaser,

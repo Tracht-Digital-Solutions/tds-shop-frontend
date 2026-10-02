@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ProductGrid from "./ProductGrid.astro";
-import { listCategories, listProducts } from "../lib/content-api";
+import { listAllProducts, listCategories } from "../lib/content-api";
 import { categoryName, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import {
@@ -15,7 +15,7 @@ import {
 } from "../lib/jsonld";
 import { categoryAlternate, homeAlternate } from "../lib/alternates";
 import { categoryCopy } from "../lib/categoryCopy";
-import { canonical, site } from "../lib/seo";
+import { site } from "../lib/seo";
 
 /**
  * The catalogue, shared by the German and English index routes.
@@ -33,8 +33,8 @@ interface Props {
 const { lang, category = null } = Astro.props;
 const t = tx(lang);
 
-const [page, categories] = await Promise.all([
-  listProducts({ lang, limit: 24, category }),
+const [products, categories] = await Promise.all([
+  listAllProducts({ lang, category }),
   listCategories(lang),
 ]);
 
@@ -67,7 +67,7 @@ const total = categories.reduce((sum, c) => sum + c.total, 0);
  * only true when one is. An empty catalogue carried it anyway, a claim about
  * links that did not exist. The product page has always made the same check.
  */
-const hasAffiliate = page.products.some((p) => p.offers.some((o) => o.kind === "affiliate"));
+const hasAffiliate = products.some((p) => p.offers.some((o) => o.kind === "affiliate"));
 
 /**
  * The locale counterpart, confirmed rather than derived. The home page always
@@ -97,7 +97,7 @@ const jsonLd = asGraph([
         ]),
       ]
     : []),
-  itemListSchema(page.products, lang),
+  itemListSchema(products, lang),
   /* FAQ markup ONLY where the page shows the questions. A category without
      written copy gets no node — markup the page cannot stand behind is what
      a FAQ rich result is withdrawn for. */
@@ -149,7 +149,7 @@ const jsonLd = asGraph([
     {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
   </section>
 
-  <ProductGrid products={page.products} lang={lang} />
+  <ProductGrid products={products} lang={lang} />
 
   {/* The questions, under the products rather than above them: somebody who
       came for a switch should reach the switches first. `<details>` so the

@@ -1,12 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { homePath, tx } from "../lib/i18n";
+import { homePath, langOfPath, tx } from "../lib/i18n";
 import { siteLinks } from "../lib/seo";
 
 export const prerender = false;
 
 // The tree the visitor was in, so a 404 under /en/ does not switch language.
-const lang = Astro.url.pathname.startsWith("/en/") ? "en" : "de";
+const lang = langOfPath(Astro.url.pathname);
 const t = tx(lang);
 ---
 

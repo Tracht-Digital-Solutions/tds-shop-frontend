@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { clearCart, readCart, type CartLine } from "../lib/cart";
 import {
   formatPrice,
   paymentMethods,
-  quoteCart,
   startCheckout,
   WITHDRAWAL_TEXT,
   type DeliveryAddress,
   type PaymentMethod,
-  type Quote,
 } from "../lib/checkout";
 import { tx, type Lang } from "../lib/i18n";
+import ShippingRow from "./ShippingRow";
+import { useQuote } from "./useQuote";
 
 interface Props {
   lang: Lang;
@@ -24,12 +24,9 @@ interface Props {
 
 const TX = {
   de: {
-    heading: "Bestellung abschließen",
     summary: "Ihre Bestellung",
     net: "Netto",
     vat: "zzgl. USt",
-    shipping: "Versand",
-    shippingFree: "kostenlos",
     total: "Gesamt",
     email: "E-Mail-Adresse",
     emailHint: "An diese Adresse geht die Bestellbestätigung.",
@@ -52,16 +49,11 @@ const TX = {
     consentLabel: "Ich stimme zu und bestätige:",
     withdrawalInfo: "Widerrufsrecht:",
     onlyGermany: "Wir liefern derzeit nur nach Deutschland.",
-    emptyCart: "Ihr Warenkorb ist leer.",
-    gone: "Mindestens ein Artikel ist nicht mehr verfügbar.",
   },
   en: {
-    heading: "Complete your order",
     summary: "Your order",
     net: "Net",
     vat: "plus VAT",
-    shipping: "Delivery",
-    shippingFree: "free",
     total: "Total",
     email: "Email address",
     emailHint: "The order confirmation goes to this address.",
@@ -84,8 +76,6 @@ const TX = {
     consentLabel: "I agree and confirm:",
     withdrawalInfo: "Right of withdrawal:",
     onlyGermany: "We currently deliver to Germany only.",
-    emptyCart: "Your basket is empty.",
-    gone: "At least one item is no longer available.",
   },
 } as const;
 
@@ -131,10 +121,12 @@ const TX = {
  */
 export default function CheckoutForm({ lang, slug }: Props) {
   const t = TX[lang];
-  const cartTx = tx(lang).cart;
+  const shared = tx(lang);
+  const cartTx = shared.cart;
+  const emailHintId = useId();
+  const countryHintId = useId();
 
   const [lines, setLines] = useState<CartLine[] | null>(slug ? [{ slug, quantity: 1 }] : null);
-  const [quote, setQuote] = useState<Quote | null>(null);
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
   const [provider, setProvider] = useState("");
 
@@ -151,6 +143,7 @@ export default function CheckoutForm({ lang, slug }: Props) {
   });
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
+  /** A failed submit. Quote failures come from `useQuote`. */
   const [error, setError] = useState<string | null>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
 
@@ -158,17 +151,7 @@ export default function CheckoutForm({ lang, slug }: Props) {
     if (!slug) setLines(readCart());
   }, [slug]);
 
-  useEffect(() => {
-    if (lines === null || lines.length === 0) return;
-    void quoteCart(lines, lang).then((result) => {
-      if ("error" in result) {
-        setQuote(null);
-        setError(result.error === "empty" ? null : t.gone);
-      } else {
-        setQuote(result);
-      }
-    });
-  }, [lines, lang, t.gone]);
+  const { quote, error: quoteError } = useQuote(lines, lang);
 
   useEffect(() => {
     void paymentMethods().then((found) => {
@@ -188,7 +171,7 @@ export default function CheckoutForm({ lang, slug }: Props) {
     if (error) errorRef.current?.focus();
   }, [error]);
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!quote) return;
     setError(null);
@@ -215,17 +198,17 @@ export default function CheckoutForm({ lang, slug }: Props) {
       return;
     }
     setBusy(false);
-    setError(result.error ?? "Unbekannter Fehler.");
+    setError(result.error ?? shared.errors.unknown);
   };
 
   if (lines !== null && lines.length === 0) {
-    return <p className="shop-lede">{t.emptyCart}</p>;
+    return <p className="shop-lede">{cartTx.empty}</p>;
   }
 
   if (!quote) {
     return (
       <p className="shop-lede" role="status">
-        {error ?? t.loading}
+        {quoteError ?? t.loading}
       </p>
     );
   }
@@ -242,7 +225,6 @@ export default function CheckoutForm({ lang, slug }: Props) {
 
   return (
     <form className="checkout" onSubmit={submit}>
-      <h2>{t.heading}</h2>
 
       {/* The mandatory details, immediately above the button — that adjacency
           is the requirement, not a layout preference. */}
@@ -267,16 +249,7 @@ export default function CheckoutForm({ lang, slug }: Props) {
             <dt>{t.vat}</dt>
             <dd>{formatPrice(quote.taxCents, currency, lang)}</dd>
           </div>
-          {quote.shipping.required ? (
-            <div>
-              <dt>{t.shipping}</dt>
-              <dd>
-                {quote.shipping.grossCents === 0
-                  ? t.shippingFree
-                  : formatPrice(quote.shipping.grossCents, currency, lang)}
-              </dd>
-            </div>
-          ) : null}
+          <ShippingRow quote={quote} lang={lang} />
           <div className="checkout__total">
             <dt>{t.total}</dt>
             <dd>{formatPrice(quote.grossCents, currency, lang)}</dd>
@@ -292,10 +265,11 @@ export default function CheckoutForm({ lang, slug }: Props) {
           type="email"
           required
           autoComplete="email"
+          aria-describedby={emailHintId}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <small>{t.emailHint}</small>
+        <small id={emailHintId}>{t.emailHint}</small>
       </label>
 
       <label>
@@ -310,10 +284,15 @@ export default function CheckoutForm({ lang, slug }: Props) {
 
       <label>
         {t.country}
-        <select className="field-boxed" value={country} onChange={(e) => setCountry(e.target.value)}>
+        <select
+          className="field-boxed"
+          aria-describedby={countryHintId}
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+        >
           <option value="DE">Deutschland</option>
         </select>
-        <small>{t.onlyGermany}</small>
+        <small id={countryHintId}>{t.onlyGermany}</small>
       </label>
 
       {/* Only asked when there is something to deliver. A basket of services

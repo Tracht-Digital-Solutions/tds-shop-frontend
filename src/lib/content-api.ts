@@ -1,8 +1,3 @@
-import {
-  emptyPlacement,
-  type ShopPlacement,
-} from "@tracht-digital-solutions/tds-shared/schemas";
-
 import type { CatalogProduct, ProductPage } from "./types";
 
 import { contentApiBase } from "./connection";
@@ -77,6 +72,30 @@ export async function listProducts(query: CatalogQuery): Promise<CatalogPage> {
   );
 }
 
+/** Safety stop for `listAllProducts`: 20 pages × 48 is far beyond the catalogue. */
+const MAX_PAGES = 20;
+
+/**
+ * Every product, following `nextCursor` to the end.
+ *
+ * The catalogue, the sitemap and `/llms.txt` used to read ONE page (24 or 48)
+ * and drop the cursor, so a product past that point was in no listing, no
+ * sitemap and no crawler file — reachable only by a direct link. The page
+ * cache keys on the path alone (a query string is dropped), so a `?cursor=`
+ * pager could never work here; reading the whole list is the honest option.
+ */
+export async function listAllProducts(query: Omit<CatalogQuery, "cursor" | "limit">): Promise<CatalogProduct[]> {
+  const products: CatalogProduct[] = [];
+  let cursor: string | null = null;
+  for (let i = 0; i < MAX_PAGES; i++) {
+    const page = await listProducts({ ...query, limit: 48, cursor });
+    products.push(...page.products);
+    cursor = page.nextCursor;
+    if (!cursor) break;
+  }
+  return products;
+}
+
 export async function getProduct(slug: string, lang: Lang): Promise<ProductPage | null> {
   // A demo build answers from the fixtures, and a slug that is not among them
   // is a genuine 404 — not an outage to fall back from.
@@ -113,27 +132,6 @@ export async function listCategories(lang: Lang): Promise<CategoryCount[]> {
     "categories",
   );
   return body.categories;
-}
-
-/**
- * A resolved advertising slot.
- *
- * Falls back to an EMPTY placement rather than to demo products: an
- * advertising slot that invents its own contents during an outage is showing
- * a visitor something nobody chose to advertise.
- */
-export async function getPlacement(
-  key: string,
-  lang: Lang,
-  category?: string,
-): Promise<ShopPlacement> {
-  const params = new URLSearchParams({ lang });
-  if (category) params.set("category", category);
-  return readJson<ShopPlacement>(
-    `/shop/placement/${encodeURIComponent(key)}?${params}`,
-    emptyPlacement(key, lang),
-    `placement ${key}`,
-  );
 }
 
 /**

@@ -21,7 +21,7 @@
  * Cached, it would stop counting and would pin one visitor's attribution
  * parameters onto everybody else's clicks.
  */
-const NEVER_CACHED = [
+export const NEVER_CACHED = [
   "/warenkorb",
   "/kasse",
   "/bestellung",
@@ -36,11 +36,20 @@ const NEVER_CACHED = [
   "/tds/",
 ];
 
-export function isNeverCached(pathname: string): boolean {
+/**
+ * Does `pathname` fall under one of `prefixes`? Segment-wise, so
+ * `/produkt/gossip-adapter` is not caught by `/go/` and `/installation` is not
+ * caught by `/install`. Shared with `indexing.ts`, which used a raw
+ * `startsWith` and so disagreed with this file about the same paths.
+ */
+export function matchesPathPrefix(pathname: string, prefixes: readonly string[]): boolean {
   const path = pathname.replace(/\/+$/, "") || "/";
-  return NEVER_CACHED.some((prefix) => {
+  return prefixes.some((prefix) => {
     const base = prefix.replace(/\/$/, "");
-    // Segment-wise, so `/produkt/gossip-adapter` is not caught by `/go/`.
     return path === base || path.startsWith(`${base}/`);
   });
+}
+
+export function isNeverCached(pathname: string): boolean {
+  return matchesPathPrefix(pathname, NEVER_CACHED);
 }

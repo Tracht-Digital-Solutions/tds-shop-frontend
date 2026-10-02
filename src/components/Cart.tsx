@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { onCartChange, readCart, removeFromCart, setQuantity, type CartLine } from "../lib/cart";
-import { formatPrice, quoteCart, type Quote } from "../lib/checkout";
+import { MAX_QUANTITY, onCartChange, readCart, removeFromCart, setQuantity, type CartLine } from "../lib/cart";
+import { formatPrice } from "../lib/checkout";
 import { homePath, tx, type Lang } from "../lib/i18n";
+import ShippingRow from "./ShippingRow";
+import { useQuote } from "./useQuote";
 
 interface Props {
   lang: Lang;
@@ -33,18 +35,15 @@ interface Props {
 export default function Cart({ lang, checkoutHref }: Props) {
   const t = tx(lang).cart;
   const [lines, setLines] = useState<CartLine[] | null>(null);
-  const [quote, setQuote] = useState<Quote | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Debounced: each quantity keystroke re-quotes.
+  const { quote, error, settled } = useQuote(lines, lang, 250);
   const [announcement, setAnnouncement] = useState("");
   /** The row currently animating out. Removed from storage once it has. */
   const [leaving, setLeaving] = useState<string | null>(null);
-  const [settled, setSettled] = useState(0);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(
     () => () => {
-      if (timer.current) clearTimeout(timer.current);
       if (leaveTimer.current) clearTimeout(leaveTimer.current);
     },
     [],
@@ -73,44 +72,6 @@ export default function Cart({ lang, checkoutHref }: Props) {
     setLines(readCart());
     return onCartChange(setLines);
   }, []);
-
-  /**
-   * Re-price, debounced.
-   *
-   * Holding the OLD quote on screen while the new one is in flight is
-   * deliberate: blanking the totals on every keypress makes the page flicker
-   * and, worse, briefly removes the figures the checkout button sits next to.
-   */
-  const reprice = useCallback(
-    (next: CartLine[]) => {
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        void quoteCart(next, lang).then((result) => {
-          if ("error" in result) {
-            setQuote(null);
-            setError(result.error === "empty" ? null : t.gone);
-          } else {
-            setQuote(result);
-            setError(null);
-            // Not the first quote: highlighting a figure the reader has not
-            // seen before says nothing.
-            setSettled((n) => n + 1);
-          }
-        });
-      }, 250);
-    },
-    [lang, t.gone],
-  );
-
-  useEffect(() => {
-    if (lines === null) return;
-    if (lines.length === 0) {
-      setQuote(null);
-      setError(null);
-      return;
-    }
-    reprice(lines);
-  }, [lines, reprice]);
 
   // Nothing until the basket has been read — see the note in AddToCart.
   if (lines === null) return null;
@@ -141,18 +102,11 @@ export default function Cart({ lang, checkoutHref }: Props) {
 
               <label className="cart__qty">
                 <span className="sr-only">{`${t.quantity}: ${priced?.title ?? line.slug}`}</span>
-                <input
-                  className="field-boxed"
-                  type="number"
-                  min={1}
-                  max={99}
-                  inputMode="numeric"
+                <QuantityInput
                   value={line.quantity}
-                  onChange={(e) => {
-                    const n = Number(e.target.value);
-                    if (!Number.isFinite(n)) return;
+                  onCommit={(n) => {
                     setQuantity(line.slug, n);
-                    setAnnouncement(t.updated(titleFor(line.slug), Math.max(1, Math.min(99, n))));
+                    setAnnouncement(t.updated(titleFor(line.slug), n));
                   }}
                 />
               </label>
@@ -189,24 +143,15 @@ export default function Cart({ lang, checkoutHref }: Props) {
           </dd>
         </div>
 
-        {quote?.shipping.required ? (
-          <div>
-            <dt>{t.shipping}</dt>
-            <dd>
-              {quote.shipping.grossCents === 0
-                ? t.shippingFree
-                : formatPrice(quote.shipping.grossCents, currency, lang)}
-            </dd>
-          </div>
-        ) : null}
+        {quote ? <ShippingRow quote={quote} lang={lang} /> : null}
 
         <div className="cart__total">
-          <dt>{tx(lang).cart.title}</dt>
+          <dt>{t.total}</dt>
           {/* Keyed on the value so the highlight replays when it changes. The
               total updates after a debounced round trip, by which time the
               reader is looking at the row they just edited — without this they
               never see the number move. */}
-          <dd key={settled} data-changed={settled > 0 ? "true" : undefined}>
+          <dd key={settled} data-changed={settled > 1 ? "true" : undefined}>
             {quote ? formatPrice(quote.grossCents, currency, lang) : t.loading}
           </dd>
         </div>
@@ -245,5 +190,38 @@ export default function Cart({ lang, checkoutHref }: Props) {
         {announcement}
       </p>
     </div>
+  );
+}
+
+/**
+ * The quantity field.
+ *
+ * It keeps its own draft, because the stored quantity cannot represent what a
+ * reader is in the middle of typing. Bound directly to the basket, clearing the
+ * field to type a new number read as `Number("") === 0` — and a quantity of 0
+ * removes the line, so the product vanished on the first keystroke. Only a
+ * whole number of at least 1 is committed (capped at `MAX_QUANTITY`); leaving
+ * the field restores whatever is stored.
+ */
+function QuantityInput({ value, onCommit }: { value: number; onCommit: (n: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+
+  return (
+    <input
+      className="field-boxed"
+      type="number"
+      min={1}
+      max={MAX_QUANTITY}
+      inputMode="numeric"
+      value={draft}
+      onChange={(e) => {
+        const raw = e.target.value;
+        setDraft(raw);
+        const n = Number(raw);
+        if (raw.trim() !== "" && Number.isInteger(n) && n >= 1) onCommit(Math.min(MAX_QUANTITY, n));
+      }}
+      onBlur={() => setDraft(String(value))}
+    />
   );
 }

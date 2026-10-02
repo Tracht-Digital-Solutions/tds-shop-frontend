@@ -1,5 +1,6 @@
-import { listCategories, listProducts } from "./content-api";
-import { categoryPath, homePath, productPath, LANGS, type Lang } from "./i18n";
+import { listAllProducts, listCategories } from "./content-api";
+import { categoryPath, homePath, legalPath, productPath, LANGS, type Lang } from "./i18n";
+import { publishedLegalSlugs } from "./legal";
 import { isIndexable } from "./indexing";
 import { canonical } from "./seo";
 
@@ -64,9 +65,10 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
   };
 
   for (const lang of LANGS) {
-    const [{ products }, categories] = await Promise.all([
-      listProducts({ lang, limit: 48 }),
+    const [products, categories, legal] = await Promise.all([
+      listAllProducts({ lang }),
       listCategories(lang),
+      publishedLegalSlugs(lang),
     ]);
     const indexable = products.filter(isIndexable);
 
@@ -89,6 +91,16 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
       entries.push({ loc, lastmod: isoDay(product.publishedAt ?? null) });
       remember(`prod:${product.slug}`, lang, loc);
     }
+
+    // The legal pages are indexable (a consumer looking for the withdrawal
+    // policy should find it) and were in no sitemap. Listed only where a text
+    // exists — the page says `noindex` otherwise. No lastmod: the CMS override
+    // carries no date, and "today" would be the lie rule 2 forbids.
+    for (const slug of legal) {
+      const loc = canonical(legalPath(slug, lang));
+      entries.push({ loc });
+      remember(`legal:${slug}`, lang, loc);
+    }
   }
 
   // Pair the two trees. Only a key present in BOTH gets alternates: a single
@@ -107,7 +119,11 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
 }
 
 const escape = (value: string): string =>
-  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 
 /** The locale a sitemap alternate declares. Matches the markup's hreflang. */
 const hreflang = (lang: Lang): string => (lang === "en" ? "en-GB" : "de-DE");

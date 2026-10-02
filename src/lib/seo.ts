@@ -1,3 +1,5 @@
+import { propertyHome } from "@tracht-digital-solutions/tds-shared/nav";
+
 import type { Lang } from "./i18n";
 
 /**
@@ -55,12 +57,11 @@ const TITLE_BUDGET = 60;
  * a truncated title that keeps "— TDShop" and loses the product name is a
  * result nobody can identify.
  */
-export function pageTitle(subject: string, lang: Lang = "de"): string {
+export function pageTitle(subject: string): string {
   const trimmed = subject.trim();
   if (trimmed === "") return site.name;
   const combined = `${trimmed} — ${site.name}`;
   if (combined.length <= TITLE_BUDGET) return combined;
-  void lang;
   return trimmed;
 }
 
@@ -70,16 +71,14 @@ export function pageTitle(subject: string, lang: Lang = "de"): string {
  * One function rather than URLs inline in the header, footer and empty state:
  * the journal links here from its own `nav.ts` (`SHOP_URL`), and a property
  * that is only ever linked TO is a dead end for a reader and an orphan for a
- * crawler. Absolute on purpose — these are separate hosts, and a site-relative
- * path would resolve against this one and 404. Every sibling serves its English
- * edition under `/en/`.
+ * crawler. The origins come from tds-shared's `PROPERTY_ORIGINS`, the list
+ * every public header reads, so a moved host is changed once.
  */
 export function siteLinks(lang: Lang): { main: string; blog: string; tools: string } {
-  const suffix = lang === "en" ? "/en/" : "/";
   return {
-    main: `https://tracht-digital.de${suffix}`,
-    blog: `https://blog.tracht-digital.de${suffix}`,
-    tools: `https://tools.tracht-digital.de${suffix}`,
+    main: propertyHome("main", lang),
+    blog: propertyHome("journal", lang),
+    tools: propertyHome("tools", lang),
   };
 }
 

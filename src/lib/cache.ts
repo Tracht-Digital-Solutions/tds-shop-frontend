@@ -5,7 +5,8 @@ import {
   type EventMap,
 } from "@tracht-digital-solutions/tds-shared/cache";
 
-import { categoryPath, prefix, productPath, type Lang } from "./i18n";
+import { categoryPath, legalPath, prefix, productPath, type Lang } from "./i18n";
+import { isLegalSlug } from "./legal";
 
 /**
  * This site's half of the page cache: which pages a change dates, and the memo
@@ -25,9 +26,6 @@ import { categoryPath, prefix, productPath, type Lang } from "./i18n";
  * and nothing would log.
  */
 export const contentCache = createGenerationCache();
-
-/** The legal documents this site renders, as URL segments. */
-const LEGAL_SLUGS = ["impressum", "datenschutz", "agb", "widerruf", "zahlung", "affiliate"];
 
 /** Entry points rebuilt whatever changed. */
 export const alwaysPaths: string[] = ["/", "/en/", "/sitemap-0.xml", "/sitemap-index.xml"];
@@ -83,10 +81,11 @@ export const cacheEvents: EventMap = {
    */
   block: (event: CacheEvent) => {
     const key = (event.id ?? "").replace(/^legal_/, "");
-    if (!LEGAL_SLUGS.includes(key)) return [];
-    return forLanguages(event, (lang) => [
-      lang === "en" ? `/en/legal/${key}` : `/rechtliches/${key}`,
-    ]);
+    // From the registry, not a restated list: a hand-kept copy had lost
+    // `versand` and `barrierefreiheit`, so edits to those two never reached
+    // their cached pages.
+    if (!isLegalSlug(key)) return [];
+    return forLanguages(event, (lang) => [legalPath(key, lang as Lang)]);
   },
 
   /**

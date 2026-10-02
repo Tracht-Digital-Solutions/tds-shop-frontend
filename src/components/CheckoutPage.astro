@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import CheckoutForm from "./CheckoutForm.tsx";
-import { productCategoryName, productPath, type Lang } from "../lib/i18n";
+import { productCategoryName, productPath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import type { Sellable } from "../lib/sellable";
 
@@ -46,9 +46,11 @@ const { product } = sellable;
   lang={lang}
   noindex
 >
-  <nav class="shop-breadcrumbs">
+  <nav class="shop-breadcrumbs" aria-label={tx(lang).breadcrumb}>
     <a href={productPath(slug, lang)}>{product.title}</a>
   </nav>
+
+  <h1 class="shop-title">{tx(lang).checkout.heading}</h1>
 
   <CheckoutForm client:load slug={slug} lang={lang} />
 </Layout>
