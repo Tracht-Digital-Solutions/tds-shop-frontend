@@ -1,7 +1,7 @@
 import type { CatalogProduct, ProductPage } from "./types";
 
 import { contentApiBase } from "./connection";
-import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
+import { assertKeyAccepted, readContentJson, siteKeyHeaders } from "./siteKey";
 import { DEMO_MODE, demoCategories, demoProduct, demoProducts } from "./demoContent";
 import type { Lang } from "./i18n";
 
@@ -37,12 +37,9 @@ async function readJson<T>(path: string, fallback: T, label: string): Promise<T>
   // instead would mean every page waited for a connection to fail first.
   if (DEMO_MODE) return fallback;
 
-  const url = `${contentApiBase()}${path}`;
   try {
-    const res = await fetch(url, { headers: siteKeyHeaders() });
-    assertKeyAccepted(res, url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return (await res.json()) as T;
+    // tds-shared's reader: key, 10s timeout (there was none), key check.
+    return await readContentJson<T>(`${contentApiBase()}${path}`);
   } catch (err) {
     if (err instanceof Error && err.name === "SiteKeyRejectedError") throw err;
     console.warn(`[tds-shop] ${label} unreachable — serving fallback:`, err);

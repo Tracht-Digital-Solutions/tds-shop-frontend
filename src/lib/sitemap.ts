@@ -3,6 +3,7 @@ import { categoryPath, homePath, legalPath, productPath, LANGS, type Lang } from
 import { publishedLegalSlugs } from "./legal";
 import { isIndexable } from "./indexing";
 import { canonical } from "./seo";
+import { escapeXml } from "@tracht-digital-solutions/tds-shared/site";
 
 /**
  * The sitemap, written by hand.
@@ -118,12 +119,6 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
   return entries;
 }
 
-const escape = (value: string): string =>
-  value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 
 /** The locale a sitemap alternate declares. Matches the markup's hreflang. */
 const hreflang = (lang: Lang): string => (lang === "en" ? "en-GB" : "de-DE");
@@ -137,13 +132,13 @@ export function renderUrlset(entries: SitemapEntry[]): string {
       // the set reciprocal rather than one-directional.
       const alternates = (entry.alternates ?? [])
         .flatMap(({ lang, href }) => {
-          const link = `\n    <xhtml:link rel="alternate" hreflang="${hreflang(lang)}" href="${escape(href)}"/>`;
+          const link = `\n    <xhtml:link rel="alternate" hreflang="${hreflang(lang)}" href="${escapeXml(href)}"/>`;
           return lang === "de"
-            ? [link, `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${escape(href)}"/>`]
+            ? [link, `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(href)}"/>`]
             : [link];
         })
         .join("");
-      return `  <url>\n    <loc>${escape(entry.loc)}</loc>${alternates}${lastmod}\n  </url>`;
+      return `  <url>\n    <loc>${escapeXml(entry.loc)}</loc>${alternates}${lastmod}\n  </url>`;
     })
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
@@ -151,7 +146,7 @@ export function renderUrlset(entries: SitemapEntry[]): string {
 
 export function renderIndex(sitemaps: string[]): string {
   const items = sitemaps
-    .map((loc) => `  <sitemap>\n    <loc>${escape(loc)}</loc>\n  </sitemap>`)
+    .map((loc) => `  <sitemap>\n    <loc>${escapeXml(loc)}</loc>\n  </sitemap>`)
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</sitemapindex>\n`;
 }

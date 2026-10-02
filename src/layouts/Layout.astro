@@ -1,4 +1,5 @@
 ---
+import { serializeJsonLd } from "@tracht-digital-solutions/tds-shared/site";
 import "@fontsource/lato/400.css";
 import "@fontsource/lato/700.css";
 import "@fontsource/lato/900.css";
@@ -161,7 +162,7 @@ const image = ogImage ?? `${site.url}/og-default.png`;
 
     {
       jsonLd ? (
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+        <script is:inline type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />
       ) : null
     }
   </head>
