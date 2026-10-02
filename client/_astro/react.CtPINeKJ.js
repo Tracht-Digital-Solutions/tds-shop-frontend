@@ -1,0 +1,1 @@
+import"./index.Ci9md7CR.js";import{t as e}from"./chunk-K3B6PMZC.i5zzdy6C.js";export{e as Collapse};
