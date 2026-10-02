@@ -1,6 +1,6 @@
 {
   "name": "tds-shop-frontend",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "lint:primitives": "node scripts/lint-primitives.mjs src",
+    "og:default": "node scripts/og-default.mjs",
+    "audit:geo": "node scripts/geo-audit.mjs",
     "type-check": "astro check",
     "test": "vitest",
     "test:run": "vitest run",

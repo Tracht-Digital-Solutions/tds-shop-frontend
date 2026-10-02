@@ -18,6 +18,28 @@ export const site = {
   /** The canonical identity lives on the marketing site; we reference it by @id. */
   organizationId: "https://tracht-digital.de/#organization",
   personId: "https://tracht-digital.de/#person",
+  /**
+   * The marketing origin, and the few values the front page needs in order to
+   * describe the organisation rather than only point at it.
+   *
+   * Until 2026-10-02 `organizationRef()` was the ONLY organisation markup on
+   * this site, so every page named a publisher with no name and no logo. A
+   * shared `@id` is the right design — one business, four properties — but it
+   * only resolves for a consumer that also fetches the marketing site, and an
+   * answer engine reading one product page does not.
+   *
+   * Deliberately NOT copied here: street address, VAT ID, phone, geo. Those
+   * belong where the Impressum is, and this shop's Impressum is a link to the
+   * marketing site. A fifth copy of the NAP is exactly the drift this file's
+   * header refuses.
+   */
+  mainUrl: "https://tracht-digital.de",
+  legalName: "Julian Tracht",
+  logo: { url: "https://tracht-digital.de/images/logo.webp", width: 713, height: 483 },
+  socials: [
+    "https://www.linkedin.com/in/julian-tracht/",
+    "https://github.com/Tracht-Digital-Solutions",
+  ],
   description: {
     de: "Kuratierte Technik für Digitalisierung im Betrieb: Hardware, Netzwerk und Software mit eigener Einschätzung statt Herstellertext.",
     en: "Curated technology for digitalising a business: hardware, networking and software with our own assessment rather than vendor copy.",

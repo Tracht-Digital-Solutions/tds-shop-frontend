@@ -1,26 +1,322 @@
+# Every group below is INDEPENDENT: a crawler obeys only the group that names
+# it, and ignores the "*" group entirely. So the Disallow rules have to be
+# repeated in each group — a single Disallow in the "*" group would leave the
+# host-side setup wizard and the host-control endpoints crawlable by every
+# named bot here.
+#
+# The closed set, repeated in every group:
+#   /go/         the click redirect. It counts a click and forwards to a
+#                partner — there is nothing to index, and crawling it would
+#                inflate the counter with traffic no person generated.
+#   the baskets  /warenkorb, /kasse, /bestellung, /konto, /suche and their
+#                English twins. Personal or transient, and none of them may be
+#                cached either; src/middleware.ts is what actually enforces
+#                that.
+#   /install/    the host-side setup wizard.
+#   /tds/        token-gated host control (/tds/cache/*, /tds/connect) — no
+#                index value. Prefix-safe: it does not touch
+#                /tds-runtime.json.
+#
+# Until 2026-10-02 this file had ONE group. Every AI agent therefore fell under
+# "*" by accident rather than by decision, and the shop was absent from answer
+# engines that read the named groups.
+#
+# AI search and answer engines are welcome — the content is meant to be found
+# and cited. Per vendor there is a training crawler, a search index and an agent
+# that fetches a page when someone asks about it. Blocking the search or the
+# fetch agent takes the site out of that engine's answers (robotsTxt.test.ts).
+#
+# Dataset-only crawlers (CCBot, Bytespider, Amazonbot, Diffbot, YouBot, …) are
+# deliberately NOT named. They feed no answer surface this site's readers use,
+# every added group has to repeat the whole Disallow set, and the permissive
+# "*" group already governs them.
+
 User-agent: *
 Allow: /
-
-# The click redirect. It counts a click and forwards to a partner — there is
-# nothing to index, and crawling it would inflate the counter with traffic no
-# person generated.
 Disallow: /go/
-
-# Personal or transient. None of these may be cached either; see
-# src/middleware.ts, which is the mechanism that actually enforces it.
 Disallow: /warenkorb
 Disallow: /kasse
 Disallow: /bestellung
 Disallow: /konto
 Disallow: /suche
+Disallow: /en/search
 Disallow: /en/cart
 Disallow: /en/checkout
 Disallow: /en/order
 Disallow: /en/account
-Disallow: /en/search
-
-# The host-side setup wizard. It is admin-gated and sends X-Robots-Tag itself;
-# this keeps it out of crawl budgets and out of any index that ignores headers.
 Disallow: /install/
+Disallow: /tds/
+
+# ── OpenAI ────────────────────────────────────────────────────────────────
+User-agent: GPTBot
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# ── Anthropic ─────────────────────────────────────────────────────────────
+User-agent: ClaudeBot
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# Retired Anthropic names, kept so an old crawler still reads the same rules.
+User-agent: Claude-Web
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# ── Perplexity ────────────────────────────────────────────────────────────
+User-agent: PerplexityBot
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# ── Google, Apple ─────────────────────────────────────────────────────────
+# Google-Extended covers Gemini; Search and AI Overviews crawl as Googlebot,
+# which the "*" group already allows. Applebot-Extended covers Apple
+# Intelligence.
+User-agent: Google-Extended
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# ── Meta AI ───────────────────────────────────────────────────────────────
+# Meta AI answers inside WhatsApp and Instagram, which is where a good part of
+# this audience already asks its questions. -agent trains, -fetcher retrieves
+# a page for one answer.
+User-agent: meta-externalagent
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: meta-externalfetcher
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# ── DuckDuckGo, Mistral ───────────────────────────────────────────────────
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+User-agent: MistralAI-User
+Allow: /
+Disallow: /go/
+Disallow: /warenkorb
+Disallow: /kasse
+Disallow: /bestellung
+Disallow: /konto
+Disallow: /suche
+Disallow: /en/search
+Disallow: /en/cart
+Disallow: /en/checkout
+Disallow: /en/order
+Disallow: /en/account
+Disallow: /install/
+Disallow: /tds/
+
+# Legal pages stay out of indexes via per-page meta robots; no
+# need to disallow here.
 
 Sitemap: https://shop.tracht-digital.de/sitemap-index.xml
