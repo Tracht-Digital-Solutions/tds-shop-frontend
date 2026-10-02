@@ -9,7 +9,8 @@ import { listProducts } from "../lib/content-api";
 import { categoryPath, homePath, productCategoryName, productPath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import { isIndexable } from "../lib/indexing";
-import { asGraph, breadcrumbSchema, productSchema, websiteSchema } from "../lib/jsonld";
+import { asGraph, breadcrumbSchema, productSchema, webPageSchema, websiteSchema } from "../lib/jsonld";
+import { productAlternate } from "../lib/alternates";
 import { canonical, site } from "../lib/seo";
 import type { ProductPage as ProductPageData } from "../lib/types";
 
@@ -89,15 +90,51 @@ const sellsDirectly = offers.some((offer) => offer.kind === "own");
  */
 const body = product.body && product.bodyFormat === "markdown" ? renderMarkdown(product.body) : "";
 
+/**
+ * The locale counterpart, confirmed with a second read rather than derived —
+ * a product's translation may live under a different slug, so a pasted `/en/`
+ * would be a 404, and one dangling alternate invalidates the whole set.
+ */
+const altUrl = indexable ? await productAlternate(product.slug, lang) : null;
+
+const selfPath = productPath(product.slug, lang);
+const breadcrumbId = `${canonical(selfPath)}#breadcrumb`;
+
 const jsonLd = asGraph([
   websiteSchema(lang),
+  /* The page, beside the product: who published it and when the assessment
+     was last revised. `updatedAt` has been in the payload all along and
+     nothing read it. */
+  webPageSchema({
+    path: selfPath,
+    name: product.title,
+    lang,
+    dateModified: product.updatedAt,
+    breadcrumbId,
+  }),
   productSchema(product, lang),
-  breadcrumbSchema([
-    { name: t.brand, path: homePath(lang) },
-    { name: categoryName, path: categoryPath(product.category, lang) },
-    { name: product.title, path: productPath(product.slug, lang) },
-  ]),
+  breadcrumbSchema(
+    [
+      { name: t.brand, path: homePath(lang) },
+      { name: categoryName, path: categoryPath(product.category, lang) },
+      { name: product.title, path: selfPath },
+    ],
+    breadcrumbId,
+  ),
 ]);
+
+/**
+ * "Stand: Oktober 2026" — the month, because an assessment is not revised on a
+ * particular day and a precise date on slow content reads as churn. The
+ * machine date in `datetime` stays exact and is what `dateModified` repeats.
+ */
+const revised = product.updatedAt
+  ? new Intl.DateTimeFormat(lang === "de" ? "de-DE" : "en-GB", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(product.updatedAt))
+  : null;
 ---
 
 <Layout
@@ -106,6 +143,8 @@ const jsonLd = asGraph([
   lang={lang}
   noindex={!indexable}
   ogImage={product.imageUrl}
+  ogType="product"
+  altUrl={altUrl}
   jsonLd={jsonLd}
 >
   {/* An ordered list with the current page last: a trail is a sequence, and
@@ -134,6 +173,20 @@ const jsonLd = asGraph([
     <div class="shop-product__head">
       <h1 class="shop-title">{product.title}</h1>
       <p class="shop-lede">{product.teaser}</p>
+
+      {/* Who assessed this, and when it was last revised. Both are the point
+          of the shop: the assessment is ours, not the vendor's, and a reader
+          deciding whether to trust a hardware recommendation needs to know
+          how old it is. The `<time>` carries the machine date the page's
+          `dateModified` repeats. */}
+      {revised && (
+        <p class="shop-revised">
+          {lang === "de" ? "Stand" : "Updated"}: <time datetime={product.updatedAt!}>{revised}</time>
+          <span aria-hidden="true"> · </span>
+          {lang === "de" ? "Eingeschätzt von " : "Assessed by "}
+          <a href={`${site.mainUrl}/#about`} class="link-underline">{site.legalName}</a>
+        </p>
+      )}
 
       {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
     </div>

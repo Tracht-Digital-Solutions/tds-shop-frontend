@@ -42,21 +42,56 @@ export function asGraph(nodes: (Node | null | undefined)[]): Node {
 
 export const organizationRef = (): Node => ({ "@id": site.organizationId });
 
+/**
+ * The organisation as a described entity, not just an `@id`.
+ *
+ * Emitted on the two front pages only; every subpage keeps referencing it with
+ * {@link organizationRef}, which is the pattern the journal already uses. The
+ * `@id` stays on the marketing origin on purpose — minting
+ * `shop.tracht-digital.de/#organization` would describe a SECOND business, and
+ * the whole point of the shared anchor is that there is one.
+ *
+ * It carries what identifies the publisher and nothing more. Address, VAT ID
+ * and phone stay on the marketing site, where the Impressum is; this shop's
+ * Impressum links there.
+ */
+export function organizationSchema(): Node {
+  return {
+    "@type": "Organization",
+    "@id": site.organizationId,
+    name: "Tracht Digital Solutions",
+    legalName: site.legalName,
+    url: site.mainUrl,
+    founder: { "@id": site.personId },
+    logo: {
+      "@type": "ImageObject",
+      url: site.logo.url,
+      width: site.logo.width,
+      height: site.logo.height,
+    },
+    sameAs: [...site.socials],
+  };
+}
+
 export function websiteSchema(lang: Lang): Node {
   return {
     "@type": "WebSite",
     "@id": `${site.url}/#website`,
     url: site.url,
     name: site.name,
-    inLanguage: lang === "en" ? "en" : "de",
+    inLanguage: lang === "en" ? "en-GB" : "de-DE",
     description: site.description[lang],
     publisher: organizationRef(),
   };
 }
 
-export function breadcrumbSchema(trail: { name: string; path: string }[]): Node {
+export function breadcrumbSchema(trail: { name: string; path: string }[], id?: string): Node {
   return {
     "@type": "BreadcrumbList",
+    // Optional so a page node can point at it by `@id`. Without one a
+    // `WebPage.breadcrumb` reference would dangle, which tells a parser the
+    // list belongs to nothing.
+    ...(id ? { "@id": id } : {}),
     itemListElement: trail.map((step, index) => ({
       "@type": "ListItem",
       position: index + 1,
@@ -79,14 +114,65 @@ export function itemListSchema(products: CatalogProduct[], lang: Lang): Node {
   };
 }
 
+/**
+ * The questions a category page shows, as `FAQPage`.
+ *
+ * Emitted only where `categoryCopy.ts` has written answers, and built from the
+ * SAME objects the page renders — Google withdraws a FAQ rich result when the
+ * structured answer differs from the visible one, and two hand-kept copies of
+ * a sentence diverge on the first edit.
+ */
+export function faqPageSchema(items: { q: string; a: string }[]): Node | null {
+  if (items.length === 0) return null;
+  return {
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
 export function collectionPageSchema(name: string, path: string, lang: Lang): Node {
   return {
     "@type": "CollectionPage",
     "@id": canonical(path),
     url: canonical(path),
     name,
-    inLanguage: lang === "en" ? "en" : "de",
+    inLanguage: lang === "en" ? "en-GB" : "de-DE",
     isPartOf: { "@id": `${site.url}/#website` },
+  };
+}
+
+/**
+ * The product PAGE as an entity, beside the product itself.
+ *
+ * `Product` describes the thing; this describes the page about it — who
+ * published it, and when its assessment was last revised. `dateModified` comes
+ * from `product.updatedAt`, which the payload has carried the whole time and
+ * which nothing read: not the sitemap's `lastmod`, not the markup, not a line
+ * on the page. Freshness is one of the few things an answer engine weighs
+ * besides the content, and this site had it and threw it away.
+ *
+ * The page shows the same date in a `<time datetime>`; the audit fails a
+ * `dateModified` with no visible counterpart, which is what keeps the two
+ * from drifting apart.
+ */
+export function webPageSchema(
+  opts: { path: string; name: string; lang: Lang; dateModified?: string | null; breadcrumbId?: string },
+): Node {
+  const url = canonical(opts.path);
+  return {
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
+    name: opts.name,
+    inLanguage: opts.lang === "en" ? "en-GB" : "de-DE",
+    isPartOf: { "@id": `${site.url}/#website` },
+    publisher: organizationRef(),
+    ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
+    ...(opts.breadcrumbId ? { breadcrumb: { "@id": opts.breadcrumbId } } : {}),
   };
 }
 

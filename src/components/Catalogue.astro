@@ -4,8 +4,18 @@ import ProductGrid from "./ProductGrid.astro";
 import { listCategories, listProducts } from "../lib/content-api";
 import { categoryName, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
-import { asGraph, collectionPageSchema, itemListSchema, websiteSchema } from "../lib/jsonld";
-import { site } from "../lib/seo";
+import {
+  asGraph,
+  breadcrumbSchema,
+  collectionPageSchema,
+  faqPageSchema,
+  itemListSchema,
+  organizationSchema,
+  websiteSchema,
+} from "../lib/jsonld";
+import { categoryAlternate, homeAlternate } from "../lib/alternates";
+import { categoryCopy } from "../lib/categoryCopy";
+import { canonical, site } from "../lib/seo";
 
 /**
  * The catalogue, shared by the German and English index routes.
@@ -59,14 +69,43 @@ const total = categories.reduce((sum, c) => sum + c.total, 0);
  */
 const hasAffiliate = page.products.some((p) => p.offers.some((o) => o.kind === "affiliate"));
 
+/**
+ * The locale counterpart, confirmed rather than derived. The home page always
+ * has one; a category has one only when the other language actually holds
+ * products in it, because an empty category is not a page the sitemap lists.
+ */
+const altUrl = category ? await categoryAlternate(category, lang) : homeAlternate(lang);
+
+/** Entry answer and questions for this category, where they have been written. */
+const copy = categoryCopy(category, lang);
+
 const jsonLd = asGraph([
   websiteSchema(lang),
+  /* The organisation as a REAL node, on the front pages only. `organizationRef`
+     is still what subpages use for `publisher` — but when nothing anywhere
+     declared the entity, the whole site named a publisher with no name and no
+     logo. Its `@id` stays on the marketing origin: one business, four
+     properties, described once. */
+  ...(category ? [] : [organizationSchema()]),
   collectionPageSchema(heading, path, lang),
+  /* The trail a category page has always DRAWN and never declared. */
+  ...(category
+    ? [
+        breadcrumbSchema([
+          { name: t.catalogue, path: homePath(lang) },
+          { name: heading, path },
+        ]),
+      ]
+    : []),
   itemListSchema(page.products, lang),
+  /* FAQ markup ONLY where the page shows the questions. A category without
+     written copy gets no node — markup the page cannot stand behind is what
+     a FAQ rich result is withdrawn for. */
+  ...(copy ? [faqPageSchema(copy.faq)] : []),
 ]);
 ---
 
-<Layout title={heading} description={description} lang={lang} jsonLd={jsonLd}>
+<Layout title={heading} description={description} lang={lang} altUrl={altUrl} jsonLd={jsonLd}>
 {/*
     The one wash band on the site. `.tds-wash` paints soft brand fields into a
     ::before at z-index -1 that fills the section edge to edge, so the section
@@ -78,6 +117,12 @@ const jsonLd = asGraph([
     {/* Decorative by definition — aria-hidden is required at the call site. */}
     <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
     <p class="shop-lede">{site.description[lang]}</p>
+
+    {/* The entry answer: what belongs in this category, for whom, and on what
+        grounds it was chosen. Only where it has been written — see
+        `categoryCopy.ts` for why an unwritten category gets nothing rather
+        than a generated paragraph. */}
+    {copy && <p class="shop-answer">{copy.answer}</p>}
 
     {
       /* Chips, not a run of links: each category is a distinct target, and the
@@ -105,4 +150,21 @@ const jsonLd = asGraph([
   </section>
 
   <ProductGrid products={page.products} lang={lang} />
+
+  {/* The questions, under the products rather than above them: somebody who
+      came for a switch should reach the switches first. `<details>` so the
+      answers are in the DOM from the start — a FAQ built by JavaScript is
+      invisible to the crawler the `FAQPage` node is for. No `name`: an
+      exclusive accordion would close the answer a reader just opened. */}
+  {copy && (
+    <section class="shop-faq" aria-labelledby="category-faq-heading">
+      <h2 id="category-faq-heading" class="shop-faq__title">{t.faqHeading}</h2>
+      {copy.faq.map((item) => (
+        <details class="shop-faq__item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </section>
+  )}
 </Layout>

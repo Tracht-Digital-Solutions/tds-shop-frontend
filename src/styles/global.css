@@ -359,6 +359,17 @@
   color: var(--color-muted);
 }
 
+/* "Stand: Oktober 2026 · Eingeschätzt von Julian Tracht" — freshness and the
+   named assessor, directly under the teaser. Same quiet treatment as the
+   affiliate disclosure it sits above: this is evidence, not content. */
+.shop-revised {
+  max-width: 44rem;
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
 .shop-breadcrumbs {
   margin: 0 0 1.25rem;
   font-size: 0.8125rem;
@@ -1200,4 +1211,58 @@
   .shop-chip:is(:hover, :focus-visible) {
     translate: none;
   }
+}
+
+/* ── Category entry answer and questions ──────────────────────────────────
+   A category page used to be a heading, a line and a grid. The answer names
+   what belongs here and on what grounds it was chosen; the questions carry
+   the commercial relationship, which § 5a Abs. 4 UWG wants legible rather
+   than discoverable. Both come from `categoryCopy.ts` and both feed the
+   page's FAQPage, so markup and page cannot disagree. */
+.shop-answer {
+  max-width: 44rem;
+  margin: 0 0 1.25rem;
+  line-height: 1.7;
+  color: var(--color-ink);
+  text-wrap: pretty;
+}
+
+.shop-faq {
+  max-width: 44rem;
+  margin: 3rem auto 0;
+  padding: 0 var(--shop-gutter, 1.25rem);
+}
+
+.shop-faq__title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: var(--color-black);
+}
+
+.shop-faq__item {
+  border-top: 1px solid var(--color-line);
+  padding: 0.875rem 0;
+}
+
+.shop-faq__item:last-of-type {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.shop-faq__item > summary {
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-black);
+  /* A 44px target on coarse pointers, per the site's own rule. */
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.shop-faq__item > p {
+  margin: 0.5rem 0 0;
+  line-height: 1.7;
+  color: var(--color-ink);
+  text-wrap: pretty;
 }

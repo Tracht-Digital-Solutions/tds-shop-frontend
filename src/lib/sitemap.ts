@@ -40,6 +40,28 @@ const newest = (dates: (string | null | undefined)[]): string | undefined => {
 
 export async function buildEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = [];
+  /**
+   * Language-neutral key per URL, so the two trees can be paired afterwards.
+   *
+   * `SitemapEntry.alternates` has been declared since the file was written and
+   * was never filled or rendered, so the sitemap offered no locale pairing at
+   * all — the same gap as the missing hreflang in the markup, in the other
+   * document a crawler reads.
+   *
+   * A product keys on its SLUG, which pairs only when the translation uses the
+   * same one. The API pairs translations on the product id and the payload
+   * carries neither that id nor the counterpart slug, so a product published
+   * under a different slug per language stays unpaired here — exactly as it
+   * stays unpaired in `alternates.ts`. The two have to agree: a sitemap that
+   * claims a pairing the page does not emit is a contradiction a crawler
+   * resolves against us.
+   */
+  const keyed = new Map<string, { lang: Lang; loc: string }[]>();
+  const remember = (key: string, lang: Lang, loc: string) => {
+    const bucket = keyed.get(key);
+    if (bucket) bucket.push({ lang, loc });
+    else keyed.set(key, [{ lang, loc }]);
+  };
 
   for (const lang of LANGS) {
     const [{ products }, categories] = await Promise.all([
@@ -48,27 +70,36 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
     ]);
     const indexable = products.filter(isIndexable);
 
-    entries.push({
-      loc: canonical(homePath(lang)),
-      lastmod: newest(indexable.map((p) => p.publishedAt ?? null)),
-    });
+    const home = canonical(homePath(lang));
+    entries.push({ loc: home, lastmod: newest(indexable.map((p) => p.publishedAt ?? null)) });
+    remember("home", lang, home);
 
     for (const { category } of categories) {
       const inCategory = indexable.filter((p) => p.category === category);
       // A category whose products are all unwritten has nothing indexable on
       // it, so it is not a page worth submitting either.
       if (inCategory.length === 0) continue;
-      entries.push({
-        loc: canonical(categoryPath(category, lang)),
-        lastmod: newest(inCategory.map((p) => p.publishedAt ?? null)),
-      });
+      const loc = canonical(categoryPath(category, lang));
+      entries.push({ loc, lastmod: newest(inCategory.map((p) => p.publishedAt ?? null)) });
+      remember(`cat:${category}`, lang, loc);
     }
 
     for (const product of indexable) {
-      entries.push({
-        loc: canonical(productPath(product.slug, lang)),
-        lastmod: isoDay(product.publishedAt ?? null),
-      });
+      const loc = canonical(productPath(product.slug, lang));
+      entries.push({ loc, lastmod: isoDay(product.publishedAt ?? null) });
+      remember(`prod:${product.slug}`, lang, loc);
+    }
+  }
+
+  // Pair the two trees. Only a key present in BOTH gets alternates: a single
+  // dangling alternate invalidates the whole set, the other side included.
+  const byLoc = new Map(entries.map((entry) => [entry.loc, entry]));
+  for (const bucket of keyed.values()) {
+    if (bucket.length < 2) continue;
+    const alternates = bucket.map(({ lang, loc }) => ({ lang, href: loc }));
+    for (const { loc } of bucket) {
+      const entry = byLoc.get(loc);
+      if (entry) entry.alternates = alternates;
     }
   }
 
@@ -78,14 +109,28 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
 const escape = (value: string): string =>
   value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+/** The locale a sitemap alternate declares. Matches the markup's hreflang. */
+const hreflang = (lang: Lang): string => (lang === "en" ? "en-GB" : "de-DE");
+
 export function renderUrlset(entries: SitemapEntry[]): string {
   const urls = entries
     .map((entry) => {
       const lastmod = entry.lastmod ? `\n    <lastmod>${entry.lastmod}</lastmod>` : "";
-      return `  <url>\n    <loc>${escape(entry.loc)}</loc>${lastmod}\n  </url>`;
+      // Every alternate of the group is listed on EVERY member, including the
+      // URL itself, plus `x-default` on the German one — that is what makes
+      // the set reciprocal rather than one-directional.
+      const alternates = (entry.alternates ?? [])
+        .flatMap(({ lang, href }) => {
+          const link = `\n    <xhtml:link rel="alternate" hreflang="${hreflang(lang)}" href="${escape(href)}"/>`;
+          return lang === "de"
+            ? [link, `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${escape(href)}"/>`]
+            : [link];
+        })
+        .join("");
+      return `  <url>\n    <loc>${escape(entry.loc)}</loc>${alternates}${lastmod}\n  </url>`;
     })
     .join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 }
 
 export function renderIndex(sitemaps: string[]): string {

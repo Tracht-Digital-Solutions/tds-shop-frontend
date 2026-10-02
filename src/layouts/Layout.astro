@@ -39,6 +39,14 @@ interface Props {
   /** Force `noindex` regardless of path (a product without its own text). */
   noindex?: boolean;
   ogImage?: string | null;
+  /**
+   * `og:type`. `product` on a product page, `website` everywhere else.
+   *
+   * It was hard-coded to `website` on every page, including the ones whose
+   * main entity is a product — the same pages whose JSON-LD already said
+   * `Product`. The two now agree.
+   */
+  ogType?: "website" | "product";
   /** JSON-LD graph, already wrapped by `asGraph`. */
   jsonLd?: Record<string, unknown> | null;
 }
@@ -50,11 +58,26 @@ const {
   altUrl = null,
   noindex = false,
   ogImage = null,
+  ogType = "website",
   jsonLd = null,
 } = Astro.props;
 
 const path = Astro.url.pathname;
 const url = canonical(path);
+
+/**
+ * hreflang must be a fully qualified URL.
+ *
+ * The four cart and checkout pages passed site-relative paths ("/en/cart"), so
+ * the rendered alternate was relative too. A browser resolves that against the
+ * document, but Google's hreflang spec wants an absolute URL and treats a
+ * relative one as malformed — the whole set then counts as broken rather than
+ * as three good links and one iffy one.
+ *
+ * Normalising here rather than in four callers means no page can get this
+ * wrong again, including pages that do not exist yet.
+ */
+const alternate = altUrl && altUrl.startsWith("/") ? canonical(altUrl) : altUrl;
 const robots = noindex || isExcludedPath(path) ? "noindex, follow" : "index, follow";
 const image = ogImage ?? `${site.url}/og-default.png`;
 const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
@@ -80,27 +103,40 @@ const legalBase = lang === "en" ? "/en/legal" : "/rechtliches";
     <meta name="robots" content={robots} />
 
     {
-      altUrl ? (
+      alternate ? (
         <>
+          {/* Bare language codes in the MARKUP, matching the marketing site
+              and the journal; the sitemap's `xhtml:link` carries the full
+              `de-DE`/`en-GB` form. Both are valid, and the four properties
+              agreeing is what makes one shared audit possible. */}
           <link
             rel="alternate"
             hreflang={lang === "de" ? "en" : "de"}
-            href={altUrl}
+            href={alternate}
           />
           <link rel="alternate" hreflang={lang} href={url} />
-          <link rel="alternate" hreflang="x-default" href={lang === "de" ? url : altUrl} />
+          <link rel="alternate" hreflang="x-default" href={lang === "de" ? url : alternate} />
         </>
       ) : null
     }
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle(title, lang)} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
     <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={lang === "en" ? "en_GB" : "de_DE"} />
+    <meta property="og:locale:alternate" content={lang === "en" ? "de_DE" : "en_GB"} />
+    {/* `twitter:card` alone was the whole Twitter block, so a share fell back
+        to whatever the scraper could guess. The three it actually reads cost
+        three lines. */}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle(title, lang)} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="author" content={site.legalName} />
 
     {/* The brand mark shared by every TDS property — byte-identical to the
         landingpage's, the journal's and the tools site's. This site links back

@@ -87,6 +87,7 @@ export const TX = {
     },
     theme: { toDark: "Zum dunklen Farbschema wechseln", toLight: "Zum hellen Farbschema wechseln" },
     catalogue: "Produkte",
+    faqHeading: "Häufige Fragen",
     /** The catalogue's H1. The <title> stays "Produkte" — short, and the brand follows it. */
     catalogueHeadline: "Technik für den Betrieb, von uns eingeschätzt",
     allCategories: "Alle",
@@ -169,6 +170,7 @@ export const TX = {
     },
     theme: { toDark: "Switch to dark mode", toLight: "Switch to light mode" },
     catalogue: "Products",
+    faqHeading: "Common questions",
     catalogueHeadline: "Business technology, assessed by us",
     allCategories: "All",
     categories: "Categories",
