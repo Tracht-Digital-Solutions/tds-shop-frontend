@@ -101,6 +101,17 @@
 :root[data-theme="dark"] {
   --shop-surface-card: color-mix(in srgb, var(--color-accent-pink) 8%, var(--color-card));
 }
+/* The same pair for a themed SUBTREE — the theme toggle's hover preview marks
+   a clone of the page with the other theme. Declared on <html>, the mix
+   resolves against the page's palette and reaches the clone as a literal, so
+   the dark circle showed light product cards. Keep the values identical to
+   the two declarations above. */
+[data-theme="light"]:not(:root) {
+  --shop-surface-card: color-mix(in srgb, var(--color-accent-pink) 5%, var(--color-card));
+}
+[data-theme="dark"]:not(:root) {
+  --shop-surface-card: color-mix(in srgb, var(--color-accent-pink) 8%, var(--color-card));
+}
 
 /* Where the tint actually lands. Two rules, and no more — a token nothing
    applies is a token that drifts.
