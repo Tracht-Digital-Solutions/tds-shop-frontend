@@ -63,12 +63,14 @@ const cta = translations[lang].nav.cta;
       120rem, the same on all three properties. */}
   <div class="tds-shell tds-sitebar">
     {/* The mark IS the "TD" of the name, so only "Shop" is set in type and the
-        accessible name restates the whole brand. `.brand-wordmark` is what puts
-        `.accent-italic` back upright (primitives.css). */}
+        accessible name restates the whole brand — as "TD Shop", because WCAG
+        2.5.3 (axe `label-content-name-mismatch`) wants the visible word "Shop"
+        as a word of the name, which "TDShop" is not. `.brand-wordmark` is what
+        puts `.accent-italic` back upright (primitives.css). */}
     <a
       class="tds-sitebar__brand brand-wordmark"
       href={homePath(lang)}
-      aria-label={`${t.brand} — ${t.nav.catalogue}`}
+      aria-label={`TD Shop — ${t.nav.catalogue}`}
     >
       <span class="brand-logo" aria-hidden="true"></span>
       <span class="accent-italic">Shop</span>
