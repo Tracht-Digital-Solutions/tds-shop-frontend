@@ -1,0 +1,199 @@
+---
+/**
+ * The shop on a phone, as an app: a bottom tab bar (Start · Kategorien ·
+ * Suche · Warenkorb · Mehr) and the sheets it opens. Below `lg` only; it
+ * replaces the hamburger sheet. Mechanics and CSS are shared with the journal
+ * and the tools site (`tds-shared/app`, `styles/app-shell.css`).
+ *
+ * The basket is a TAB, not a sheet: it is a page of its own with a checkout
+ * behind it. Its count rides on the tab (`setTabBadge`), from the same
+ * `onCartChange` the header badge listens to.
+ */
+import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
+import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
+import { listAllProducts, listCategories } from "../lib/content-api";
+import { cartPath } from "../lib/cart";
+import { categoryName, categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
+
+interface Props {
+  lang: Lang;
+  /** The resolved counterpart page, or null (then the other catalogue). */
+  altUrl?: string | null;
+}
+const { lang, altUrl = null } = Astro.props;
+const de = lang === "de";
+const t = tx(lang);
+const path = Astro.url.pathname;
+
+const [categories, products] = await Promise.all([
+  listCategories(lang).catch(() => []),
+  listAllProducts({ lang }).catch(() => []),
+]);
+const others = propertyNav("shop", lang, homePath(lang)).filter((p) => !p.current);
+const contact = propertyContact(lang);
+const cta = translations[lang].nav.cta;
+const langHref = (code: Lang) => (code === lang ? path : (altUrl ?? homePath(code)));
+
+const c = de
+  ? {
+      tabs: "App-Navigation", start: "Start", cats: "Kategorien", search: "Suche", more: "Mehr", close: "Schließen",
+      searchLabel: "Produkte durchsuchen", searchPh: "Wonach suchen Sie?", none: "Kein Produkt gefunden.", all: "Alle Produkte",
+      look: "Darstellung", light: "Hell", dark: "Dunkel", system: "System", language: "Sprache",
+      saved: "Wird für Sie gespeichert – auf allen Tracht-Digital-Seiten.", elsewhere: "Weitere Angebote",
+    }
+  : {
+      tabs: "App navigation", start: "Home", cats: "Categories", search: "Search", more: "More", close: "Close",
+      searchLabel: "Search the products", searchPh: "What are you looking for?", none: "No product found.", all: "All products",
+      look: "Appearance", light: "Light", dark: "Dark", system: "System", language: "Language",
+      saved: "Saved for you — on every Tracht Digital site.", elsewhere: "More from Tracht Digital",
+    };
+---
+
+<nav class="tds-tabbar" id="app-tabbar" aria-label={c.tabs}>
+  <a class="tds-tabbar__item" href={homePath(lang)} data-tab-match={`${homePath(lang)}`}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M10 21v-6h4v6"></path></svg>
+    <span>{c.start}</span>
+  </a>
+  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-cats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5"></rect><rect x="13.5" y="3" width="7.5" height="7.5"></rect><rect x="3" y="13.5" width="7.5" height="7.5"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5"></rect></svg>
+    <span>{c.cats}</span>
+  </button>
+  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    <span>{c.search}</span>
+  </button>
+  <a class="tds-tabbar__item" href={cartPath(lang)} data-tab-match={cartPath(lang)}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 8H6.2"></path><circle cx="9" cy="20" r="1.3"></circle><circle cx="17" cy="20" r="1.3"></circle></svg>
+    <span>{t.cart.title}</span>
+    <span class="tds-tabbar__badge" id="app-cart-badge" data-count="0" aria-hidden="true"></span>
+  </a>
+  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-more">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>
+    <span>{c.more}</span>
+  </button>
+</nav>
+
+<dialog class="tds-sheet" id="sheet-cats" aria-labelledby="sheet-cats-title">
+  <div class="tds-sheet__grab">
+    <h2 class="tds-sheet__title" id="sheet-cats-title">{c.cats}</h2>
+    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={c.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <div class="tds-sheet__body">
+    <a class="tds-sheet-row" href={homePath(lang)}><span>{c.all}</span><span aria-hidden="true">→</span></a>
+    {categories.map((cat) => (
+      <a class="tds-sheet-row" href={categoryPath(cat.category, lang)} aria-current={path === categoryPath(cat.category, lang) ? "page" : undefined}>
+        <span>{categoryName(cat.category, cat.label)}</span><span class="app-count">{cat.total}</span>
+      </a>
+    ))}
+  </div>
+</dialog>
+
+<dialog class="tds-sheet" id="sheet-search" aria-labelledby="sheet-search-title">
+  <div class="tds-sheet__grab">
+    <h2 class="tds-sheet__title" id="sheet-search-title">{c.search}</h2>
+    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={c.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <div class="tds-sheet__body">
+    <label class="sr-only" for="app-product-q">{c.searchLabel}</label>
+    <input id="app-product-q" class="field-boxed app-search-input" type="search" enterkeyhint="search" autocomplete="off" placeholder={c.searchPh} />
+    <div role="list">
+      {products.map((p) => (
+        <a class="tds-sheet-row app-product-row" role="listitem" href={productPath(p.slug, lang)} data-search={`${p.title} ${p.teaser} ${p.category}`.toLowerCase()}>
+          <span><strong>{p.title}</strong><small>{p.teaser}</small></span>
+        </a>
+      ))}
+    </div>
+    <p id="app-product-none" class="app-sheet-note" hidden>{c.none}</p>
+  </div>
+</dialog>
+
+<dialog class="tds-sheet" id="sheet-more" aria-labelledby="sheet-more-title">
+  <div class="tds-sheet__grab">
+    <h2 class="tds-sheet__title" id="sheet-more-title">{c.more}</h2>
+    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={c.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <div class="tds-sheet__body" id="sheet-more-body">
+    <p class="tds-sheet-heading">{c.look}</p>
+    <div class="tds-segmented" role="group" aria-label={c.look}>
+      <button type="button" class="tds-segmented__option" data-theme-choice="light" aria-pressed="false">{c.light}</button>
+      <button type="button" class="tds-segmented__option" data-theme-choice="dark" aria-pressed="false">{c.dark}</button>
+      <button type="button" class="tds-segmented__option" data-theme-choice="system" aria-pressed="false">{c.system}</button>
+    </div>
+    <p class="tds-sheet-heading">{c.language}</p>
+    <div class="tds-segmented" role="group" aria-label={c.language}>
+      <a href={langHref("de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
+      <a href={langHref("en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
+    </div>
+    <p class="app-sheet-note">{c.saved}</p>
+    <p class="tds-sheet-heading">{c.elsewhere}</p>
+    {others.map((p) => (
+      <a class="tds-sheet-row" href={p.href}><span>{p.label}</span><span aria-hidden="true">↗</span></a>
+    ))}
+    <a href={contact} class="btn btn-primary app-sheet-cta">{cta}</a>
+  </div>
+</dialog>
+
+<style>
+  /* Geometry and focus from the shared `.field-boxed`; 16px so iOS does not zoom. */
+  .app-search-input { width: 100%; margin: 0.25rem 0 0.5rem; font-size: 1rem; }
+  .app-product-row strong { display: block; font-weight: 600; }
+  .app-product-row small {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--color-muted);
+  }
+  .app-count { font-size: 0.8125rem; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+  .app-sheet-note { margin: 0.625rem 0 0; font-size: 0.8125rem; color: var(--color-muted); }
+  .app-sheet-cta { width: 100%; justify-content: center; margin-top: 1rem; }
+</style>
+
+<script>
+  import { mountAppTabBar, mountSheet, mountPreferenceControls, setTabBadge } from "@tracht-digital-solutions/tds-shared/app";
+  import { cartCount, onCartChange } from "../lib/cart";
+
+  const bar = document.getElementById("app-tabbar");
+  if (bar) mountAppTabBar(bar);
+  for (const dialog of Array.from(document.querySelectorAll<HTMLDialogElement>("dialog.tds-sheet"))) {
+    mountSheet({
+      dialog,
+      triggers: Array.from(document.querySelectorAll<HTMLElement>(`[data-sheet-open="${dialog.id}"]`)),
+      onOpen: () => {
+        if (dialog.id === "sheet-search") document.getElementById("app-product-q")?.focus();
+      },
+    });
+  }
+  const more = document.getElementById("sheet-more-body");
+  if (more) mountPreferenceControls(more);
+
+  // The basket count on its tab, from the same store as the header badge.
+  const badge = document.getElementById("app-cart-badge");
+  setTabBadge(badge, cartCount());
+  onCartChange((lines) => setTabBadge(badge, cartCount(lines)));
+
+  // Instant filter over the rendered list: every word must match.
+  const q = document.getElementById("app-product-q") as HTMLInputElement | null;
+  const rows = Array.from(document.querySelectorAll<HTMLElement>(".app-product-row"));
+  const none = document.getElementById("app-product-none");
+  q?.addEventListener("input", () => {
+    const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const row of rows) {
+      const hit = words.every((w) => (row.dataset.search ?? "").includes(w));
+      row.style.display = hit ? "" : "none";
+      if (hit) shown++;
+    }
+    if (none) none.hidden = shown > 0;
+  });
+</script>

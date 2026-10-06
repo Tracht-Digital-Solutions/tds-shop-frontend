@@ -87,6 +87,22 @@ Node 22 in CI with npm force-upgraded to 11: npm 10's arborist crashes
 resolving Astro 7.3.0. `npm install --no-package-lock` — the lockfile is gitignored because a
 Windows-generated one does not resolve on a Linux runner.
 
+## The phone is an app (2026-10-06, tds-shared 0.47)
+
+- `AppChrome.astro` (in `Layout.astro`) renders the shared bottom tab bar:
+  Start · Kategorien · Suche (instant filter over the catalogue) · Warenkorb
+  (a page, with the basket count on the tab) · Mehr (theme, language, sibling
+  properties, CTA). No hamburger. The header tucks away while scrolling.
+- The product page shows a buy bar above the tab bar once the reader has
+  scrolled past the offers. It only scrolls back to them — never a checkout
+  of its own, so the advertising label and the 24-hour price rule stay in
+  front of the decision.
+- PWA: prerendered `/manifest.webmanifest` and `/sw.js`. **The basket,
+  checkout, order pages and `/go/` are never cached** (pinned in
+  `header.test.ts`), and never prerendered speculatively.
+- Theme and language are saved through `tds-shared/prefs` (cookie on
+  `.tracht-digital.de` + account sync).
+
 ## Don't
 
 - Don't author a radius or an elevation locally. Set a token in the surface
@@ -95,8 +111,8 @@ Windows-generated one does not resolve on a Linux runner.
 - Don't hand-roll a header or footer again, and don't write a sibling URL
   inline. `siteLinks()` is the one source (it reads tds-shared's
   `PROPERTY_ORIGINS`). `header.test.ts` fails on a local
-  bar, on an `is:inline` mobile-menu script (its import would reach the browser
-  as a bare specifier and the hamburger would do nothing), and on a missing
+  bar, on an `is:inline` app-shell script (its import would reach the browser
+  as a bare specifier and the controls would do nothing), and on a missing
   link back to the journal, the tools site or the main site.
 - Don't trust a local render after editing a component without clearing
   `var/page-cache`. The dev server writes it too, and the result is the OLD

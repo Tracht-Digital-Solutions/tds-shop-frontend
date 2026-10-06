@@ -21,6 +21,7 @@ const layout = read("../layouts/Layout.astro");
 const header = read("../components/Header.astro");
 const footer = read("../components/Footer.astro");
 const css = read("../styles/global.css");
+const chrome = read("../components/AppChrome.astro");
 
 describe("the shared chrome", () => {
   it("renders header and footer through their components", () => {
@@ -30,20 +31,33 @@ describe("the shared chrome", () => {
     expect(layout).not.toMatch(/<footer\b/);
   });
 
-  it("uses the shared header shell, language switch and mobile menu", () => {
-    expect(header).toContain('class="brand-header"');
+  it("uses the shared header shell, language switch and app tab bar", () => {
+    expect(header).toContain('class="brand-header tds-app-header"');
     expect(header).toContain("tds-lang-toggle");
-    expect(header).toContain("tds-mobile-menu");
+    // The phone navigates with the shared tab bar, not a hamburger.
+    expect(header).not.toContain("tds-menu-toggle");
+    expect(layout).toMatch(/<AppChrome lang=\{lang\} altUrl=\{altUrl\} \/>/);
+    expect(chrome).toContain('class="tds-tabbar"');
     expect(footer).toContain("tds-tone-navy");
   });
 
-  it("bundles the mobile-menu script instead of inlining it", () => {
+  it("bundles the app-shell scripts instead of inlining them", () => {
     // An inline script is not bundled: its import reaches the browser as a
-    // bare specifier and the hamburger silently does nothing.
-    const script = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/.exec(header);
-    expect(script, "no script in the header").not.toBeNull();
-    expect(script?.[1] ?? "").not.toContain("is:inline");
-    expect(script?.[2]).toContain("mountMobileNav");
+    // bare specifier and the controls silently do nothing.
+    for (const [file, body] of [["header", header], ["chrome", chrome]] as const) {
+      const script = /<script(\s[^>]*)?>([\s\S]*?)<\/script>/.exec(body);
+      expect(script, `no script in ${file}`).not.toBeNull();
+      expect(script?.[1] ?? "").not.toContain("is:inline");
+    }
+    expect(header).toContain("mountAppHeader(header)");
+    expect(chrome).toMatch(/mountAppTabBar\(/);
+  });
+
+  it("never caches the basket, checkout, orders or offer redirects offline", () => {
+    const sw = read("../pages/sw.js.ts");
+    for (const p of ["/warenkorb", "/kasse", "/bestellung", "/go/", "/en/cart", "/en/checkout", "/en/order"]) {
+      expect(sw).toContain(`"${p}"`);
+    }
   });
 
   it("links back to every sibling property from header and footer", () => {
@@ -103,14 +117,12 @@ describe("the property bar", () => {
     expect(header).toMatch(/<div class="tds-sitebar__wide">\s*<a href=\{contact\} class="btn btn-primary"/);
   });
 
-  it("keeps the account menu and the basket beside the hamburger at every width", () => {
+  it("keeps the account menu and the basket in the bar at every width", () => {
     const actions = header.slice(header.indexOf('<div class="tds-sitebar__actions">'));
     const account = actions.indexOf("<AccountMenu");
     const cart = actions.indexOf("<CartBadge");
-    const toggle = actions.indexOf('id="menu-toggle"');
     expect(account, "no account menu in the actions").toBeGreaterThan(-1);
     expect(cart).toBeGreaterThan(account);
-    expect(toggle).toBeGreaterThan(cart);
   });
 
   it("keeps the blend's pill actions out of the shared bar", () => {

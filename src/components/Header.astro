@@ -58,7 +58,7 @@ const cta = translations[lang].nav.cta;
 
 {/* Fill, blur, sticky position and the warm hairline all come from
     `.brand-header` (tds-shared). Never re-declare them here. */}
-<header class="brand-header">
+<header class="brand-header tds-app-header" id="site-header">
   {/* `.tds-shell` gives the bar the page's own edges — the blog surface's
       120rem, the same on all three properties. */}
   <div class="tds-shell tds-sitebar">
@@ -102,6 +102,7 @@ const cta = translations[lang].nav.cta;
             href={l.href}
             hreflang={l.code}
             lang={l.code}
+            data-locale-link={l.code}
             class={l.code === lang ? "on" : ""}
             aria-current={l.code === lang ? "true" : undefined}
           >
@@ -116,77 +117,27 @@ const cta = translations[lang].nav.cta;
     </div>
 
     {/* Visible at every width, in the shared order: who you are, then the
-        shop's own extra, then the hamburger. The account menu renders nothing
-        for a signed-out visitor and the basket nothing while it is empty, so an
-        anonymous first visit sees just the hamburger here. */}
+        shop's own extra. On a phone navigation lives in the app tab bar
+        (AppChrome.astro), which carries the basket as a tab of its own. */}
     <div class="tds-sitebar__actions">
       <AccountMenu client:idle lang={lang} />
       <CartBadge client:idle lang={lang} />
 
-      {/* The breakpoint comes from `.tds-menu-toggle` itself. */}
-      <button
-        id="menu-toggle"
-        type="button"
-        class="btn btn-ghost tds-menu-toggle"
-        aria-controls="mobile-menu"
-        aria-expanded="false"
-        aria-label={t.nav.menu}
-      >
-        <span class="tds-menu-bar tds-menu-bar-top" aria-hidden="true"></span>
-        <span class="tds-menu-bar tds-menu-bar-mid" aria-hidden="true"></span>
-        <span class="tds-menu-bar tds-menu-bar-bot" aria-hidden="true"></span>
-      </button>
     </div>
   </div>
 
-  {/* The sheet, its motion and its scroll containment are `.tds-mobile-menu`;
-      only the docking offset and the control row are local
-      (`.shop-mobile-menu`). */}
-  <div id="mobile-menu" class="tds-mobile-menu shop-mobile-menu" aria-hidden="true" aria-label={t.nav.menu}>
-    <nav aria-label={t.nav.label}>
-      {nav.map((item) => (
-        <a
-          href={item.href}
-          data-menu-link
-          class="tds-mobile-menu__link"
-          aria-current={item.current ? (isHome ? "page" : "true") : undefined}
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
-
-    <div class="shop-mobile-menu__controls">
-      <div class="shop-mobile-menu__settings">
-        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
-          {langHrefs.map((l) => (
-            <a
-              href={l.href}
-              hreflang={l.code}
-              lang={l.code}
-              data-menu-link
-              class={l.code === lang ? "on" : ""}
-              aria-current={l.code === lang ? "true" : undefined}
-            >
-              {l.code.toUpperCase()}
-            </a>
-          ))}
-        </div>
-        <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
-      </div>
-      <a href={contact} data-menu-link class="btn btn-primary">{cta}</a>
-    </div>
-  </div>
 </header>
 
 <script>
   // NOT `is:inline` — an inline script is not bundled, so this import would
-  // reach the browser as a bare specifier and the hamburger would do nothing.
-  import { mountMobileNav } from "@tracht-digital-solutions/tds-shared/nav";
+  // reach the browser as a bare specifier.
+  import { mountAppHeader, mountPreferenceControls } from "@tracht-digital-solutions/tds-shared/app";
 
-  const toggle = document.getElementById("menu-toggle");
-  const panel = document.getElementById("mobile-menu");
-  if (toggle && panel) {
-    mountMobileNav({ toggle, panel });
+  const header = document.getElementById("site-header");
+  if (header) {
+    // Phone: tucks away while scrolling down; navigation is the tab bar.
+    mountAppHeader(header);
+    // The DE/EN switch remembers the choice for every Tracht Digital site.
+    mountPreferenceControls(header);
   }
 </script>

@@ -20,7 +20,7 @@ re-declare a shared class here.
 
 The chrome is the journal's as well. `Header.astro` and `Footer.astro` are built
 from the classes the journal and the tools site use — `.brand-header`, the DE|EN
-`.tds-lang-toggle`, the `.tds-mobile-menu` sheet driven by `mountMobileNav`, a
+`.tds-lang-toggle`, the app tab bar on a phone (`AppChrome.astro`), a
 `.tds-tone-navy` footer — and link to the sibling properties through
 `siteLinks()` in `src/lib/seo.ts`. The journal links to the shop from its nav;
 the shop links back from header, footer and the empty catalogue.

@@ -188,7 +188,7 @@ const revised = product.updatedAt
 
     {/* The offer list. `ProductCard` carries the advertising label and drops a
         price older than 24 hours by itself — this page decides neither. */}
-    <aside class="shop-product__offers" aria-label={t.offers}>
+    <aside class="shop-product__offers" id="offers" aria-label={t.offers}>
       <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
 
       {/* Only for something TDS sells itself. An affiliate product is bought at
@@ -237,5 +237,39 @@ const revised = product.updatedAt
     </a>
   </p>
 
+  {/* Phone: a buy bar above the tab bar while the offers are scrolled out of
+      view — the price and the way to buy are never more than a tap away, like a
+      shop app. It only points at the offers; it never adds to the basket or
+      opens a checkout itself, so the advertising label and the 24-hour price
+      rule on the card always stay in front of the decision. */}
+  {offers.length > 0 && (
+    <div class="shop-buybar" id="shop-buybar" hidden>
+      <span class="shop-buybar__title">{product.title}</span>
+      <a href="#offers" class="btn btn-primary shop-buybar__cta">{t.offers}</a>
+    </div>
+  )}
+
   <link rel="prefetch" href={canonical(homePath(lang))} />
 </Layout>
+
+<script>
+  const buybar = document.getElementById("shop-buybar");
+  const offers = document.getElementById("offers");
+  if (buybar && offers && "IntersectionObserver" in window) {
+    const phone = window.matchMedia("(max-width: 63.99rem)");
+    let offersVisible = true;
+    let pastOffers = false;
+    const sync = () => {
+      buybar.hidden = !phone.matches || offersVisible || !pastOffers;
+    };
+    new IntersectionObserver(([e]) => {
+      offersVisible = e!.isIntersecting;
+      // Only once the reader has scrolled PAST the offers — above them, the
+      // offers are still coming and a bar would only repeat them.
+      pastOffers = !e!.isIntersecting && e!.boundingClientRect.top < 0;
+      sync();
+    }).observe(offers);
+    phone.addEventListener("change", sync);
+  }
+</script>
+

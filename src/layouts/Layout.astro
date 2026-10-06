@@ -11,7 +11,13 @@ import Header from "../components/Header.astro";
 import { API_BASE_META } from "@tracht-digital-solutions/tds-shared/api";
 import { ConsentBanner } from "@tracht-digital-solutions/tds-shared/consent";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
-import { pageTransitionOptIn, themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
+import {
+  pageDirectionScript,
+  pageTransitionOptIn,
+  speculationRules,
+  themeBootstrapScript,
+} from "@tracht-digital-solutions/tds-shared/astro";
+import AppChrome from "../components/AppChrome.astro";
 
 import "../styles/global.css";
 import { apiBase } from "../lib/connection";
@@ -89,7 +95,7 @@ const image = ogImage ?? `${site.url}/og-default.png`;
   and tools.tracht-digital.de render — so the three read as one property rather
   than three that resemble each other. Do not author radii locally.
 -->
-<html lang={lang} data-surface="blog" data-flat>
+<html lang={lang} data-surface="blog" data-flat class="tds-app">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -97,6 +103,15 @@ const image = ogImage ?? `${site.url}/og-default.png`;
          incoming page's opt-in at its first render, and the stylesheet linked at the
          end of this head often arrives later (tds-shared pageTransitionOptIn). -->
     <style is:inline set:html={pageTransitionOptIn} />
+    {/* Tags each page transition forward/back, so a phone slides like an app. */}
+    <script is:inline set:html={pageDirectionScript} />
+    <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#070a14" media="(prefers-color-scheme: dark)" />
+    {/* Installable app (tds-shared/pwa). */}
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="TD Shop" />
     <title>{pageTitle(title)}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={url} />
@@ -165,6 +180,9 @@ const image = ogImage ?? `${site.url}/og-default.png`;
         <script is:inline type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />
       ) : null
     }
+    {/* Near-instant navigation — never for the basket, checkout, orders or
+        the outbound offer redirects, which must only load on a real tap. */}
+    <script is:inline type="speculationrules" set:html={speculationRules(["/warenkorb", "/kasse", "/bestellung", "/go/", "/en/cart", "/en/checkout", "/en/order"])} />
   </head>
 
   <body>
@@ -189,6 +207,16 @@ const image = ogImage ?? `${site.url}/og-default.png`;
     </main>
 
     <Footer lang={lang} />
+    <AppChrome lang={lang} altUrl={altUrl} />
+
+    <script>
+      import { startAccountPrefsSync } from "@tracht-digital-solutions/tds-shared/prefs";
+      import { registerServiceWorker } from "@tracht-digital-solutions/tds-shared/app";
+      // Signed in? Theme and language follow the account to other devices.
+      void startAccountPrefsSync();
+      // Installable; catalogue pages stay readable offline (src/pages/sw.js.ts).
+      registerServiceWorker();
+    </script>
 
     {/*
       No `categories` — this shop sets nothing beyond what it cannot work
