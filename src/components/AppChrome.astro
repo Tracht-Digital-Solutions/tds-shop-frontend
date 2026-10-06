@@ -1,13 +1,14 @@
 ---
 /**
- * The shop on a phone, as an app: a bottom tab bar (Start · Kategorien ·
- * Suche · Warenkorb · Mehr) and the sheets it opens. Below `lg` only; it
- * replaces the hamburger sheet. Mechanics and CSS are shared with the journal
- * and the tools site (`tds-shared/app`, `styles/app-shell.css`).
+ * The shop on a phone, as an app (since 2026-10-06, tds-shared 0.49):
+ * Start · Entdecken · Warenkorb · Mehr. The non-link tabs open full-screen
+ * PAGES (`mountTabPages`) that slide in from their tab's side, swipe to the
+ * neighbouring tab and close on Back; the basket stays a real page with its
+ * count on the tab. Below `lg` only.
  *
- * The basket is a TAB, not a sheet: it is a page of its own with a checkout
- * behind it. Its count rides on the tab (`setTabBadge`), from the same
- * `onCartChange` the header badge listens to.
+ * "Entdecken" is search and presentation in one: empty, it presents the
+ * categories (each leading to its category page) and the whole range; as
+ * soon as something is typed it searches every product in place.
  */
 import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
@@ -33,19 +34,26 @@ const others = propertyNav("shop", lang, homePath(lang)).filter((p) => !p.curren
 const contact = propertyContact(lang);
 const cta = translations[lang].nav.cta;
 const langHref = (code: Lang) => (code === lang ? path : (altUrl ?? homePath(code)));
+const nameOf = (slug: string) => categoryName(slug, categories.find((c) => c.category === slug)?.label);
 
 const c = de
   ? {
-      tabs: "App-Navigation", start: "Start", cats: "Kategorien", search: "Suche", more: "Mehr", close: "Schließen",
-      searchLabel: "Produkte durchsuchen", searchPh: "Wonach suchen Sie?", none: "Kein Produkt gefunden.", all: "Alle Produkte",
-      look: "Darstellung", light: "Hell", dark: "Dunkel", system: "Auto", language: "Sprache",
-      saved: "Wird für Sie gespeichert – auf allen Tracht-Digital-Seiten.", elsewhere: "Weitere Angebote",
+      tabs: "App-Navigation", start: "Start", discover: "Entdecken", more: "Mehr",
+      discoverLead: "Finden Sie das passende Produkt – oder stöbern Sie nach Kategorie.",
+      searchLabel: "Produkte durchsuchen", searchPh: "Produkt, Marke oder Einsatz", none: "Kein Produkt passt dazu.",
+      cats: "Kategorien", range: "Das ganze Sortiment",
+      look: "Darstellung", light: "Hell", dark: "Dunkel", auto: "Auto", language: "Sprache",
+      elsewhere: "Mehr von Tracht Digital",
+      count: (n: number) => (n === 1 ? "1 Produkt" : `${n} Produkte`),
     }
   : {
-      tabs: "App navigation", start: "Home", cats: "Categories", search: "Search", more: "More", close: "Close",
-      searchLabel: "Search the products", searchPh: "What are you looking for?", none: "No product found.", all: "All products",
-      look: "Appearance", light: "Light", dark: "Dark", system: "Auto", language: "Language",
-      saved: "Saved for you — on every Tracht Digital site.", elsewhere: "More from Tracht Digital",
+      tabs: "App navigation", start: "Home", discover: "Discover", more: "More",
+      discoverLead: "Find the right product — or browse by category.",
+      searchLabel: "Search the products", searchPh: "Product, brand or use", none: "No product matches that.",
+      cats: "Categories", range: "The whole range",
+      look: "Appearance", light: "Light", dark: "Dark", auto: "Auto", language: "Language",
+      elsewhere: "More from Tracht Digital",
+      count: (n: number) => (n === 1 ? "1 product" : `${n} products`),
     };
 ---
 
@@ -54,127 +62,162 @@ const c = de
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path><path d="M10 21v-6h4v6"></path></svg>
     <span>{c.start}</span>
   </a>
-  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-cats">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5"></rect><rect x="13.5" y="3" width="7.5" height="7.5"></rect><rect x="3" y="13.5" width="7.5" height="7.5"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5"></rect></svg>
-    <span>{c.cats}</span>
-  </button>
-  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-search">
+  <button type="button" class="tds-tabbar__item" data-tab-page="discover" aria-controls="tabpage-discover" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-    <span>{c.search}</span>
+    <span>{c.discover}</span>
   </button>
   <a class="tds-tabbar__item" href={cartPath(lang)} data-tab-match={cartPath(lang)}>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 8H6.2"></path><circle cx="9" cy="20" r="1.3"></circle><circle cx="17" cy="20" r="1.3"></circle></svg>
     <span>{t.cart.title}</span>
     <span class="tds-tabbar__badge" id="app-cart-badge" data-count="0" aria-hidden="true"></span>
   </a>
-  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-more">
+  <button type="button" class="tds-tabbar__item" data-tab-page="more" aria-controls="tabpage-more" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>
     <span>{c.more}</span>
   </button>
 </nav>
 
-<dialog class="tds-sheet" id="sheet-cats" aria-labelledby="sheet-cats-title">
-  <div class="tds-sheet__grab">
-    <h2 class="tds-sheet__title" id="sheet-cats-title">{c.cats}</h2>
-    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={c.close}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-    </button>
-  </div>
-  <div class="tds-sheet__body">
-    <a class="tds-sheet-row" href={homePath(lang)}><span>{c.all}</span><span aria-hidden="true">→</span></a>
-    {categories.map((cat) => (
-      <a class="tds-sheet-row" href={categoryPath(cat.category, lang)} aria-current={path === categoryPath(cat.category, lang) ? "page" : undefined}>
-        <span>{categoryName(cat.category, cat.label)}</span><span class="app-count">{cat.total}</span>
-      </a>
-    ))}
-  </div>
-</dialog>
+<section class="tds-tabpage" id="tabpage-discover" data-tab-page-id="discover" aria-labelledby="tabpage-discover-title" hidden>
+  <header class="tds-tabpage__head">
+    <h2 id="tabpage-discover-title" tabindex="-1">{c.discover}</h2>
+    <p>{c.discoverLead}</p>
+  </header>
+  <div class="tds-tabpage__body">
+    <form class="tds-searchfield" role="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <label class="sr-only" for="discover-q">{c.searchLabel}</label>
+      <input id="discover-q" class="tds-searchfield__input" type="search" enterkeyhint="search" autocomplete="off" placeholder={c.searchPh} data-autofocus />
+    </form>
+    <p class="sr-only" role="status" aria-live="polite" id="discover-status"></p>
 
-<dialog class="tds-sheet" id="sheet-search" aria-labelledby="sheet-search-title">
-  <div class="tds-sheet__grab">
-    <h2 class="tds-sheet__title" id="sheet-search-title">{c.search}</h2>
-    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={c.close}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-    </button>
-  </div>
-  <div class="tds-sheet__body">
-    <label class="sr-only" for="app-product-q">{c.searchLabel}</label>
-    <input id="app-product-q" class="field-boxed app-search-input" type="search" enterkeyhint="search" autocomplete="off" placeholder={c.searchPh} />
-    <div role="list">
-      {products.map((p) => (
-        <a class="tds-sheet-row app-product-row" role="listitem" href={productPath(p.slug, lang)} data-search={`${p.title} ${p.teaser} ${p.category}`.toLowerCase()}>
-          <span><strong>{p.title}</strong><small>{p.teaser}</small></span>
-        </a>
-      ))}
+    <div class="tds-tabpage__section discover-results" id="discover-results" hidden>
+      <ul class="discover-list">
+        {products.map((p) => (
+          <li data-search={`${p.title} ${p.teaser} ${nameOf(p.category)}`.toLowerCase()}>
+            <a href={productPath(p.slug, lang)} class="discover-hit">
+              <span class="discover-hit__meta">{nameOf(p.category)}</span>
+              <strong>{p.title}</strong>
+              <small>{p.teaser}</small>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="discover-empty" id="discover-empty" hidden>{c.none}</p>
     </div>
-    <p id="app-product-none" class="app-sheet-note" hidden>{c.none}</p>
-  </div>
-</dialog>
 
-<dialog class="tds-sheet" id="sheet-more" aria-labelledby="sheet-more-title">
-  <div class="tds-sheet__grab">
-    <h2 class="tds-sheet__title" id="sheet-more-title">{c.more}</h2>
-    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={c.close}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-    </button>
-  </div>
-  <div class="tds-sheet__body" id="sheet-more-body">
-    <p class="tds-sheet-heading">{c.look}</p>
-    <div class="tds-segmented" role="group" aria-label={c.look}>
-      <button type="button" class="tds-segmented__option" data-theme-choice="light" aria-pressed="false">{c.light}</button>
-      <button type="button" class="tds-segmented__option" data-theme-choice="dark" aria-pressed="false">{c.dark}</button>
-      <button type="button" class="tds-segmented__option" data-theme-choice="system" aria-pressed="false">{c.system}</button>
+    <div id="discover-idle">
+      {categories.length > 0 && (
+        <div class="tds-tabpage__section">
+          <p class="tds-sheet-heading">{c.cats}</p>
+          <div class="tds-tilegrid">
+            {categories.map((cat) => (
+              <a class="tds-tile" href={categoryPath(cat.category, lang)}>
+                <strong>{nameOf(cat.category)}</strong>
+                <small>{c.count(cat.total)}</small>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+      {products.length > 0 && (
+        <div class="tds-tabpage__section">
+          <p class="tds-sheet-heading">{c.range}</p>
+          <ul class="discover-list">
+            {products.map((p) => (
+              <li>
+                <a href={productPath(p.slug, lang)} class="discover-hit">
+                  <span class="discover-hit__meta">{nameOf(p.category)}</span>
+                  <strong>{p.title}</strong>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
-    <p class="tds-sheet-heading">{c.language}</p>
-    <div class="tds-segmented" role="group" aria-label={c.language}>
-      <a href={langHref("de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
-      <a href={langHref("en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
-    </div>
-    <p class="app-sheet-note">{c.saved}</p>
-    <p class="tds-sheet-heading">{c.elsewhere}</p>
-    {others.map((p) => (
-      <a class="tds-sheet-row" href={p.href}><span>{p.label}</span><span aria-hidden="true">↗</span></a>
-    ))}
-    <a href={contact} class="btn btn-primary app-sheet-cta">{cta}</a>
   </div>
-</dialog>
+</section>
+
+<section class="tds-tabpage" id="tabpage-more" data-tab-page-id="more" aria-labelledby="tabpage-more-title" hidden>
+  <header class="tds-tabpage__head">
+    <h2 id="tabpage-more-title" tabindex="-1">{c.more}</h2>
+  </header>
+  <div class="tds-tabpage__body" id="tabpage-more-body">
+    <div class="tds-tabpage__section">
+      <p class="tds-sheet-heading">{c.look}</p>
+      <div class="tds-segmented tds-segmented--icons" role="group" aria-label={c.look}>
+        <button type="button" class="tds-segmented__option" data-theme-choice="light" aria-pressed="false" aria-label={c.light} title={c.light}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+        </button>
+        <button type="button" class="tds-segmented__option" data-theme-choice="dark" aria-pressed="false" aria-label={c.dark} title={c.dark}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path></svg>
+        </button>
+        <button type="button" class="tds-segmented__option" data-theme-choice="system" aria-pressed="false" aria-label={c.auto} title={c.auto}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" stroke="none"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="tds-tabpage__section">
+      <p class="tds-sheet-heading">{c.language}</p>
+      <div class="tds-segmented" role="group" aria-label={c.language}>
+        <a class="tds-segmented__option" href={langHref("de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
+        <a class="tds-segmented__option" href={langHref("en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
+      </div>
+    </div>
+    <div class="tds-tabpage__section">
+      <p class="tds-sheet-heading">{c.elsewhere}</p>
+      <div class="tds-linkgroup">
+        {others.map((p) => <a href={p.href}>{p.label}</a>)}
+      </div>
+      <a href={contact} class="btn btn-primary more-cta">{cta}</a>
+    </div>
+  </div>
+</section>
 
 <style>
-  /* Geometry and focus from the shared `.field-boxed`; 16px so iOS does not zoom. */
-  .app-search-input { width: 100%; margin: 0.25rem 0 0.5rem; font-size: 1rem; }
-  .app-product-row strong { display: block; font-weight: 600; }
-  .app-product-row small {
+  .discover-results { margin-top: 1.25rem; }
+  .discover-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.625rem; }
+  .discover-hit {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem 0.875rem 1.125rem;
+    background: var(--color-soft);
+    color: var(--color-ink);
+    text-decoration: none;
+    box-shadow: inset 4px 0 0 var(--color-accent);
+  }
+  .discover-hit__meta {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .discover-hit strong { font-weight: 700; line-height: 1.25; }
+  .discover-hit small {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-top: 0.125rem;
-    font-size: 0.8125rem;
-    font-weight: 400;
     color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.45;
   }
-  .app-count { font-size: 0.8125rem; color: var(--color-muted); font-variant-numeric: tabular-nums; }
-  .app-sheet-note { margin: 0.625rem 0 0; font-size: 0.8125rem; color: var(--color-muted); }
-  .app-sheet-cta { width: 100%; justify-content: center; margin-top: 1rem; }
+  .discover-empty { margin: 0.75rem 0 0; color: var(--color-muted); }
+  .more-cta { width: 100%; justify-content: center; margin-top: 1rem; }
 </style>
 
 <script>
-  import { mountAppTabBar, mountSheet, mountPreferenceControls, setTabBadge } from "@tracht-digital-solutions/tds-shared/app";
+  import { mountAppTabBar, mountLiveFilter, mountPreferenceControls, mountTabPages, setTabBadge } from "@tracht-digital-solutions/tds-shared/app";
   import { cartCount, onCartChange } from "../lib/cart";
 
   const bar = document.getElementById("app-tabbar");
-  if (bar) mountAppTabBar(bar);
-  for (const dialog of Array.from(document.querySelectorAll<HTMLDialogElement>("dialog.tds-sheet"))) {
-    mountSheet({
-      dialog,
-      triggers: Array.from(document.querySelectorAll<HTMLElement>(`[data-sheet-open="${dialog.id}"]`)),
-      onOpen: () => {
-        if (dialog.id === "sheet-search") document.getElementById("app-product-q")?.focus();
-      },
-    });
+  if (bar) {
+    mountAppTabBar(bar);
+    mountTabPages(bar);
   }
-  const more = document.getElementById("sheet-more-body");
+  const more = document.getElementById("tabpage-more-body");
   if (more) mountPreferenceControls(more);
 
   // The basket count on its tab, from the same store as the header badge.
@@ -182,18 +225,21 @@ const c = de
   setTabBadge(badge, cartCount());
   onCartChange((lines) => setTabBadge(badge, cartCount(lines)));
 
-  // Instant filter over the rendered list: every word must match.
-  const q = document.getElementById("app-product-q") as HTMLInputElement | null;
-  const rows = Array.from(document.querySelectorAll<HTMLElement>(".app-product-row"));
-  const none = document.getElementById("app-product-none");
-  q?.addEventListener("input", () => {
-    const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
-    let shown = 0;
-    for (const row of rows) {
-      const hit = words.every((w) => (row.dataset.search ?? "").includes(w));
-      row.style.display = hit ? "" : "none";
-      if (hit) shown++;
-    }
-    if (none) none.hidden = shown > 0;
-  });
+  const q = document.getElementById("discover-q") as HTMLInputElement | null;
+  if (q) {
+    const isDe = document.documentElement.lang !== "en";
+    mountLiveFilter({
+      input: q,
+      items: Array.from(document.querySelectorAll<HTMLElement>("#discover-results li[data-search]")),
+      idle: document.getElementById("discover-idle"),
+      results: document.getElementById("discover-results"),
+      empty: document.getElementById("discover-empty"),
+      status: document.getElementById("discover-status"),
+      countLabel: (n) => (isDe ? `${n} ${n === 1 ? "Produkt" : "Produkte"}` : `${n} ${n === 1 ? "product" : "products"}`),
+    });
+    q.form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      q.blur();
+    });
+  }
 </script>
