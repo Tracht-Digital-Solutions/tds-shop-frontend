@@ -39,6 +39,11 @@ export interface LlmsInput {
   categories: readonly LlmsCategory[];
   /** Indexable products only — the same `isIndexable()` the sitemap uses. */
   products: readonly LlmsProduct[];
+  /**
+   * The shop's own legal texts that exist (the same `publishedLegalSlugs()` the
+   * sitemap lists), German first. Optional so an older caller still renders.
+   */
+  legal?: readonly { title: string; url: string }[];
 }
 
 export function renderLlmsTxt(input: LlmsInput): string {
@@ -109,6 +114,15 @@ export function renderLlmsTxt(input: LlmsInput): string {
   }
 
   out("## Maschinenlesbare Quellen");
+  if (input.legal && input.legal.length > 0) {
+    out();
+    out("## Rechtliches");
+    out();
+    // The shop sells in its own name, so its terms, privacy notice and imprint
+    // are its own pages — and every URL the sitemap lists is named here
+    // (geo-audit `llmsCovers`), so an answer engine can cite the right text.
+    for (const doc of input.legal) out(`- ${doc.title}: ${doc.url}`);
+  }
   out();
   out(`- Sitemap: ${canonical("/sitemap-index.xml")}`);
   out();

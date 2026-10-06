@@ -80,8 +80,8 @@ export const TX = {
       catalogue: "Katalog",
       label: "Hauptnavigation",
       menu: "Menü",
-      /** The marketing site, by name — "Startseite" beside "Katalog" is ambiguous. */
-      main: "Tracht Digital",
+      /** The marketing site: "Startseite" / "Home" on every property since 2026-10-06 (tds-shared propertyLabel). */
+      main: "Startseite",
     },
     theme: { toDark: "Zum dunklen Farbschema wechseln", toLight: "Zum hellen Farbschema wechseln" },
     catalogue: "Produkte",
@@ -166,7 +166,7 @@ export const TX = {
       catalogue: "Catalogue",
       label: "Main navigation",
       menu: "Menu",
-      main: "Tracht Digital",
+      main: "Home",
     },
     theme: { toDark: "Switch to dark mode", toLight: "Switch to light mode" },
     catalogue: "Products",

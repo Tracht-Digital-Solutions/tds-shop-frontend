@@ -20,8 +20,8 @@ const de = "https://shop.tracht-digital.de/produkt/switch";
 const en = "https://shop.tracht-digital.de/en/product/switch";
 
 const paired: SitemapEntry[] = [
-  { loc: de, lastmod: "2026-09-01", alternates: [{ lang: "de", href: de }, { lang: "en", href: en }] },
-  { loc: en, lastmod: "2026-09-01", alternates: [{ lang: "de", href: de }, { lang: "en", href: en }] },
+  { loc: de, section: "pages", lastmod: "2026-09-01", alternates: [{ lang: "de", href: de }, { lang: "en", href: en }] },
+  { loc: en, section: "pages", lastmod: "2026-09-01", alternates: [{ lang: "de", href: de }, { lang: "en", href: en }] },
 ];
 
 describe("renderUrlset", () => {
@@ -54,7 +54,7 @@ describe("renderUrlset", () => {
     // paired from the frontend — the payload carries no product id. No
     // alternate is the honest outcome; one dangling alternate would invalidate
     // the whole set.
-    const lone = renderUrlset([{ loc: de, lastmod: "2026-09-01" }]);
+    const lone = renderUrlset([{ loc: de, section: "pages", lastmod: "2026-09-01" }]);
     expect(lone).not.toContain("xhtml:link");
     expect(lone).toContain(`<loc>${de}</loc>`);
   });

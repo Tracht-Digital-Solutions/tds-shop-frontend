@@ -3,7 +3,8 @@ import { categoryPath, homePath, legalPath, productPath, LANGS, type Lang } from
 import { publishedLegalSlugs } from "./legal";
 import { isIndexable } from "./indexing";
 import { canonical } from "./seo";
-import { escapeXml } from "@tracht-digital-solutions/tds-shared/site";
+import { escapeXml, newestDay, renderSectionedSitemapIndex } from "@tracht-digital-solutions/tds-shared/site";
+import { SITEMAP_SECTIONS, sectionPath, type SitemapSection } from "./sitemapSections";
 
 /**
  * The sitemap, written by hand.
@@ -25,6 +26,10 @@ import { escapeXml } from "@tracht-digital-solutions/tds-shared/site";
 
 export interface SitemapEntry {
   loc: string;
+  /** Which child sitemap lists it. */
+  section: SitemapSection;
+  /** The product photo, for image search and image-aware answer engines. */
+  image?: { loc: string; title: string };
   lastmod?: string;
   alternates?: { lang: Lang; href: string }[];
 }
@@ -74,7 +79,7 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
     const indexable = products.filter(isIndexable);
 
     const home = canonical(homePath(lang));
-    entries.push({ loc: home, lastmod: newest(indexable.map((p) => p.publishedAt ?? null)) });
+    entries.push({ loc: home, section: "pages", lastmod: newest(indexable.map((p) => p.publishedAt ?? null)) });
     remember("home", lang, home);
 
     for (const { category } of categories) {
@@ -83,13 +88,18 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
       // it, so it is not a page worth submitting either.
       if (inCategory.length === 0) continue;
       const loc = canonical(categoryPath(category, lang));
-      entries.push({ loc, lastmod: newest(inCategory.map((p) => p.publishedAt ?? null)) });
+      entries.push({ loc, section: "categories", lastmod: newest(inCategory.map((p) => p.publishedAt ?? null)) });
       remember(`cat:${category}`, lang, loc);
     }
 
     for (const product of indexable) {
       const loc = canonical(productPath(product.slug, lang));
-      entries.push({ loc, lastmod: isoDay(product.publishedAt ?? null) });
+      entries.push({
+        loc,
+        section: "products",
+        lastmod: isoDay(product.publishedAt ?? null),
+        ...(product.imageUrl?.startsWith("http") ? { image: { loc: product.imageUrl, title: product.title } } : {}),
+      });
       remember(`prod:${product.slug}`, lang, loc);
     }
 
@@ -99,7 +109,7 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
     // carries no date, and "today" would be the lie rule 2 forbids.
     for (const slug of legal) {
       const loc = canonical(legalPath(slug, lang));
-      entries.push({ loc });
+      entries.push({ loc, section: "legal" });
       remember(`legal:${slug}`, lang, loc);
     }
   }
@@ -138,10 +148,13 @@ export function renderUrlset(entries: SitemapEntry[]): string {
             : [link];
         })
         .join("");
-      return `  <url>\n    <loc>${escapeXml(entry.loc)}</loc>${alternates}${lastmod}\n  </url>`;
+      const image = entry.image
+        ? `\n    <image:image><image:loc>${escapeXml(entry.image.loc)}</image:loc><image:title>${escapeXml(entry.image.title)}</image:title></image:image>`
+        : "";
+      return `  <url>\n    <loc>${escapeXml(entry.loc)}</loc>${alternates}${image}${lastmod}\n  </url>`;
     })
     .join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 }
 
 export function renderIndex(sitemaps: string[]): string {
@@ -149,4 +162,18 @@ export function renderIndex(sitemaps: string[]): string {
     .map((loc) => `  <sitemap>\n    <loc>${escapeXml(loc)}</loc>\n  </sitemap>`)
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</sitemapindex>\n`;
+}
+
+/**
+ * The sectioned index (2026-10-06): one child per non-empty section, each with
+ * the newest real date inside it (none for the legal texts, which carry no date).
+ */
+export function renderSectionIndex(entries: readonly SitemapEntry[], origin: string): string {
+  return renderSectionedSitemapIndex(
+    SITEMAP_SECTIONS.flatMap((section) => {
+      const inSection = entries.filter((e) => e.section === section);
+      if (inSection.length === 0) return [];
+      return [{ loc: `${origin}${sectionPath(section)}`, lastmod: newestDay(inSection.map((e) => e.lastmod)) }];
+    }),
+  );
 }

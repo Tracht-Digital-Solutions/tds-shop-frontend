@@ -2,6 +2,9 @@ import type { APIRoute } from "astro";
 import { listAllProducts, listCategories } from "~/lib/content-api";
 import { isIndexable } from "~/lib/indexing";
 import { renderLlmsTxt } from "~/lib/llmsTxt";
+import { LEGAL_TITLES, publishedLegalSlugs } from "../lib/legal";
+import { legalPath } from "../lib/i18n";
+import { canonical } from "../lib/seo";
 
 /**
  * `/llms.txt`, derived from the catalogue.
@@ -47,6 +50,10 @@ export const GET: APIRoute = async () => {
       total: entry.total,
     })),
     products,
+    legal: (await publishedLegalSlugs("de")).map((slug) => ({
+      title: LEGAL_TITLES.de[slug],
+      url: canonical(legalPath(slug, "de")),
+    })),
   });
 
   return new Response(body, {

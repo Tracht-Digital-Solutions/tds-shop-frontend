@@ -7,6 +7,7 @@ import {
 
 import { categoryPath, legalPath, prefix, productPath, type Lang } from "./i18n";
 import { isLegalSlug } from "./legal";
+import { SITEMAP_PATHS } from "./sitemapSections";
 
 /**
  * This site's half of the page cache: which pages a change dates, and the memo
@@ -28,11 +29,11 @@ import { isLegalSlug } from "./legal";
 export const contentCache = createGenerationCache();
 
 /** Entry points rebuilt whatever changed. */
-export const alwaysPaths: string[] = ["/", "/en/", "/sitemap-0.xml", "/sitemap-index.xml"];
+export const alwaysPaths: string[] = ["/", "/en/", ...SITEMAP_PATHS];
 
 /** The listing pages a product appears on, in one language. */
 function listingPages(lang: Lang, category?: string): string[] {
-  const pages = [`${prefix(lang)}/`, "/sitemap-0.xml"];
+  const pages = [`${prefix(lang)}/`, ...SITEMAP_PATHS];
   if (category) pages.push(categoryPath(category, lang));
   return pages;
 }
@@ -97,7 +98,7 @@ export const cacheEvents: EventMap = {
    */
   legal: () => [],
 
-  sitemap: () => ["/sitemap-0.xml", "/sitemap-index.xml"],
+  sitemap: () => [...SITEMAP_PATHS],
 
   /** These belong to the sibling sites. Naming them keeps a typo visible. */
   post: () => [],

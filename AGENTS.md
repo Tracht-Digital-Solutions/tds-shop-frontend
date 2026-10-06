@@ -367,3 +367,10 @@ off the resting `--tds-elevation-*` shadow. Hover and keyboard focus LIFT an
 interactive element 2px up-left while its offset grows
 (`--tds-shadow-hard(-sm)-hover`, 2026-09-26; the product cards and buttons get
 it in tds-shared, the filter chips here). Never transition a `box-shadow`.
+
+- **2026-10-06:** no top bar on the phone (the header is the page's first
+  line). Sectioned sitemap: `sitemap-{pages,categories,products,legal}.xml`
+  (src/lib/sitemapSections.ts), products with their photo as `image:image`.
+  `llms.txt` names the shop's own legal texts (geo-audit `llmsCovers`).
+  `.htaccess` compresses; fonts preloaded. The main site's link is
+  "Startseite"/"Home".
