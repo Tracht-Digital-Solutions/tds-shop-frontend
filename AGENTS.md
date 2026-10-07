@@ -1,376 +1,44 @@
 # AGENTS.md — tds-shop-frontend
 
-TDShop, `shop.tracht-digital.de`. Astro 7, `output: "server"` under Passenger,
-behind the shared file-backed page cache. Read `README.md` first for the four
-standing rules; this file is what breaks if you do not know it.
+**TDShop**, `shop.tracht-digital.de`. Astro 7, `output: "server"` under Passenger, behind the
+shared file-backed page cache. It renders the catalogue and checkout from
+`tds-ext-shop-pkg` (via `tds-core-frontend-api`) and shares the journal's design (`blog`
+surface). Read [README.md](README.md) first for the four standing rules and the cache
+boundary; the files below cover what breaks silently.
 
-## The five things that fail silently
+## Commands
 
-**1. `Astro.rewrite()` from a component does nothing useful.** It only produces
-a response when returned from a **page**. From a component's frontmatter it just
-stops that component rendering, and the page answers **200 with an empty
-document** — fifteen bytes, no error — which the page cache then stores. That
-shipped once here already: a missing product served a blank success page. The
-fetch and the 404 therefore live in `src/pages/produkt/[slug].astro`, not in
-`ProductPage.astro`.
+```bash
+npm install --no-package-lock   # Node 22, npm 11; lockfile is gitignored
+npm run dev                     # astro dev (a daemon; see docs/agents/audits.md)
+npm run type-check              # astro check
+npm run test:run                # vitest
+npm run lint:primitives
+npm run build                   # postbuild assembles release/
+npm run audit:geo -- <url>      # also audit:a11y, audit:mobile
+```
 
-**2. The default API base is production.** `PUBLIC_API_URL` falls back to
-`https://api.tracht-digital.de`, which is reachable. A local `npm start`
-without a `.env` sends real requests there. Put `PUBLIC_API_URL=http://127.0.0.1:9`
-in `.env` before any local run.
+## Hard rules
 
-**3. A broken render gets cached like a good one.** If a page looks wrong after
-a failed run, `rm -rf var/page-cache` before concluding anything about the code.
+- Put `PUBLIC_API_URL=http://127.0.0.1:9` in `.env` before any local run; the default is production.
+- `Astro.rewrite()` / `Astro.redirect()` only from a **page**, never a component.
+- Read `TDS_SITE_KEY` from `process.env`, never `import.meta.env`.
+- Clear `var/page-cache` before judging any local render.
+- Never cache or speculatively prerender `/kasse`, `/warenkorb`, `/bestellung`, `/konto` or `/go/`.
+- Affiliate links always go through `/go/{id}`. Product bodies go through `renderMarkdown`, never raw `set:html`.
+- Never derive an hreflang alternate by prefixing `/en/`; only resolved `altUrl`s.
+- No local radius, elevation, header, footer or sibling URL; use tds-shared and `siteLinks()`.
+- No `@astrojs/sitemap`, no `public/llms.txt`.
+- tds-shared is a minor-locked 0.x caret: a shared minor needs a repin and re-verification.
 
-**4. `TDS_SITE_KEY` must be read from `process.env`.** Astro inlines only
-`PUBLIC_*` names, so `import.meta.env.TDS_SITE_KEY` is silently `undefined` and
-the site runs keyless without saying so.
+## Topic files
 
-**5. Every content read is fail-soft — except a rejected site key.** A rejected
-key produces a perfectly valid page full of fallbacks; cached, it outlives the
-misconfiguration. `assertKeyAccepted` throws, and `middleware.ts` compares the
-rejection counter around the render and refuses to store anything that grew it.
-
-## Where the decisions live
-
-| Rule | File | Also enforced in |
-|---|---|---|
-| 24-hour price | `tds-shared`'s `displayPrice` | the API strips it server-side |
-| advertising label | `tds-shared`'s `ProductCard` | the placement endpoint serves the text |
-| indexing gate | `src/lib/indexing.ts` | `sitemap.ts` and the page's robots meta both call it |
-| cache boundary | `src/lib/noCache.ts` | `middleware.ts`, `.htaccess`, and `cache.ts`'s event map |
-| `Product` without `offers` | `src/lib/jsonld.ts` | — |
-
-The indexing gate is deliberately ONE function: a URL submitted for indexing
-whose page says `noindex` is a self-inflicted crawl-budget hole that reports
-nothing anywhere.
-
-## i18n
-
-German at the root, English under `/en/`. The trees are **not** a prefix
-mirror — `kategorie` ↔ `category`, `produkt` ↔ `product`, `thema` ↔ `topic`.
-Deriving an alternate by pasting `/en/` in front of a German path yields a 404
-on every listing page, so `Layout.astro` renders hreflang only from a resolved
-`altUrl` and never guesses.
-
-Unlike the journal, DE and EN product slugs may differ: the API pairs
-translations on the product id. Do not "fix" that back to a 1:1 rule.
-
-**`src/lib/alternates.ts` is what resolves a counterpart**, and it was missing
-until 2026-10-02 although `i18n.ts` had referred to it since the shop was
-built. The consequence was not a missing nicety: `altUrl` was passed only by
-the four `noindex` cart and checkout pages, so home, every category and every
-product shipped **no hreflang at all**, and `Header.astro`'s language switch
-fell back to `homePath()` — a reader on a product page who switched language
-landed on the front page.
-
-Every function there returns `null` unless the counterpart is known to answer:
-a category needs a non-zero count in the other language, a product is
-confirmed with a second read. **A product whose translation lives under a
-different slug still cannot be paired** — the payload carries neither the
-product id nor the counterpart slug — so it ships without hreflang rather than
-with a guess. Closing that needs a field from tds-ext-shop.
-
-`Layout.astro` makes any site-relative `altUrl` absolute: hreflang must be a
-fully qualified URL, and normalising centrally means no future page can get it
-wrong. The markup uses bare `de`/`en`; the sitemap's `xhtml:link` uses
-`de-DE`/`en-GB`. Both are valid, and all four properties agree so that one
-shared audit can check them.
-
-## Toolchain
-
-Astro 7.2.5, TypeScript 6 (TS7 is capped by `@astrojs/check`'s peer range),
-vitest 4, `tds-shared ^0.45.4`. The 0.x caret is **minor-locked** — a shared
-minor needs an explicit repin here and a re-verification, not just an install.
-
-Node 22 in CI with npm force-upgraded to 11: npm 10's arborist crashes
-resolving Astro 7.3.0. `npm install --no-package-lock` — the lockfile is gitignored because a
-Windows-generated one does not resolve on a Linux runner.
-
-## The phone is an app (2026-10-06, tds-shared 0.47)
-
-- `AppChrome.astro` (in `Layout.astro`) renders the shared bottom tab bar:
-  Start · Kategorien · Suche (instant filter over the catalogue) · Warenkorb
-  (a page, with the basket count on the tab) · Mehr (theme, language, sibling
-  properties, CTA). No hamburger. The header tucks away while scrolling.
-- The product page shows a buy bar above the tab bar once the reader has
-  scrolled past the offers. It only scrolls back to them — never a checkout
-  of its own, so the advertising label and the 24-hour price rule stay in
-  front of the decision.
-- PWA: prerendered `/manifest.webmanifest` and `/sw.js`. **The basket,
-  checkout, order pages and `/go/` are never cached** (pinned in
-  `header.test.ts`), and never prerendered speculatively.
-- Theme and language are saved through `tds-shared/prefs` (cookie on
-  `.tracht-digital.de` + account sync).
-
-## Don't
-
-- Don't author a radius or an elevation locally. Set a token in the surface
-  layer; this site renders `data-surface="blog"` and must keep matching the
-  journal because they link to each other.
-- Don't hand-roll a header or footer again, and don't write a sibling URL
-  inline. `siteLinks()` is the one source (it reads tds-shared's
-  `PROPERTY_ORIGINS`). `header.test.ts` fails on a local
-  bar, on an `is:inline` app-shell script (its import would reach the browser
-  as a bare specifier and the controls would do nothing), and on a missing
-  link back to the journal, the tools site or the main site.
-- Don't trust a local render after editing a component without clearing
-  `var/page-cache`. The dev server writes it too, and the result is the OLD
-  markup styled by the NEW CSS — which reads like a half-applied change.
-- Don't reintroduce `@astrojs/sitemap`. It derives entries from routes a build
-  emits, and under `output: "server"` a build emits none — it would ship a
-  sitemap holding only the pages its own filter excluded, with nothing red.
-- Don't `set:html` a product body directly. It is panel-authored and untrusted
-  here; `renderMarkdown` from `tds-shared` escapes before it transforms.
-- Don't link an affiliate URL directly. Everything goes through `/go/{id}` so
-  the partner tag lives in one database row rather than in every card and
-  article that ever mentioned the offer.
-- Don't add a path under `/kasse`, `/warenkorb`, `/bestellung` or `/konto`
-  without checking all three cache mechanisms listed above.
-
-## The checkout
-
-`/kasse/[slug]` and `/bestellung/[token]`, plus their `/en/` mirrors. None of
-them is ever cached — see the cache boundary above.
-
-**The order button lives here, not at Stripe.** § 312j Abs. 3 BGB requires a
-button reading "Zahlungspflichtig bestellen" with the mandatory details
-immediately above it. Stripe's hosted page says "Bezahlen" and is not ours to
-relabel, so the declaration is made on our page and Stripe is only the payment
-step that follows. That is also why `CheckoutPage.astro` is server-rendered:
-the details have to be in the document the reader receives, not assembled
-afterwards by a script that may not run.
-
-**The withdrawal checkbox is a precondition.** For a digital service the right
-of withdrawal lapses on full performance only if the customer expressly agreed
-beforehand (§ 356 Abs. 4 BGB). It is never pre-ticked, the button stays
-disabled without it, and the **server refuses too** — the browser check is a
-courtesy, the server check is the rule. The exact wording travels with the
-request so the order records the sentence the customer actually read.
-
-**The VAT split is computed twice and must agree.** `src/lib/sellable.ts`
-mirrors `OrderRepository::price()`: round the tax, then add. A page showing a
-total the customer is not charged is worse than either rounding on its own, and
-nothing flags it — both numbers look plausible. `checkout.test.ts` pins the
-arithmetic on both sides of that boundary.
-
-**`/bestellung/{token}` is also Stripe's `success_url`.** So it is the first
-page after paying, and the webhook may not have arrived yet. A `pending` order
-therefore renders as "payment received, confirmation follows" — never as a
-failure. Telling a paying customer their order does not exist because of a race
-is the worst thing that page could do.
-
-### The redirect trap, again
-
-`Astro.redirect()` has the same limitation as `Astro.rewrite()`: it only
-produces a response when returned from a **page**. `/kasse/[slug]` originally
-looked the product up inside `CheckoutPage.astro` and redirected from there —
-which answered **200 with an empty document**, fifteen bytes, for every product
-that is not for sale. The lookup now lives in `src/lib/sellable.ts`, both exits
-live in the page, and the component only ever receives something it can render.
-
-Measure response **size** as well as status when checking this site. `200 15B`
-is the fingerprint of that bug and looks like a loading glitch in a browser.
-
-
-## Motion: four movements, each answering a question
-
-The journal's voice is that motion is **functional** — a thing moves to say
-something changed, not to be noticed. Everything in the `--- motion ---` block
-of `global.css` answers a question the page would otherwise leave open, and
-uses the shared duration and easing tokens rather than a hand-picked curve.
-
-| Movement | The question it answers |
+| File | Read before |
 |---|---|
-| Basket count pops | "Did that add?" |
-| Basket row collapses on remove | "Which row went?" — with six on screen, an instant disappearance leaves the reader checking the whole list |
-| Total washes once when it changes | "Did the total move?" — it updates after a debounced round trip, by which time the reader is looking at the row they just edited |
-| Submit button pulses while busy | `aria-busy` says it to a screen reader; this says it to everyone else |
-| Pages cross-fade (tds-shared `page-transitions.css`, 2026-09) | "Did I leave the shop?" — product → basket → checkout read as one place instead of three white flashes; opacity only, off under reduced motion |
+| [docs/agents/architecture.md](docs/agents/architecture.md) | Changing where a rule lives, i18n/hreflang, the app shell or the toolchain |
+| [docs/agents/pitfalls.md](docs/agents/pitfalls.md) | Any change to pages, rendering, caching or site keys |
+| [docs/agents/checkout.md](docs/agents/checkout.md) | Touching `/kasse`, `/bestellung`, the basket or VAT display |
+| [docs/agents/design-motion.md](docs/agents/design-motion.md) | Changing styles, motion, shadows or mobile chrome |
+| [docs/agents/audits.md](docs/agents/audits.md) | Running or changing the geo, accessibility or mobile audits |
 
-The product card's hover affordance — the 2px accent bar — is deliberately
-**not** here. `.tds-product-card` is a shared primitive, and a local `::before`
-on someone else's class is a rule that vanishes the next time that component is
-touched. It lives in `tds-shared`'s `primitives.css` (0.36.1) where the card
-does, and reaches every surface that renders one.
-
-Two of them replay by **remounting** the element with a React `key` on the
-value (`CartBadge`'s count, the basket total). Re-running a CSS animation on an
-element that never left the DOM otherwise needs a reflow hack; this is the same
-thing said honestly.
-
-The row exit **defers the storage write**, not the animation. Removing the row
-first and animating a copy would mean keeping a copy, and a basket with a ghost
-row in it is a worse bug than an abrupt removal.
-
-### Reduced motion is not a duration clamp
-
-`base.css` already clamps every duration to 0.01ms under
-`prefers-reduced-motion: reduce`. For an **entrance** that is enough — it ends
-at the natural state, so clamping simply arrives there. It is not enough for
-anything that still travels after arriving: a clamped transform still moves. So
-the badge pop and the busy pulse are switched off outright, and the row exit
-loses its `transform`.
-
-`src/lib/surface.test.ts` collects the `@keyframes` names from the file itself
-rather than from a hand-kept list, so a new animation cannot be added without
-the reduced-motion assertion failing.
-
-### The mobile audit knows about inline links
-
-`scripts/mobile-audit.mjs` exempts a link that sits **inside a sentence**, which
-WCAG 2.5.8 does too: its size is constrained by the line-height of the text
-around it, and the only way to give it a 24px box is to break the line box. A
-link alone in its own paragraph is a button wearing a link's clothes and stays
-in scope. Without the exception the legal pages reported every cross-reference
-in their prose — noise that teaches a reader to skim past the real findings.
-## Search and answer engines
-
-```
-npm run audit:geo -- http://localhost:4321
-```
-
-`scripts/geo-audit.mjs` is the same file in all four public repos — only its
-`PROFILE` differs, and `src/lib/geoAudit.test.ts` holds the shared check list.
-No browser: it reads the raw server HTML a crawler gets, starting from
-`robots.txt` and the sitemap.
-
-Three things it enforces that are specific to a shop:
-
-- **It never walks `/go/`.** That path counts a click and forwards to a
-  partner, so an audit that followed it would inflate the affiliate counter
-  with traffic no person generated.
-- **`Review` and `AggregateRating` are in `forbiddenTypes`.** There are no
-  reviews of these products anywhere; rating markup on a shop is a lie and a
-  manual-action risk.
-- **Every product page must show a date.** `product.updatedAt` had been in the
-  payload since the beginning and nothing read it — not the sitemap, not the
-  markup, not the page. It is now the `Stand` line and the `dateModified`, and
-  the audit fails a `dateModified` with no visible `<time>` beside it.
-
-`/llms.txt` is generated (`src/lib/llmsTxt.ts` + `src/pages/llms.txt.ts`,
-`prerender = false`). **It states no price**, deliberately: a partner price is
-publishable only while it is demonstrably current, and this file is rendered
-from a cached read and cached again downstream. It states the 24-hour rule
-instead. There is no `public/llms.txt` and there must not be — a static asset
-shadows the route, and the endpoint would silently never answer.
-
-`public/og-default.png` is generated by `npm run og:default` and committed.
-It existed as a `<meta>` reference and not as a file, so every page without a
-product picture advertised a 404 as its preview. There is still no per-page OG
-renderer: a product's image is a partner's asset and the Amazon PA-API forbids
-rehosting or editing it.
-
-Local limit to know about: the demo fixtures mark every product
-`editorialStatus: "none"` so an outage cannot push placeholders into an index.
-Without a reachable API the sitemap therefore holds only the two front pages,
-and the product and category paths are not audited locally. Run the audit
-against the deployed site after a release.
-
-## Accessibility: the third that a machine can check, and the two thirds it cannot
-
-```
-MSYS_NO_PATHCONV=1 npm run audit:a11y -- http://localhost:4361 / /en/ /rechtliches/impressum
-```
-
-axe-core in a real Chrome, at **WCAG 2.2 AA** — the level
-`/rechtliches/barrierefreiheit` claims, so the claim is checked rather than
-asserted. It runs in CI after the tests, against the **dev** server with a dead
-API and demo content: CI must never read production content to decide whether a
-PR is mergeable.
-
-Two notes on running it by hand. The dev server is a **daemon** (`astro dev
-stop`, `astro dev status`) — a plain `npm run dev` will happily attach to an
-instance started hours ago and serve you the old markup, which reads exactly
-like "my change did not apply". And it can end up bound to `[::1]` only when
-something already holds the IPv4 address, so prefer `localhost` over
-`127.0.0.1` in these URLs.
-
-**A green run is not compliance.** Automated checking reaches roughly a third
-of WCAG. The rest is read:
-
-- Does the focus order follow the reading order, and does every stop show a
-  ring? (`:focus-visible` is centralised in tds-shared's `base.css` — never
-  `outline: none`.)
-- Does the skip link actually move focus? It only does because `<main>` carries
-  `tabindex="-1"`; without it the browser scrolls and the next Tab continues
-  from the link, with the whole header still in the way.
-- Does an error message say how to fix the error, and is it associated with the
-  field rather than merely near it?
-- Is refusing a consent exactly as easy as granting it? The two decisions in the
-  banner carry the same class on purpose, and `tds-shared`'s `consent.test.tsx`
-  fails if that changes — but nothing can check that a later CSS override did
-  not make one of them quieter.
-- Does a link make sense read on its own, out of the sentence around it?
-- Do the decorative graphics (`.tds-wash`, `.tds-shape`, `.tds-brandbar`) carry
-  `aria-hidden="true"` at the call site? A decorative graphic announced to a
-  screen reader is worse than no graphic.
-
-
-## Mobile: measure, do not look
-
-`MSYS_NO_PATHCONV=1 npm run audit:mobile -- http://127.0.0.1:4361 390 / /produkt/<slug>`
-
-(The `MSYS_NO_PATHCONV=1` is not optional in Git Bash: without it the shell
-rewrites every `/path` argument into a Windows path before node sees it, and
-the failure names a directory nobody typed.)
-
-`scripts/mobile-audit.mjs` drives a real Chrome at a phone viewport and reports
-horizontal overflow plus tap targets under 24 CSS px.
-
-**Why a script and not a screenshot.** `body { overflow-x: hidden }` in
-tds-shared's `base.css` **clamps `document.scrollWidth` to the viewport**, so a
-page always reports that it fits, and an element hanging off the right edge is
-clipped rather than shown. A screenshot of a broken mobile layout looks
-correct. The audit lifts that clamp for the measurement, which is the only
-reason the numbers mean anything — and it checks each element's own rect as
-well, because the clamp is not the only way to hide the problem.
-
-Confirm the tool still bites before trusting a clean run: append a 900px-wide
-div and check the reported width moves. A silent "ok" from a broken script and
-a silent "ok" from a good layout read identically.
-
-### Measure against realistic content, not the demo fallback
-
-`src/lib/demoContent.ts` carries no prices and no offers — deliberately, so an
-outage cannot invent either. That also means measuring against it proves only
-that an *empty* card fits. The rows that overflow are the ones with four things
-in them: merchant, price, retrieval timestamp, button. Point `PUBLIC_API_URL`
-at a stub that serves long German compound titles and several offers per
-product.
-
-### What the first pass found (2026-09-08)
-
-No horizontal overflow at 320px or 390px — the wrapping in
-`.tds-product-offer`, `.shop-pager` and `.tds-field-row` holds. What it did
-find was tap targets, which nothing about the page makes look wrong: header
-links 23px high, category links 16px, the six footer legal links 18px in a
-middot-separated run. All are plain navigation links, so the library's
-`pointer: coarse` block (which already lifts `.btn` and `.field-boxed` to 44px
-and inputs to 16px against iOS auto-zoom) knew nothing about them. Lifted here;
-`.tds-product-card__title` was lifted in tds-shared, because three surfaces
-render it.
-
-Middot-separated link runs became wrapping rows in the same pass. Six links
-joined by punctuation read as one sentence, and the separator sits between two
-targets that are already too small.
-
-## Hard 2D shadows (2026-09-22, tds-shared ≥ 0.42)
-
-Every box and control of the public sites carries a fixed, unblurred offset.
-The values are the blog surface's `--tds-shadow-hard*` tokens; the product
-cards, buttons, account dropdown and cookie notice take them in tds-shared.
-The end of `global.css` only says which of the shop's own boxes wear them
-(`.checkout__summary`, `.checkout__payment`, `.shop-empty`, the filter chips).
-That is not authoring an elevation — `surface.test.ts` still holds the shop
-off the resting `--tds-elevation-*` shadow. Hover and keyboard focus LIFT an
-interactive element 2px up-left while its offset grows
-(`--tds-shadow-hard(-sm)-hover`, 2026-09-26; the product cards and buttons get
-it in tds-shared, the filter chips here). Never transition a `box-shadow`.
-
-- **2026-10-06:** no top bar on the phone (the header is the page's first
-  line). Sectioned sitemap: `sitemap-{pages,categories,products,legal}.xml`
-  (src/lib/sitemapSections.ts), products with their photo as `image:image`.
-  `llms.txt` names the shop's own legal texts (geo-audit `llmsCovers`).
-  `.htaccess` compresses; fonts preloaded. The main site's link is
-  "Startseite"/"Home".
+Workspace rules: `../CLAUDE.md`. Cross-repo state: `../MIGRATION-STATUS.md`.
