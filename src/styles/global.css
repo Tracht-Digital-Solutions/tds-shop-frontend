@@ -852,6 +852,12 @@
 .shop-chip[aria-current="page"] {
   background: var(--color-surface-navy);
   color: #fff;
+  /* A navy chip never casts the navy ink (tds-shared 0.49.5): its offset is
+     coral. The offsets are restated because a custom property's `var()` is
+     resolved where it is declared, not here. */
+  --tds-shadow-ink: var(--color-accent-pink);
+  --tds-shadow-hard-press: 1px 1px 0 0 var(--tds-shadow-ink);
+  --tds-shadow-hard-sm: 3px 3px 0 0 var(--tds-shadow-ink);
 }
 
 .shop-chip__count {
