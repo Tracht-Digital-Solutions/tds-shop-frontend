@@ -224,7 +224,7 @@ export default function CheckoutForm({ lang, slug }: Props) {
         : t.deliveryDigital;
 
   return (
-    <form className="checkout" onSubmit={submit}>
+    <form className="checkout" onSubmit={submit} data-track-form="checkout">
 
       {/* The mandatory details, immediately above the button — that adjacency
           is the requirement, not a layout preference. */}

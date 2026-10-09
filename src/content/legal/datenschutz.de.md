@@ -7,7 +7,7 @@ review: Vor Livegang anwaltlich pruefen lassen. Diese Vorlage ist vollstaendig
 ---
 Diese Erklärung beschreibt, was mit Ihren Daten geschieht, wenn Sie diesen Shop
 besuchen oder hier bestellen — für jede Verarbeitung einzeln, mit Zweck und
-Rechtsgrundlage. Stand: September 2026.
+Rechtsgrundlage. Stand: Oktober 2026.
 
 ## 1. Verantwortlicher
 
@@ -37,8 +37,8 @@ am sicheren Betrieb.\
 
 ## 3. Speicherung auf Ihrem Gerät
 
-Dieser Shop setzt **keine Werbe- oder Trackingcookies**. Was gespeichert wird,
-liegt im lokalen Speicher Ihres Browsers und verlässt Ihr Gerät nicht:
+Dieser Shop setzt **keine Werbecookies**. Ohne Ihre Einwilligung liegt nur
+Folgendes im lokalen Speicher Ihres Browsers und verlässt Ihr Gerät nicht:
 
 - **Farbschema (hell/dunkel):** Ihre Anzeigeeinstellung; gespeichert, bis Sie
   sie ändern.
@@ -52,6 +52,9 @@ Diese Speicherung ist für den von Ihnen ausdrücklich gewünschten Dienst
 unbedingt erforderlich und daher nach § 25 Abs. 2 Nr. 2 TDDDG
 einwilligungsfrei. **Im Warenkorb stehen nur Kennungen und Mengen, keine
 Preise** — die Preise kommen bei jeder Anzeige neu vom Server.
+
+Nur wenn Sie der Kategorie **„Statistik"** zustimmen, kommt eine zufällige
+Besucherkennung hinzu (Ziffer 11), die nach 30 Tagen abläuft.
 
 Ihre Entscheidung im Hinweisfeld können Sie jederzeit über
 **„Cookie-Einstellungen"** in der Fußzeile ändern.
@@ -137,12 +140,39 @@ Alle Schriftarten werden von unserem eigenen Server ausgeliefert. Es besteht
 **keine Verbindung zu Google Fonts, Adobe Fonts oder einem anderen
 Schriftdienst**, und es wird dorthin auch keine IP-Adresse übertragen.
 
-## 11. Keine Analyse, keine Werbung
+## 11. Reichweitenmessung (eigene Statistik, nur mit Einwilligung)
 
-Dieser Shop enthält **keine Webanalyse, kein Tag-Management, keine Werbung,
-keine Social-Media-Plugins und keine eingebetteten Karten oder Videos.** Es gibt
-folglich nichts, wozu Sie hier einwilligen müssten — das Hinweisfeld sagt genau
-das und fragt nichts ab.
+Wenn Sie im Hinweisfeld der Kategorie **„Statistik"** zustimmen, messen wir mit
+einer selbst betriebenen Statistik, welche Seiten aufgerufen werden, woher
+Besucher kommen, welche Schaltflächen (z. B. „In den Warenkorb") genutzt werden
+und an welcher Stelle Besuche oder die Kasse abgebrochen werden.
+Rechtsgrundlage ist Ihre Einwilligung (Art. 6 Abs. 1 lit. a DSGVO i. V. m.
+§ 25 Abs. 1 TDDDG). Ohne Einwilligung wird nichts gesendet und nichts
+gespeichert; ein „Global Privacy Control"-Signal Ihres Browsers beachten wir
+auch nach einer Einwilligung.
+
+- **Gespeichert:** eine zufällige Besucherkennung (läuft nach 30 Tagen ab),
+  Seitenpfade ohne Parameter, Domain der verweisenden Seite und UTM-Angaben,
+  Klicks auf gekennzeichnete Schaltflächen, Zieldomain externer Links,
+  Scrolltiefe, Verweildauer, Sprache, Geräteklasse, Browser- und
+  Betriebssystemfamilie, Land. Bei der Kasse nur, dass sie begonnen oder
+  abgeschickt wurde und der **Name** des zuletzt ausgefüllten Feldes —
+  **niemals Ihre Eingaben**.
+- **Nicht gespeichert:** Ihre IP-Adresse und die vollständige Browserkennung.
+  Die IP-Adresse dient nur im Moment der Anfrage dazu, das Land in einer lokal
+  auf unserem Server liegenden Datenbank nachzuschlagen (Länderdaten:
+  DB-IP.com, CC BY 4.0), und als verschlüsselter Hashwert dem
+  Missbrauchsschutz; danach wird sie verworfen.
+- **Speicherdauer:** einzelne Besuche 90 Tage, danach nur anonyme
+  Tagessummen.
+- **Empfänger:** niemand — keine Drittanbieter, keine Verknüpfung mit Ihrer
+  Bestellung oder einem Kundenkonto.
+
+Ihre Einwilligung können Sie jederzeit über **„Cookie-Einstellungen"** in der
+Fußzeile widerrufen; die Kennung wird dann sofort aus Ihrem Browser gelöscht.
+
+Darüber hinaus enthält dieser Shop **kein Tag-Management, keine Werbung, keine
+Social-Media-Plugins und keine eingebetteten Karten oder Videos.**
 
 ## 12. Ihre Rechte
 

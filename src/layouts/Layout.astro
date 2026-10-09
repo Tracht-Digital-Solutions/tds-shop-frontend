@@ -231,13 +231,23 @@ const image = ogImage ?? `${site.url}/og-default.png`;
       registerServiceWorker();
     </script>
 
+    {/* Besucher-Statistik: nothing until the visitor agrees to "Statistik" in
+        the banner below; withdrawing deletes the ids. The checkout form is
+        marked, but only field NAMES travel — never what was typed. */}
+    <script>
+      import { startAnalytics } from "@tracht-digital-solutions/tds-shared/analytics";
+
+      startAnalytics({
+        site: "shop",
+        lang: document.documentElement.lang.startsWith("en") ? "en" : "de",
+      });
+    </script>
+
     {/*
-      No `categories` — this shop sets nothing beyond what it cannot work
-      without: the theme, the language, the basket and the consent record
-      itself, all covered by § 25 Abs. 2 Nr. 2 TDDDG. So the banner STATES
-      that rather than asking a question with no content. Add a category here
-      the day something optional actually ships, and the same component turns
-      into a real gate.
+      One category: `analytics`, the platform's own statistics. Everything
+      else this shop stores — the theme, the language, the basket and the
+      consent record itself — is covered by § 25 Abs. 2 Nr. 2 TDDDG and is
+      not a question.
 
       `privacyUrl` points at THIS site's policy. It used to fall back to the
       marketing domain, which sent a shop visitor to a document that does not
@@ -246,6 +256,7 @@ const image = ogImage ?? `${site.url}/og-default.png`;
     <ConsentBanner
       client:idle
       lang={lang}
+      categories={["analytics"]}
       privacyUrl={legalPath("datenschutz", lang)}
       imprintUrl={legalPath("impressum", lang)}
     />

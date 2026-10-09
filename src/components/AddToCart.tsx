@@ -60,6 +60,7 @@ export default function AddToCart({ slug, lang, variant = "primary" }: Props) {
       <button
         type="button"
         className={variant === "secondary" ? "btn btn-ghost" : "btn btn-primary"}
+        data-track="add-to-cart"
         onClick={() => {
           addToCart(slug, 1);
           setJustAdded(true);
