@@ -30,3 +30,15 @@ and both numbers look plausible. `checkout.test.ts` pins the arithmetic on both 
 
 It is the first page after paying, and the webhook may not have arrived yet. A `pending` order
 renders as "payment received, confirmation follows", never as a failure.
+
+## Empfehlungen (`?ref=`)
+
+- `src/lib/referral.ts`: a `?ref=CODE` is carried into every same-site link **at click time**.
+  Nothing is stored in the browser. A stored code would need consent, and the banner's
+  "Werbung" category describes ad scripts, not referral attribution. `/go/` links never
+  carry it.
+- The page cache drops the query from its key, so the parameter costs no render and the
+  canonical stays the bare path.
+- `/kasse` pre-fills the visible, editable code field from the address and shows "Empfohlen
+  von …" via `GET /shop/referral/{code}`. "Wer hat uns empfohlen?" is free text. Both are
+  optional and travel in `startCheckout()`. The server drops unknown codes.

@@ -209,6 +209,13 @@ export interface CheckoutInput {
   provider?: string;
   /** Required when the quote said so; ignored otherwise. */
   address?: DeliveryAddress | null;
+  /**
+   * A partner code, from a `?ref=` link (`via: "link"`) or typed (`"code"`).
+   * An unknown code is dropped by the server, never refused.
+   */
+  referral?: { code: string; via: "link" | "code" } | null;
+  /** Free text, "who recommended us?". The operator assigns it to a partner. */
+  referredBy?: string;
 }
 
 export interface CheckoutResult {

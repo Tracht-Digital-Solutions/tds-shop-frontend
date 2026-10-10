@@ -231,6 +231,15 @@ const image = ogImage ?? `${site.url}/og-default.png`;
       registerServiceWorker();
     </script>
 
+    {/* Empfehlungslink: a `?ref=` code is carried to every same-site link the
+        visitor follows, so the checkout can pre-fill it. Nothing is stored —
+        see src/lib/referral.ts for why that needs no consent question. */}
+    <script>
+      import { installReferralCarry } from "../lib/referral";
+
+      installReferralCarry();
+    </script>
+
     {/* Besucher-Statistik: nothing until the visitor agrees to "Statistik" in
         the banner below; withdrawing deletes the ids. The checkout form is
         marked, but only field NAMES travel — never what was typed. */}

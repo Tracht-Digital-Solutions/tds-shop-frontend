@@ -10,6 +10,8 @@ import {
   type PaymentMethod,
 } from "../lib/checkout";
 import { tx, type Lang } from "../lib/i18n";
+import { lookupReferral, refFromUrl } from "../lib/referral";
+import { apiBase } from "@tracht-digital-solutions/tds-shared/api";
 import ShippingRow from "./ShippingRow";
 import { useQuote } from "./useQuote";
 
@@ -49,6 +51,11 @@ const TX = {
     consentLabel: "Ich stimme zu und bestätige:",
     withdrawalInfo: "Widerrufsrecht:",
     onlyGermany: "Wir liefern derzeit nur nach Deutschland.",
+    referral: "Empfehlung (optional)",
+    referralCode: "Empfehlungscode",
+    referredBy: "Oder: Wer hat uns empfohlen?",
+    referredByHint: "Ein Name genügt. So können wir uns bei der Person bedanken.",
+    referredFrom: (name: string) => `Empfohlen von ${name}`,
   },
   en: {
     summary: "Your order",
@@ -76,6 +83,11 @@ const TX = {
     consentLabel: "I agree and confirm:",
     withdrawalInfo: "Right of withdrawal:",
     onlyGermany: "We currently deliver to Germany only.",
+    referral: "Referral (optional)",
+    referralCode: "Referral code",
+    referredBy: "Or: who recommended us?",
+    referredByHint: "A name is enough, so we can thank them.",
+    referredFrom: (name: string) => `Recommended by ${name}`,
   },
 } as const;
 
@@ -142,6 +154,12 @@ export default function CheckoutForm({ lang, slug }: Props) {
     shipCountry: "DE",
   });
   const [consent, setConsent] = useState(false);
+  /** Pre-filled from a `?ref=` link; the visitor can change or clear it. */
+  const [refCode, setRefCode] = useState("");
+  const [refFromLink, setRefFromLink] = useState<string | null>(null);
+  const [refName, setRefName] = useState<string | null>(null);
+  const [referredBy, setReferredBy] = useState("");
+  const referralHintId = useId();
   const [busy, setBusy] = useState(false);
   /** A failed submit. Quote failures come from `useQuote`. */
   const [error, setError] = useState<string | null>(null);
@@ -150,6 +168,32 @@ export default function CheckoutForm({ lang, slug }: Props) {
   useEffect(() => {
     if (!slug) setLines(readCart());
   }, [slug]);
+
+  useEffect(() => {
+    const code = refFromUrl(window.location.search);
+    if (code) {
+      setRefCode(code);
+      setRefFromLink(code);
+    }
+  }, []);
+
+  // "Empfohlen von …" for a code the programme knows. Debounced so typing a
+  // code does not fire a request per keystroke; an unknown code shows nothing.
+  useEffect(() => {
+    const code = refCode.trim();
+    setRefName(null);
+    if (code.length < 3) return;
+    let alive = true;
+    const timer = window.setTimeout(() => {
+      void lookupReferral(apiBase(), code).then((found) => {
+        if (alive) setRefName(found?.name ?? null);
+      });
+    }, 300);
+    return () => {
+      alive = false;
+      window.clearTimeout(timer);
+    };
+  }, [refCode]);
 
   const { quote, error: quoteError } = useQuote(lines, lang);
 
@@ -187,6 +231,10 @@ export default function CheckoutForm({ lang, slug }: Props) {
       withdrawalConsent: consent,
       provider: provider || undefined,
       address: quote.addressRequired ? address : null,
+      referral: refCode.trim()
+        ? { code: refCode.trim(), via: refFromLink !== null && refCode.trim().toUpperCase() === refFromLink ? "link" : "code" }
+        : null,
+      referredBy: referredBy.trim() || undefined,
     });
 
     if (result.url) {
@@ -377,6 +425,38 @@ export default function CheckoutForm({ lang, slug }: Props) {
             </label>
           ))
         )}
+      </fieldset>
+
+      {/* Optional and after everything the order needs: who recommended us
+          is a courtesy question, never a step on the way to paying. */}
+      <fieldset className="checkout__referral">
+        <legend>{t.referral}</legend>
+        <label>
+          {t.referralCode}
+          <input
+            className="field-boxed"
+            autoComplete="off"
+            autoCapitalize="characters"
+            spellCheck={false}
+            maxLength={40}
+            aria-describedby={referralHintId}
+            value={refCode}
+            onChange={(e) => setRefCode(e.target.value)}
+          />
+          <small id={referralHintId} role="status">
+            {refName ? t.referredFrom(refName) : ""}
+          </small>
+        </label>
+        <label>
+          {t.referredBy}
+          <input
+            className="field-boxed"
+            maxLength={200}
+            value={referredBy}
+            onChange={(e) => setReferredBy(e.target.value)}
+          />
+          <small>{t.referredByHint}</small>
+        </label>
       </fieldset>
 
       {consentRequired ? (
