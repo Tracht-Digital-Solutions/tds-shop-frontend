@@ -1283,3 +1283,118 @@
   color: var(--color-ink);
   text-wrap: pretty;
 }
+
+/* ── Product answer fields (tds-ext-shop ≥ 0.6) ───────────────────────────
+   "Kurz gesagt" under the lede, the facts beside the price. The answer is a
+   soft-filled box with the brand's left rule, so it reads as THE answer and
+   not as one more paragraph; the facts are a quiet two-column list under the
+   offer card. Tokens only — no local radius or elevation. */
+.shop-answer--product {
+  margin: 1rem 0 1.25rem;
+  padding: 0.875rem 1rem;
+  background: var(--color-soft);
+  border-left: 3px solid var(--color-primary);
+}
+
+.shop-answer--product strong {
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.shop-facts {
+  margin-top: 1.25rem;
+  padding: 1rem 1.125rem;
+  background: var(--color-soft);
+  box-shadow: var(--tds-shadow-hard-sm);
+}
+
+.shop-facts__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--color-black);
+}
+
+.shop-facts dl {
+  margin: 0;
+}
+
+.shop-facts__row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 40%) 1fr;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.shop-facts__row:first-child {
+  border-top: 0;
+}
+
+.shop-facts dt {
+  color: var(--color-muted);
+}
+
+.shop-facts dd {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ── Category shelves on the front page ──────────────────────────────────
+   One heading, one line of intro and four cards per category, with a link to
+   the full category. The heading links too: it is the largest target on the
+   shelf and the obvious one to press. */
+.shop-shelf {
+  margin-top: 2.5rem;
+}
+
+.shop-shelf__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.shop-shelf__title {
+  margin: 0;
+}
+
+.shop-shelf__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.shop-shelf__title a:is(:hover, :focus-visible) {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.shop-shelf__more {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  /* A 44px target on coarse pointers, per the site's own rule. */
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.shop-shelf__intro {
+  max-width: 44rem;
+  margin: 0.25rem 0 1rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+/* On a product page the questions belong to the text column they follow, not
+   to the centre of the page: centred, they started 260px right of the text
+   edge every other block on the page shares. */
+.shop-product ~ .shop-faq {
+  margin-left: 0;
+  padding-left: 0;
+}

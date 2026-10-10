@@ -33,6 +33,8 @@ export interface LlmsProduct {
   title: string;
   teaser: string;
   category: string;
+  /** "Kurz gesagt" (tds-ext-shop ≥ 0.6); preferred over the teaser, which sells. */
+  summary?: string | null;
 }
 
 export interface LlmsInput {
@@ -101,14 +103,15 @@ export function renderLlmsTxt(input: LlmsInput): string {
   }
 
   if (input.products.length > 0) {
-    out("## Produkte mit eigener Einschätzung");
+    out("## Leistungen und Produkte");
     out();
     for (const product of input.products) {
-      out(`- **${product.title}** — ${product.teaser}`);
-      out(
-        `  ${canonical(productPath(product.slug, "de"))}` +
-          ` · EN ${canonical(productPath(product.slug, "en"))}`,
-      );
+      out(`- **${product.title}** — ${product.summary?.trim() || product.teaser}`);
+      // German URL only. A product's English slug is its own (the API pairs
+      // translations by id, not by slug), so `/en/product/<german-slug>` was a
+      // 404 for every product whose slugs differ — and a dead link is worse
+      // than none in a file an assistant reads as ground truth.
+      out(`  ${canonical(productPath(product.slug, "de"))}`);
     }
     out();
   }

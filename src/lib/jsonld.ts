@@ -218,3 +218,27 @@ export function productSchema(product: ProductPage, lang: Lang, now = Date.now()
   }
   return node;
 }
+
+/**
+ * Our own offer is a SERVICE, and says so beside the `Product` node: who
+ * provides it, where, and what kind of service it is. The `Product` keeps the
+ * price (`Offer`); this node links to it rather than repeating it, so the two
+ * cannot state different prices.
+ *
+ * Germany only — the shop sells to Germany alone, checked before payment.
+ */
+export function serviceSchema(product: ProductPage, lang: Lang): Node {
+  const url = canonical(productPath(product.slug, lang));
+  return {
+    "@type": "Service",
+    "@id": `${url}#service`,
+    url,
+    name: product.title,
+    description: product.summary?.trim() || product.teaser,
+    serviceType: productCategoryName(product),
+    provider: organizationRef(),
+    areaServed: { "@type": "Country", name: lang === "en" ? "Germany" : "Deutschland" },
+    inLanguage: lang === "en" ? "en-GB" : "de-DE",
+    isRelatedTo: { "@id": url },
+  };
+}

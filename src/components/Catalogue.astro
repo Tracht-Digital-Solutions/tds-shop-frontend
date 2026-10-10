@@ -50,12 +50,20 @@ const heading = currentName ?? t.catalogue;
  *  only what kind of page it was. */
 const headline = currentName ?? t.catalogueHeadline;
 
+/** The current category as the API answered it — names, intro and FAQ. */
+const current = category ? categories.find((c) => c.category === category) : undefined;
+
+/** Entry answer and questions for this category: panel copy first, then the
+ *  hand-written fallback in `categoryCopy.ts`. */
+const copy = categoryCopy(category, lang, current);
+
 const description = describe(
-  currentName
-    ? lang === "de"
-      ? `Kuratierte Technik aus der Kategorie ${currentName}: mit eigener Einschätzung statt Herstellertext.`
-      : `Curated technology in the ${currentName} category, with our own assessment rather than vendor copy.`
-    : site.description[lang],
+  copy?.answer ??
+    (currentName
+      ? lang === "de"
+        ? `${currentName} bei Tracht Digital Solutions: Leistungen zum Festpreis und Technik mit eigener Einschätzung.`
+        : `${currentName} at Tracht Digital Solutions: fixed-price services and technology with our own assessment.`
+      : site.description[lang]),
   site.description[lang],
 );
 
@@ -76,8 +84,24 @@ const hasAffiliate = products.some((p) => p.offers.some((o) => o.kind === "affil
  */
 const altUrl = category ? await categoryAlternate(category, lang) : homeAlternate(lang);
 
-/** Entry answer and questions for this category, where they have been written. */
-const copy = categoryCopy(category, lang);
+/**
+ * The front page groups the catalogue by category once it outgrows one screen:
+ * four products per category and a link to the rest. Fifty-odd cards in one
+ * grid read as a warehouse, and a reader looking for "E-Mail" had to scroll
+ * past every website package first. Category order is the API's (largest
+ * first); a category page always shows its full grid.
+ */
+const SHELF_SIZE = 4;
+const grouped = category === null && products.length > 12;
+const shelves = grouped
+  ? categories
+      .map((c) => ({
+        ...c,
+        name: categoryName(c.category, c.label),
+        items: products.filter((p) => p.category === c.category).slice(0, SHELF_SIZE),
+      }))
+      .filter((shelf) => shelf.items.length > 0)
+  : [];
 
 const jsonLd = asGraph([
   websiteSchema(lang),
@@ -149,7 +173,28 @@ const jsonLd = asGraph([
     {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
   </section>
 
-  <ProductGrid products={products} lang={lang} />
+  {
+    grouped ? (
+      shelves.map((shelf) => (
+        <section class="shop-shelf" aria-labelledby={`shelf-${shelf.category}`}>
+          <div class="shop-shelf__head">
+            <h2 class="shop-section-title shop-shelf__title" id={`shelf-${shelf.category}`}>
+              <a href={categoryPath(shelf.category, lang)}>{shelf.name}</a>
+            </h2>
+            {shelf.total > shelf.items.length ? (
+              <a class="shop-shelf__more link-underline" href={categoryPath(shelf.category, lang)}>
+                {t.showAll(shelf.total)}
+              </a>
+            ) : null}
+          </div>
+          {shelf.intro ? <p class="shop-shelf__intro">{shelf.intro}</p> : null}
+          <ProductGrid products={shelf.items} lang={lang} />
+        </section>
+      ))
+    ) : (
+      <ProductGrid products={products} lang={lang} />
+    )
+  }
 
   {/* The questions, under the products rather than above them: somebody who
       came for a switch should reach the switches first. `<details>` so the

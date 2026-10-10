@@ -40,6 +40,7 @@ export const GET: APIRoute = async () => {
     slug: product.slug,
     title: product.title,
     teaser: product.teaser,
+    summary: product.summary ?? null,
     category: product.category,
   }));
 

@@ -125,8 +125,20 @@ const COPY: Record<string, Record<Lang, CategoryCopy>> = {
 };
 
 /** The written copy for a category, or `null` when none has been written. */
-export function categoryCopy(category: string | null, lang: Lang): CategoryCopy | null {
+export function categoryCopy(
+  category: string | null,
+  lang: Lang,
+  fromApi?: { intro?: string | null; faq?: { q: string; a: string }[] } | null,
+): CategoryCopy | null {
   if (!category) return null;
+  // Copy written in the panel (tds-ext-shop ≥ 0.6) wins: it covers every
+  // category, not just the two hand-written below. It needs BOTH an intro and
+  // at least one question — half an entry would put a FAQPage node on a page
+  // with no visible questions, or an answer with nothing behind it.
+  const intro = fromApi?.intro?.trim();
+  if (intro && fromApi?.faq && fromApi.faq.length > 0) {
+    return { answer: intro, faq: fromApi.faq };
+  }
   return COPY[category]?.[lang] ?? null;
 }
 

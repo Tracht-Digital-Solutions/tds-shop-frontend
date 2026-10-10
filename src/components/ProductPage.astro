@@ -9,7 +9,15 @@ import { listProducts } from "../lib/content-api";
 import { categoryPath, homePath, productCategoryName, productPath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
 import { isIndexable } from "../lib/indexing";
-import { asGraph, breadcrumbSchema, productSchema, webPageSchema, websiteSchema } from "../lib/jsonld";
+import {
+  asGraph,
+  breadcrumbSchema,
+  faqPageSchema,
+  productSchema,
+  serviceSchema,
+  webPageSchema,
+  websiteSchema,
+} from "../lib/jsonld";
 import { productAlternate } from "../lib/alternates";
 import { withAttribution } from "../lib/offers";
 import { canonical, site } from "../lib/seo";
@@ -76,6 +84,22 @@ const hasAffiliate = offers.some((offer) => offer.kind === "affiliate");
 const sellsDirectly = offers.some((offer) => offer.kind === "own");
 
 /**
+ * The answer fields (tds-ext-shop ≥ 0.6). Each is optional and renders
+ * nothing when absent, so an older API build gives the page it always had.
+ *
+ * - `summary` is the "Kurz gesagt" paragraph directly under the lede: the
+ *   sentence an answer engine quotes, so it stands on its own.
+ * - `facts` sit with the price, where a buyer compares.
+ * - `faq` is rendered visibly AND as FAQPage, from the same objects.
+ */
+const summary = product.summary?.trim() || null;
+const facts = product.facts ?? [];
+const faq = product.faq ?? [];
+
+/** The <title> subject: the panel's meta title when the heading is too long. */
+const titleSubject = product.metaTitle?.trim() || product.title;
+
+/**
  * The assessment body.
  *
  * Only the markdown format is rendered for now. A blocks document needs the
@@ -108,6 +132,8 @@ const jsonLd = asGraph([
     breadcrumbId,
   }),
   productSchema(product, lang),
+  ...(sellsDirectly ? [serviceSchema(product, lang)] : []),
+  ...(faq.length > 0 ? [faqPageSchema(faq)] : []),
   breadcrumbSchema(
     [
       { name: t.nav.catalogue, path: homePath(lang) },
@@ -133,7 +159,7 @@ const revised = product.updatedAt
 ---
 
 <Layout
-  title={product.title}
+  title={titleSubject}
   description={description}
   lang={lang}
   noindex={!indexable}
@@ -178,10 +204,21 @@ const revised = product.updatedAt
         <p class="shop-revised">
           {lang === "de" ? "Stand" : "Updated"}: <time datetime={product.updatedAt!}>{revised}</time>
           <span aria-hidden="true"> · </span>
-          {lang === "de" ? "Eingeschätzt von " : "Assessed by "}
-          <a href={`${site.mainUrl}/#about`} class="link-underline">{site.legalName}</a>
+          {sellsDirectly ? `${t.providedBy}: ` : lang === "de" ? "Eingeschätzt von " : "Assessed by "}
+          <a href={`${site.mainUrl}/#about`} class="link-underline">
+            {sellsDirectly ? "Tracht Digital Solutions" : site.legalName}
+          </a>
         </p>
       )}
+
+      {/* "Kurz gesagt": the complete answer in two or three sentences, before
+          the details. A plain paragraph with its label inline, so a crawler
+          that lifts the paragraph lifts a sentence that makes sense alone. */}
+      {summary ? (
+        <p class="shop-answer shop-answer--product">
+          <strong>{t.inShort}</strong> {summary}
+        </p>
+      ) : null}
 
       {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
     </div>
@@ -200,6 +237,23 @@ const revised = product.updatedAt
           filled button. Both ways to buy sit in one place — the basket button
           used to stand under the lede, a column away from the price it adds. */}
       {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} variant="secondary" /> : null}
+
+      {/* The facts next to the price: scope, duration, effort, result — what a
+          buyer compares between two packages, as a definition list so each
+          value keeps its name for assistive tech and for extraction. */}
+      {facts.length > 0 ? (
+        <section class="shop-facts" aria-labelledby="facts-heading">
+          <h2 class="shop-facts__title" id="facts-heading">{t.atAGlance}</h2>
+          <dl>
+            {facts.map((fact) => (
+              <div class="shop-facts__row">
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ) : null}
     </aside>
 
     {
@@ -215,12 +269,29 @@ const revised = product.updatedAt
          lines of body text. */
       body ? (
         <section class="shop-product__body" aria-labelledby="assessment-heading">
-          <h2 class="shop-section-title" id="assessment-heading">{t.ourAssessment}</h2>
+          <h2 class="shop-section-title" id="assessment-heading">
+            {sellsDirectly ? t.serviceDetails : t.ourAssessment}
+          </h2>
           <div class="shop-doc" set:html={body} />
         </section>
       ) : null
     }
   </div>
+
+  {/* Visible questions, built from the same objects as the FAQPage node —
+      a structured answer that differs from the visible one loses the rich
+      result. `<details>` keeps the answers in the server HTML. */}
+  {faq.length > 0 && (
+    <section class="shop-faq" aria-labelledby="product-faq-heading">
+      <h2 id="product-faq-heading" class="shop-faq__title">{t.faqHeading}</h2>
+      {faq.map((item) => (
+        <details class="shop-faq__item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </section>
+  )}
 
   {
     related.length > 0 ? (

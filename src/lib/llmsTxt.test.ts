@@ -60,12 +60,21 @@ describe("llms.txt", () => {
     expect(llms).not.toContain(canonical(categoryPath("leer", "de")));
   });
 
-  it("names every product in both languages", () => {
+  it("names every product with its German URL and never derives an English one", () => {
+    // DE and EN slugs may differ; `/en/product/<german-slug>` was a 404.
     for (const product of input.products) {
       expect(llms, product.slug).toContain(`**${product.title}**`);
       expect(llms, product.slug).toContain(canonical(productPath(product.slug, "de")));
-      expect(llms, product.slug).toContain(canonical(productPath(product.slug, "en")));
+      expect(llms, product.slug).not.toContain(canonical(productPath(product.slug, "en")));
     }
+  });
+
+  it("prefers the Kurz-gesagt summary over the teaser", () => {
+    const text = renderLlmsTxt({
+      ...input,
+      products: [{ ...input.products[0]!, summary: "Zwei Sätze, die antworten." }],
+    });
+    expect(text).toContain("— Zwei Sätze, die antworten.");
   });
 
   it("states no price at all", () => {

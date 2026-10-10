@@ -124,10 +124,17 @@ describe("structured data", () => {
     expect((node.offers as Record<string, unknown>[])[0]?.price).toBe("349.00");
   });
 
-  it("emits no Offer for our own product once the quote has expired", () => {
-    // Structured data must not outlive the price it quotes.
-    const stale = offer({ kind: "own", priceCheckedAt: new Date(NOW - 25 * HOUR).toISOString() });
-    expect(productSchema(product({ offers: [stale] }), "de", NOW).offers).toBeUndefined();
+  it("keeps the Offer for our own price, which carries no retrieval time and never expires", () => {
+    // The API serves own prices WITHOUT `priceCheckedAt` (tds-ext-shop
+    // ProductRepository::offersFor). Treating that as "never fetched" dropped
+    // the Offer — and the visible price — from every own product.
+    const own = offer({ kind: "own", priceCheckedAt: null });
+    expect((productSchema(product({ offers: [own] }), "de", NOW).offers as unknown[]).length).toBe(1);
+  });
+
+  it("never emits an Offer for a partner price, fresh or not", () => {
+    const fresh = offer({ kind: "affiliate", priceCheckedAt: new Date(NOW - HOUR).toISOString() });
+    expect(productSchema(product({ offers: [fresh] }), "de", NOW).offers).toBeUndefined();
   });
 
   it("owns @context exactly once, at the graph", () => {

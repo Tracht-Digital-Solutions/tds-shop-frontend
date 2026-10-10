@@ -87,7 +87,8 @@ export const TX = {
     catalogue: "Produkte",
     faqHeading: "Häufige Fragen",
     /** The catalogue's H1. The <title> stays "Produkte" — short, and the brand follows it. */
-    catalogueHeadline: "Technik für den Betrieb, von uns eingeschätzt",
+    catalogueHeadline: "Digitale Leistungen zum Festpreis",
+    showAll: (n: number) => `Alle ${n} anzeigen`,
     allCategories: "Alle",
     categories: "Kategorien",
     // An empty catalogue is an invitation, not a dead end: say what is coming
@@ -103,6 +104,11 @@ export const TX = {
     offers: "Angebote",
     relatedCategory: "Mehr aus dieser Kategorie",
     ourAssessment: "Unsere Einschätzung",
+    /** Own services: the body describes the service, it does not assess a product. */
+    serviceDetails: "Leistungsbeschreibung",
+    inShort: "Kurz gesagt:",
+    atAGlance: "Auf einen Blick",
+    providedBy: "Anbieter",
     // "Sie", like the basket, the checkout and every legal text. This notice
     // used to say "du" and was the one line on the page that did.
     affiliateNotice:
@@ -115,7 +121,7 @@ export const TX = {
     notFound: "Diese Adresse gibt es hier nicht.",
     notFoundBody: "Der Link ist veraltet oder vertippt. Im Katalog steht, was es gerade gibt.",
     footer: {
-      blurb: "Kuratierte Technik für den Betrieb, jedes Produkt mit eigener Einschätzung von Tracht Digital Solutions.",
+      blurb: "Digitale Leistungen zum Festpreis und Technik mit eigener Einschätzung, von Tracht Digital Solutions.",
       shop: "Shop",
       company: "Tracht Digital",
       legal: "Rechtliches",
@@ -171,7 +177,8 @@ export const TX = {
     theme: { toDark: "Switch to dark mode", toLight: "Switch to light mode" },
     catalogue: "Products",
     faqHeading: "Common questions",
-    catalogueHeadline: "Business technology, assessed by us",
+    catalogueHeadline: "Digital services at a fixed price",
+    showAll: (n: number) => `Show all ${n}`,
     allCategories: "All",
     categories: "Categories",
     empty: {
@@ -184,6 +191,10 @@ export const TX = {
     offers: "Offers",
     relatedCategory: "More in this category",
     ourAssessment: "Our assessment",
+    serviceDetails: "Service details",
+    inShort: "In short:",
+    atAGlance: "At a glance",
+    providedBy: "Provided by",
     affiliateNotice:
       "Some links on this page are affiliate links. If you buy through them we earn a commission — the price is the same for you.",
     backToCatalogue: "Back to the catalogue",
@@ -192,7 +203,7 @@ export const TX = {
     notFound: "This address does not exist here.",
     notFoundBody: "The link is outdated or mistyped. The catalogue shows what is currently available.",
     footer: {
-      blurb: "Curated technology for the business, every product with its own assessment by Tracht Digital Solutions.",
+      blurb: "Digital services at a fixed price and technology with our own assessment, by Tracht Digital Solutions.",
       shop: "Shop",
       company: "Tracht Digital",
       legal: "Legal",

@@ -54,10 +54,38 @@ export type CatalogProduct = Omit<ShopProductRef, "offers"> & {
    * rather than in the shared schema for the same reason as the fields above.
    */
   categoryLabel?: string;
-};
+} & AnswerFields;
 
-export type ProductPage = Omit<ShopProduct, "offers"> & {
-  offers: SellableOffer[];
-  editorialStatus?: EditorialStatus;
-  categoryLabel?: string;
-};
+/** A question and its answer, as the API serves product and category FAQs. */
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+/** A named value ("Dauer" → "ca. 1 Woche"), the product page's fact list. */
+export interface FactItem {
+  label: string;
+  value: string;
+}
+
+/**
+ * The answer fields (tds-ext-shop ≥ 0.6). All optional: an older API build
+ * serves none of them, and the page then renders exactly as before.
+ * Widened here, not in the shared schema, for the same reason as above —
+ * only this site renders a product page.
+ */
+interface AnswerFields {
+  /** The <title> subject when the heading is too long for a result line. */
+  metaTitle?: string | null;
+  /** "Kurz gesagt": two or three sentences an answer engine can quote. */
+  summary?: string | null;
+}
+
+export type ProductPage = Omit<ShopProduct, "offers"> &
+  AnswerFields & {
+    offers: SellableOffer[];
+    editorialStatus?: EditorialStatus;
+    categoryLabel?: string;
+    facts?: FactItem[];
+    faq?: FaqItem[];
+  };

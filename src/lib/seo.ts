@@ -43,8 +43,8 @@ export const site = {
     "https://github.com/Tracht-Digital-Solutions",
   ],
   description: {
-    de: "Kuratierte Technik für Digitalisierung im Betrieb: Hardware, Netzwerk und Software mit eigener Einschätzung statt Herstellertext.",
-    en: "Curated technology for digitalising a business: hardware, networking and software with our own assessment rather than vendor copy.",
+    de: "Digitale Leistungen zum Festpreis für Selbstständige und kleine Betriebe: Website, SEO, E-Mail, Wartung und Schulung. Dazu Technik mit eigener Einschätzung.",
+    en: "Digital services at a fixed price for freelancers and small businesses: websites, SEO, email, maintenance and training, plus technology we assess ourselves.",
   },
 } as const;
 

@@ -1,4 +1,4 @@
-import type { CatalogProduct, ProductPage } from "./types";
+import type { CatalogProduct, FaqItem, ProductPage } from "./types";
 
 import { contentApiBase } from "./connection";
 import { assertKeyAccepted, readContentJson, siteKeyHeaders } from "./siteKey";
@@ -120,6 +120,9 @@ export interface CategoryCount {
   /** The display name in the requested language; absent on an older API build. */
   label?: string;
   total: number;
+  /** Intro and FAQ written in the panel (tds-ext-shop ≥ 0.6), in this language only. */
+  intro?: string | null;
+  faq?: FaqItem[];
 }
 
 export async function listCategories(lang: Lang): Promise<CategoryCount[]> {
