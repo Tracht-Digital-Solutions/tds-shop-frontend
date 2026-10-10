@@ -1,0 +1,14 @@
+import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
+import { h as site } from "./siteKey_CqMDM8Ei.mjs";
+import { n as renderSectionIndex, t as buildEntries } from "./sitemap_Ceyvvv20.mjs";
+//#region src/pages/sitemap-index.xml.ts
+var sitemap_index_xml_exports = /* @__PURE__ */ __exportAll({
+	GET: () => GET,
+	prerender: () => false
+});
+var GET = async () => new Response(renderSectionIndex(await buildEntries(), site.url), { headers: { "content-type": "application/xml; charset=utf-8" } });
+//#endregion
+//#region \0virtual:astro:page:src/pages/sitemap-index.xml@_@ts
+var page = () => sitemap_index_xml_exports;
+//#endregion
+export { page };
