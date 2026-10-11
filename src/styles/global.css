@@ -146,6 +146,17 @@
   padding-inline: clamp(1.25rem, 4vw, 3rem);
   margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
 }
+/* Desktop: the header is a transparent strip with two islands, so its 84px
+   plus the main's top padding showed as a bare light strip above the intro.
+   The intro now starts under the header (pulled up by more than header + main
+   padding; nothing above the page top is painted) and pads its content back to
+   where it was — the same move as the journal's and the tools site's hero. */
+@media (min-width: 64rem) {
+  .shop-main > .shop-intro:first-child {
+    margin-top: -10rem;
+    padding-top: calc(10rem + clamp(2rem, 5vw, 3.5rem));
+  }
+}
 
 /* The one large piece of type on the site. It says what the shop is, so it is
    set as a statement: tight leading, balanced lines, and a measure short
