@@ -110,6 +110,18 @@ describe("the property bar", () => {
     expect(css).not.toMatch(/\.shop-nav__link\b/);
   });
 
+  it("splits the bar into two corner islands: brand and nav, then the actions", () => {
+    const islands = header.split('<div class="tds-sitebar__island">');
+    expect(islands, "exactly two islands").toHaveLength(3);
+    const [, first, second] = islands as [string, string, string];
+    expect(first).toContain('class="tds-sitebar__brand brand-wordmark"');
+    expect(first).toContain('<nav class="tds-sitebar__nav"');
+    expect(first).not.toContain("tds-sitebar__actions");
+    expect(second).toContain('<div class="tds-sitebar__desktop">');
+    expect(second).toContain('<div class="tds-sitebar__actions">');
+    expect(second.indexOf("<CartBadge")).toBeGreaterThan(-1);
+  });
+
   it("marks the shop current and sends the CTA in the reader's language", () => {
     expect(header).toContain('aria-current={item.current ? (isHome ? "page" : "true") : undefined}');
     expect(header).toContain("propertyContact(lang)");
@@ -143,6 +155,7 @@ describe("the property bar", () => {
         "utf8",
       );
     expect(shared("styles/primitives.css")).toContain(".tds-sitebar__wide");
+    expect(shared("styles/primitives.css")).toContain(".tds-sitebar__island");
     expect(shared("styles/base.css")).toContain("--tds-product-grid-min:");
     expect(shared("dist/nav/index.d.ts")).toMatch(/\bpropertyContact\b/);
   });

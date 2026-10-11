@@ -41,8 +41,8 @@ build emits no routes, and it would ship a sitemap with only the pages its own f
 
 - `AppChrome.astro` (in `Layout.astro`) renders the shared bottom tab bar: Start · Kategorien ·
   Suche (instant catalogue filter) · Warenkorb (page, with the basket count) · Mehr (theme,
-  language, sibling properties, CTA). No hamburger, no top bar on the phone; the header tucks away
-  while scrolling.
+  language, sibling properties, CTA). No hamburger, no top bar on the phone; from 64rem the header is
+  two corner islands (`.tds-sitebar__island`, tds-shared ≥ 0.51), not a bar.
 - The product page shows a buy bar above the tab bar once the reader has scrolled past the offers.
   It only scrolls back to them, never into a checkout of its own, so the advertising label and the
   24-hour rule stay in front of the decision.

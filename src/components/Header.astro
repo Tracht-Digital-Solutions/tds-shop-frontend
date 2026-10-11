@@ -62,67 +62,73 @@ const cta = translations[lang].nav.cta;
   {/* `.tds-shell` gives the bar the page's own edges — the blog surface's
       120rem, the same on all three properties. */}
   <div class="tds-shell tds-sitebar">
-    {/* The mark IS the "TD" of the name, so only "Shop" is set in type and the
-        accessible name restates the whole brand — as "TD Shop", because WCAG
-        2.5.3 (axe `label-content-name-mismatch`) wants the visible word "Shop"
-        as a word of the name, which "TDShop" is not. `.brand-wordmark` is what
-        puts `.accent-italic` back upright (primitives.css). */}
-    <a
-      class="tds-sitebar__brand brand-wordmark"
-      href={homePath(lang)}
-      aria-label={`TD Shop — ${t.nav.catalogue}`}
-    >
-      <span class="brand-logo" aria-hidden="true"></span>
-      <span class="accent-italic">Shop</span>
-    </a>
-    <span class="tds-sitebar__divider" aria-hidden="true"></span>
+    {/* Two corner islands from 64rem (`.tds-sitebar__island`, tds-shared):
+        the wordmark and the property list here, everything the reader acts
+        with in the second. Below 64rem the wrappers vanish from layout. */}
+    <div class="tds-sitebar__island">
+      {/* The mark IS the "TD" of the name, so only "Shop" is set in type and the
+          accessible name restates the whole brand — as "TD Shop", because WCAG
+          2.5.3 (axe `label-content-name-mismatch`) wants the visible word "Shop"
+          as a word of the name, which "TDShop" is not. `.brand-wordmark` is what
+          puts `.accent-italic` back upright (primitives.css). */}
+      <a
+        class="tds-sitebar__brand brand-wordmark"
+        href={homePath(lang)}
+        aria-label={`TD Shop — ${t.nav.catalogue}`}
+      >
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span class="accent-italic">Shop</span>
+      </a>
+      <span class="tds-sitebar__divider" aria-hidden="true"></span>
 
-    {/* `page` on the catalogue, `true` everywhere else in the shop: the reader
-        is inside this property there, just not on its home. */}
-    <nav class="tds-sitebar__nav" aria-label={t.nav.label}>
-      {nav.map((item) => (
-        <a
-          class="tds-sitebar__link"
-          href={item.href}
-          aria-current={item.current ? (isHome ? "page" : "true") : undefined}
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
-
-    {/* Hidden below `lg` by the shared class on the WRAPPER: tds-shared is
-        unlayered, so a `display` rule on the controls themselves would lose to
-        theirs. The CTA yields below 80rem through `.tds-sitebar__wide`, the
-        same on all three bars. */}
-    <div class="tds-sitebar__desktop">
-      <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
-        {langHrefs.map((l) => (
+      {/* `page` on the catalogue, `true` everywhere else in the shop: the reader
+          is inside this property there, just not on its home. */}
+      <nav class="tds-sitebar__nav" aria-label={t.nav.label}>
+        {nav.map((item) => (
           <a
-            href={l.href}
-            hreflang={l.code}
-            lang={l.code}
-            data-locale-link={l.code}
-            class={l.code === lang ? "on" : ""}
-            aria-current={l.code === lang ? "true" : undefined}
+            class="tds-sitebar__link"
+            href={item.href}
+            aria-current={item.current ? (isHome ? "page" : "true") : undefined}
           >
-            {l.code.toUpperCase()}
+            {item.label}
           </a>
         ))}
-      </div>
-      <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
-      <div class="tds-sitebar__wide">
-        <a href={contact} class="btn btn-primary">{cta}</a>
-      </div>
+      </nav>
     </div>
 
-    {/* Visible at every width, in the shared order: who you are, then the
-        shop's own extra. On a phone navigation lives in the app tab bar
-        (AppChrome.astro), which carries the basket as a tab of its own. */}
-    <div class="tds-sitebar__actions">
-      <AccountMenu client:idle lang={lang} />
-      <CartBadge client:idle lang={lang} />
+    <div class="tds-sitebar__island">
+      {/* Hidden below `lg` by the shared class on the WRAPPER: tds-shared is
+          unlayered, so a `display` rule on the controls themselves would lose to
+          theirs. The CTA yields below 80rem through `.tds-sitebar__wide`, the
+          same on all three bars. */}
+      <div class="tds-sitebar__desktop">
+        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+          {langHrefs.map((l) => (
+            <a
+              href={l.href}
+              hreflang={l.code}
+              lang={l.code}
+              data-locale-link={l.code}
+              class={l.code === lang ? "on" : ""}
+              aria-current={l.code === lang ? "true" : undefined}
+            >
+              {l.code.toUpperCase()}
+            </a>
+          ))}
+        </div>
+        <ThemeToggle client:idle labelToDark={t.theme.toDark} labelToLight={t.theme.toLight} />
+        <div class="tds-sitebar__wide">
+          <a href={contact} class="btn btn-primary">{cta}</a>
+        </div>
+      </div>
 
+      {/* Visible at every width, in the shared order: who you are, then the
+          shop's own extra. On a phone navigation lives in the app tab bar
+          (AppChrome.astro), which carries the basket as a tab of its own. */}
+      <div class="tds-sitebar__actions">
+        <AccountMenu client:idle lang={lang} />
+        <CartBadge client:idle lang={lang} />
+      </div>
     </div>
   </div>
 
