@@ -12,12 +12,28 @@ interface Props {
   lang: Lang;
   /** Attribution for the click counter — which slot these cards came from. */
   placement?: string | null;
+  /**
+   * Wrap each card in a `.shop-filter-item` carrying what the catalogue's
+   * filter bar matches on (kind, search text, title, date). The wrapper is
+   * `display: contents`, so the grid still lays out the cards themselves.
+   */
+  filterable?: boolean;
 }
 
-const { products, lang, placement = null } = Astro.props;
+const { products, lang, placement = null, filterable = false } = Astro.props;
 const t = tx(lang);
 
 const attributed = products.map((product) => withAttribution(product, lang, placement));
+
+/** Own service, partner offer, or both (a product can carry either kind). */
+const kindOf = (product: CatalogProduct): string => {
+  const kinds = new Set(product.offers.map((o) => o.kind));
+  return kinds.size === 2 ? "own affiliate" : [...kinds][0] ?? "";
+};
+const searchOf = (product: CatalogProduct): string =>
+  [product.title, product.teaser, product.categoryLabel ?? product.category, ...(product.tags ?? [])]
+    .join(" ")
+    .toLowerCase();
 ---
 
 {
@@ -35,9 +51,21 @@ const attributed = products.map((product) => withAttribution(product, lang, plac
     </div>
   ) : (
     <div class="tds-product-grid">
-      {attributed.map((product) => (
-        <ProductCard product={product} lang={lang} variant="card" />
-      ))}
+      {attributed.map((product, i) =>
+        filterable ? (
+          <div
+            class="shop-filter-item"
+            data-kind={kindOf(products[i])}
+            data-search={searchOf(products[i])}
+            data-title={products[i].title}
+            data-published={products[i].publishedAt ?? ""}
+          >
+            <ProductCard product={product} lang={lang} variant="card" />
+          </div>
+        ) : (
+          <ProductCard product={product} lang={lang} variant="card" />
+        ),
+      )}
     </div>
   )
 }

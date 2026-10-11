@@ -37,6 +37,18 @@ Sectioned: `sitemap-{pages,categories,products,legal}.xml` (`src/lib/sitemapSect
 with their photo as `image:image`. Don't reintroduce `@astrojs/sitemap`: under `output: "server"` a
 build emits no routes, and it would ship a sitemap with only the pages its own filter excluded.
 
+## Catalogue filter bar (tds-shared ≥ 0.52.2)
+
+- `ShopFilterBar.astro` under the intro on every `Catalogue.astro` route: tds-shared's `.tds-filterbar` +
+  `mountFilterBar()`, closed by default. Search, Art (own / affiliate from `offers[].kind`; a product with both
+  matches both) and order (Empfohlen = API order, Neueste by `publishedAt`, A–Z). Never a price (24-hour rule).
+- Client-side only: the page cache keys on the path, so a query string never reaches the server's answer. The
+  category chips stay links between categories.
+- `ProductGrid filterable` wraps each card in a `display: contents` `.shop-filter-item` with the data. On the grouped
+  front page (more than 12 products, four per shelf) the full grid ships in a `<template data-filter-all>` and
+  replaces the shelves while a filter is set; the default view is the shelves.
+- Copy reaches the script as data attributes; the i18n module stays on the server.
+
 ## The phone is an app (tds-shared ≥ 0.47)
 
 - `AppChrome.astro` (in `Layout.astro`) renders the shared bottom tab bar: Start · Kategorien ·

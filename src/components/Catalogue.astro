@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ProductGrid from "./ProductGrid.astro";
+import ShopFilterBar from "./ShopFilterBar.astro";
 import { listAllProducts, listCategories } from "../lib/content-api";
 import { categoryName, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
@@ -173,10 +174,18 @@ const jsonLd = asGraph([
     {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
   </section>
 
+  {products.length > 1 ? <ShopFilterBar lang={lang} /> : null}
+
   {
     grouped ? (
-      shelves.map((shelf) => (
-        <section class="shop-shelf" aria-labelledby={`shelf-${shelf.category}`}>
+      <>
+      {/* Filled from the template by the filter bar; empty until then. */}
+      <div class="shop-filter-results" data-filter-results />
+      <template data-filter-all>
+        <ProductGrid products={products} lang={lang} filterable />
+      </template>
+      {shelves.map((shelf) => (
+        <section class="shop-shelf" data-filter-shelf aria-labelledby={`shelf-${shelf.category}`}>
           <div class="shop-shelf__head">
             <h2 class="shop-section-title shop-shelf__title" id={`shelf-${shelf.category}`}>
               <a href={categoryPath(shelf.category, lang)}>{shelf.name}</a>
@@ -190,9 +199,10 @@ const jsonLd = asGraph([
           {shelf.intro ? <p class="shop-shelf__intro">{shelf.intro}</p> : null}
           <ProductGrid products={shelf.items} lang={lang} />
         </section>
-      ))
+      ))}
+      </>
     ) : (
-      <ProductGrid products={products} lang={lang} />
+      <ProductGrid products={products} lang={lang} filterable />
     )
   }
 

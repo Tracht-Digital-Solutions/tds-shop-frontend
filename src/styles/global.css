@@ -1400,3 +1400,23 @@
   margin-left: 0;
   padding-left: 0;
 }
+
+/* --- catalogue filter bar (tds-shared .tds-filterbar) --------------------- */
+
+/* Only spacing and the tile tone here; the bar itself is tds-shared's. */
+.shop-filterbar {
+  --tds-flat-tint: var(--color-card);
+  margin-bottom: 1.5rem;
+}
+/* The wrapper that carries the filter data must not become the grid cell:
+   the card stays the grid item. `:not([hidden])` so hiding still wins. */
+.shop-filter-item:not([hidden]) {
+  display: contents;
+}
+.shop-filter-empty {
+  margin: 1rem 0 2rem;
+  color: var(--color-muted);
+}
+.shop-filter-empty:empty {
+  display: none;
+}

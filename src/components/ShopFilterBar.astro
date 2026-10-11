@@ -1,0 +1,108 @@
+---
+import { tx, type Lang } from "../lib/i18n";
+
+/**
+ * The collapsible filter bar above the catalogue — tds-shared's
+ * `.tds-filterbar`, wired by `mountFilterBar()`. Closed by default.
+ *
+ * Everything happens in the browser over cards already in the page: the page
+ * cache keys on the path alone, so `?art=…` could never change what is
+ * served. The category chips above stay the navigation between categories;
+ * this narrows and orders what one page holds.
+ *
+ * On the grouped front page the shelves show only four cards each, so the
+ * full catalogue comes along in a `<template>` (inert, not rendered, not read
+ * as content) and replaces the shelves while a filter is set.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const f = tx(lang).filter;
+const kinds = ["all", "own", "affiliate"] as const;
+const sorts = ["default", "new", "az"] as const;
+---
+
+<details class="tds-disclosure tds-filterbar shop-filterbar" data-shop-filter
+  data-lang={lang}
+  data-shown-one={f.shown(1)}
+  data-shown-many={f.shown(2).replace("2", "{n}")}
+  data-none={f.none}>
+  <summary class="tds-filterbar__toggle">{f.toggle} <span class="tds-filterbar__count"></span></summary>
+  <div class="tds-filterbar__panel">
+    <input
+      type="search"
+      class="field-boxed tds-filterbar__search"
+      data-filter-search
+      placeholder={f.search}
+      aria-label={f.search}
+      autocomplete="off"
+    />
+    <fieldset class="tds-filterbar__group">
+      <legend class="tds-filterbar__legend">{f.kind}</legend>
+      <div class="tds-toolbar">
+        {kinds.map((k) => (
+          <button type="button" class="chip" data-filter-group="kind" data-value={k} aria-pressed={k === "all" ? "true" : "false"}>
+            {f.kinds[k]}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+    <fieldset class="tds-filterbar__group">
+      <legend class="tds-filterbar__legend">{f.sort}</legend>
+      <div class="tds-toolbar">
+        {sorts.map((k) => (
+          <button type="button" class="chip" data-filter-group="sort" data-value={k} aria-pressed={k === "default" ? "true" : "false"}>
+            {f.sorts[k]}
+          </button>
+        ))}
+      </div>
+    </fieldset>
+    <button type="button" class="tds-filterbar__reset" data-filter-reset>{f.reset}</button>
+  </div>
+</details>
+<p class="sr-only" role="status" data-filter-status></p>
+<p class="shop-filter-empty" data-filter-empty></p>
+
+<script>
+  import { matchesAllWords, mountFilterBar } from "@tracht-digital-solutions/tds-shared/filter";
+
+  const root = document.querySelector<HTMLElement>("[data-shop-filter]");
+  if (root) {
+    const lang = root.dataset.lang === "en" ? "en" : "de";
+    // Copy from data attributes: the i18n module stays on the server.
+    const { shownOne = "", shownMany = "", none = "" } = root.dataset;
+    const shown = (n: number) => (n === 1 ? shownOne : shownMany.replace("{n}", String(n)));
+    const status = document.querySelector<HTMLElement>("[data-filter-status]");
+    const empty = document.querySelector<HTMLElement>("[data-filter-empty]");
+
+    // Grouped front page: the full catalogue waits in a template and stands
+    // in for the shelves while a filter is set.
+    const template = document.querySelector<HTMLTemplateElement>("template[data-filter-all]");
+    const results = document.querySelector<HTMLElement>("[data-filter-results]");
+    const shelves = Array.from(document.querySelectorAll<HTMLElement>("[data-filter-shelf]"));
+    if (template && results) results.append(template.content.cloneNode(true));
+    const scope: ParentNode = template && results ? results : document;
+    const items = Array.from(scope.querySelectorAll<HTMLElement>(".shop-filter-item"));
+
+    mountFilterBar(root, {
+      items,
+      match: (item, s) =>
+        (s.groups.kind === "all" || (item.dataset.kind ?? "").split(" ").includes(s.groups.kind)) &&
+        matchesAllWords(item.dataset.search ?? "", s.query),
+      compare: (a, b, s) => {
+        if (s.groups.sort === "new") return (b.dataset.published ?? "").localeCompare(a.dataset.published ?? "");
+        if (s.groups.sort === "az") return (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "", lang);
+        return 0;
+      },
+      onChange: (visible, s) => {
+        const active = s.query !== "" || s.groups.kind !== "all" || s.groups.sort !== "default";
+        if (results) results.hidden = !active;
+        for (const shelf of shelves) shelf.hidden = active;
+        if (status) status.textContent = active ? shown(visible) : "";
+        if (empty) empty.textContent = active && visible === 0 ? none : "";
+      },
+    });
+  }
+</script>

@@ -91,6 +91,18 @@ export const TX = {
     showAll: (n: number) => `Alle ${n} anzeigen`,
     allCategories: "Alle",
     categories: "Kategorien",
+    /** The collapsible filter bar above the catalogue (tds-shared .tds-filterbar). */
+    filter: {
+      toggle: "Filter",
+      search: "Im Katalog suchen",
+      kind: "Art",
+      kinds: { all: "Alle", own: "Eigene Leistungen", affiliate: "Partnerangebote" },
+      sort: "Sortierung",
+      sorts: { default: "Empfohlen", new: "Neueste", az: "A–Z" },
+      reset: "Filter zurücksetzen",
+      none: "Keine Produkte passen zu diesen Filtern.",
+      shown: (n: number) => (n === 1 ? "1 Produkt" : `${n} Produkte`),
+    },
     // An empty catalogue is an invitation, not a dead end: say what is coming
     // and where the reader can go meanwhile. No free consultation, no customer
     // names — the same copy rules the tools site pins.
@@ -181,6 +193,17 @@ export const TX = {
     showAll: (n: number) => `Show all ${n}`,
     allCategories: "All",
     categories: "Categories",
+    filter: {
+      toggle: "Filter",
+      search: "Search the catalogue",
+      kind: "Type",
+      kinds: { all: "All", own: "Our services", affiliate: "Partner offers" },
+      sort: "Sort",
+      sorts: { default: "Recommended", new: "Newest", az: "A–Z" },
+      reset: "Reset filters",
+      none: "No products match these filters.",
+      shown: (n: number) => (n === 1 ? "1 product" : `${n} products`),
+    },
     empty: {
       title: "The catalogue is being stocked.",
       body: "Meanwhile, our assessments of business technology are in the journal, and the tools site has utilities you can use right in your browser.",
