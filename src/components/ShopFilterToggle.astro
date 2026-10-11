@@ -1,0 +1,30 @@
+---
+import { tx, type Lang } from "../lib/i18n";
+
+/**
+ * The catalogue's filter toggle — tds-shared's `.tds-filterbar__toggle`, a
+ * brand button — at the right end of the intro's heading row. It controls
+ * the panel `ShopFilterBar` renders below the intro; `mountFilterBar()`
+ * finds it through `aria-controls`.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const f = tx(lang).filter;
+---
+
+<button
+  type="button"
+  class="btn btn-primary tds-filterbar__toggle shop-intro__filter"
+  data-filter-toggle
+  aria-expanded="false"
+  aria-controls="catalogue-filter"
+>
+  <svg class="tds-filterbar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+    <path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"></path>
+  </svg>
+  <span class="tds-filterbar__label">{f.toggle}</span>
+  <span class="tds-filterbar__count"></span>
+</button>

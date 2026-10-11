@@ -37,10 +37,11 @@ Sectioned: `sitemap-{pages,categories,products,legal}.xml` (`src/lib/sitemapSect
 with their photo as `image:image`. Don't reintroduce `@astrojs/sitemap`: under `output: "server"` a
 build emits no routes, and it would ship a sitemap with only the pages its own filter excluded.
 
-## Catalogue filter bar (tds-shared ≥ 0.52.2)
+## Catalogue filter bar (tds-shared ≥ 0.53.1)
 
-- `ShopFilterBar.astro` under the intro on every `Catalogue.astro` route: tds-shared's `.tds-filterbar` +
-  `mountFilterBar()`, closed by default. Search, Art (own / affiliate from `offers[].kind`; a product with both
+- `ShopFilterToggle.astro` (a brand button) closes the intro's heading row (`.shop-intro__head`) on the right;
+  `ShopFilterBar.astro` renders the panel under the intro: tds-shared's `.tds-filterbar__*` + `mountFilterBar()`,
+  closed by default. Search, Art (own / affiliate from `offers[].kind`; a product with both
   matches both) and order (Empfohlen = API order, Neueste by `publishedAt`, A–Z). Never a price (24-hour rule).
 - Client-side only: the page cache keys on the path, so a query string never reaches the server's answer. The
   category chips stay links between categories.

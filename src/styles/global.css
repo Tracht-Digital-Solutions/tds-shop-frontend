@@ -1414,10 +1414,20 @@
 
 /* --- catalogue filter bar (tds-shared .tds-filterbar) --------------------- */
 
-/* Only spacing and the tile tone here; the bar itself is tds-shared's. */
-.shop-filterbar {
+/* The intro's heading row: the H1 on the left, the filter toggle (tds-shared
+   .tds-filterbar__toggle) on the right, level with the first line. */
+.shop-intro__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.shop-intro__filter {
+  margin-top: 0.35rem;
+}
+/* The panel opens under the intro, as a card on the page ground. */
+#catalogue-filter {
   --tds-flat-tint: var(--color-card);
-  margin-bottom: 1.5rem;
 }
 /* The wrapper that carries the filter data must not become the grid cell:
    the card stays the grid item. `:not([hidden])` so hiding still wins. */

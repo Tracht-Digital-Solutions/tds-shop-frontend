@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import ProductGrid from "./ProductGrid.astro";
 import ShopFilterBar from "./ShopFilterBar.astro";
+import ShopFilterToggle from "./ShopFilterToggle.astro";
 import { listAllProducts, listCategories } from "../lib/content-api";
 import { categoryName, categoryPath, homePath, tx, type Lang } from "../lib/i18n";
 import { describe } from "../lib/metaDescription";
@@ -138,7 +139,10 @@ const jsonLd = asGraph([
     edge of the tint. Everything inside shares that one inner edge.
   */}
   <section class="shop-intro tds-wash" aria-labelledby="catalogue-heading">
-    <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
+    <div class="shop-intro__head">
+      <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
+      {products.length > 1 ? <ShopFilterToggle lang={lang} /> : null}
+    </div>
     {/* Decorative by definition — aria-hidden is required at the call site. */}
     <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
     <p class="shop-lede">{site.description[lang]}</p>

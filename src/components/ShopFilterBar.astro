@@ -2,8 +2,9 @@
 import { tx, type Lang } from "../lib/i18n";
 
 /**
- * The collapsible filter bar above the catalogue — tds-shared's
- * `.tds-filterbar`, wired by `mountFilterBar()`. Closed by default.
+ * The catalogue's filter panel — tds-shared's `.tds-filterbar__panel`, wired
+ * by `mountFilterBar()`. Closed by default; opened by `ShopFilterToggle`,
+ * the brand button at the right end of the intro's heading row.
  *
  * Everything happens in the browser over cards already in the page: the page
  * cache keys on the path alone, so `?art=…` could never change what is
@@ -24,13 +25,18 @@ const kinds = ["all", "own", "affiliate"] as const;
 const sorts = ["default", "new", "az"] as const;
 ---
 
-<details class="tds-disclosure tds-filterbar shop-filterbar" data-shop-filter
+{/* The panel; its toggle (ShopFilterToggle) sits beside the H1 in the
+    intro and finds it through `aria-controls`. */}
+<div
+  class="tds-filterbar__panel"
+  id="catalogue-filter"
+  data-shop-filter
   data-lang={lang}
   data-shown-one={f.shown(1)}
   data-shown-many={f.shown(2).replace("2", "{n}")}
-  data-none={f.none}>
-  <summary class="tds-filterbar__toggle">{f.toggle} <span class="tds-filterbar__count"></span></summary>
-  <div class="tds-filterbar__panel">
+  data-none={f.none}
+  hidden
+>
     <input
       type="search"
       class="field-boxed tds-filterbar__search"
@@ -60,8 +66,7 @@ const sorts = ["default", "new", "az"] as const;
       </div>
     </fieldset>
     <button type="button" class="tds-filterbar__reset" data-filter-reset>{f.reset}</button>
-  </div>
-</details>
+</div>
 <p class="sr-only" role="status" data-filter-status></p>
 <p class="shop-filter-empty" data-filter-empty></p>
 
