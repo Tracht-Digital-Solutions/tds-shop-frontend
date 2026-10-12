@@ -140,11 +140,44 @@
    section box edge to edge, and with block padding alone the headline sat on
    the exact edge of the tint and the first category link was clipped at it.
    Headline, bar, lede, chips and disclosure share this one inner edge. */
+/* FULL BLEED (2026-10-12). Inside the shell the band stopped short of both
+   window edges — a white margin left and right — and it had no ground of its
+   own, only the wash on paper, so it read as barely there. Now it runs edge
+   to edge like the journal's bands and carries the journal's tint under the
+   wash; the CONTENT stays on the shell's edge (the padding is exactly the
+   distance the margin pulled out), level with the shelves below.
+
+   `50% - 50vw`: `vw` counts a classic scrollbar, so the band overhangs the
+   right edge by its width — inside body's `overflow-x: hidden`, which clips
+   it, so it never becomes sideways scroll. */
 .shop-intro {
+  --shop-intro-tint: color-mix(in srgb, var(--color-primary) 9%, var(--color-paper));
+  --tds-decor-field-strength: 1.9;
   isolation: isolate;
+  margin-inline: calc(50% - 50vw);
   padding-block: clamp(2rem, 5vw, 3.5rem);
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  padding-inline: calc(50vw - 50%);
   margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--shop-intro-tint);
+}
+/* 9% primary is indistinguishable from the dark paper (the journal measured
+   1.02:1), so the dark tint takes 20%, as the journal's does. */
+:root[data-theme="dark"] .shop-intro,
+[data-theme="dark"]:not(:root) .shop-intro {
+  --shop-intro-tint: color-mix(in srgb, var(--color-primary) 20%, var(--color-paper));
+}
+/* --color-muted on the tint is 4.26:1, below AA (the journal's measurement);
+   the lede takes ink 72% into soft, ~5.8:1. */
+.shop-intro .shop-lede,
+.shop-intro .shop-disclosure {
+  color: color-mix(in srgb, var(--color-ink) 72%, var(--color-soft));
+}
+/* Phone: the band starts right under the header bar, not after the main's
+   top padding — that strip of paper above it was the same white edge. */
+@media (max-width: 63.999rem) {
+  .shop-main > .shop-intro:first-child {
+    margin-top: calc(-1 * clamp(1.5rem, 5vw, 3rem));
+  }
 }
 /* Desktop: the header is a transparent strip with two islands, so its 84px
    plus the main's top padding showed as a bare light strip above the intro.
@@ -1612,15 +1645,45 @@
 .shop-intro__filter {
   margin-top: 0.35rem;
 }
-/* With the "Auf einen Blick" column beside it, space-between parked the
-   toggle in the middle of the band. It follows the headline instead. */
-@media (min-width: 64rem) {
-  .shop-intro:has(> .shop-glance) .shop-intro__head {
-    justify-content: flex-start;
-    gap: 1.5rem;
+/* The toggle and its panel (Catalogue.astro). The panel is a sheet anchored
+   to the button's RIGHT edge that unfolds toward the left over the band —
+   it used to open as a full row under the intro, pushing the catalogue down.
+   Width stops at the viewport less the gutters, so on a phone it spans the
+   screen and still unfolds from the button. */
+.shop-filter {
+  position: relative;
+  flex: none;
+}
+.shop-filter > .tds-filterbar__panel {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  z-index: 30;
+  width: min(46rem, calc(100vw - 2.5rem));
+  margin: 0;
+  background: var(--color-card);
+}
+.shop-filter > .tds-filterbar__panel:not([hidden]) {
+  animation: shop-filter-unfold var(--tds-dur-slow) var(--tds-ease-out);
+}
+/* Opens from the button's edge leftward. The clip keeps 8px below and to the
+   right so the hard offset shadow is drawn while it travels. */
+@keyframes shop-filter-unfold {
+  from {
+    clip-path: inset(0 0 -8px 100%);
+    opacity: 0.6;
+  }
+  to {
+    clip-path: inset(0 -8px -8px 0);
+    opacity: 1;
   }
 }
-/* The panel opens under the intro, as a card on the page ground. */
+@media (prefers-reduced-motion: reduce) {
+  .shop-filter > .tds-filterbar__panel:not([hidden]) {
+    animation: none;
+  }
+}
+/* The panel is a card over the tinted band. */
 #catalogue-filter {
   --tds-flat-tint: var(--color-card);
 }

@@ -67,8 +67,6 @@ const sorts = ["default", "new", "az"] as const;
     </fieldset>
     <button type="button" class="tds-filterbar__reset" data-filter-reset>{f.reset}</button>
 </div>
-<p class="sr-only" role="status" data-filter-status></p>
-<p class="shop-filter-empty" data-filter-empty></p>
 
 <script>
   import { matchesAllWords, mountFilterBar } from "@tracht-digital-solutions/tds-shared/filter";
@@ -90,6 +88,21 @@ const sorts = ["default", "new", "az"] as const;
     if (template && results) results.append(template.content.cloneNode(true));
     const scope: ParentNode = template && results ? results : document;
     const items = Array.from(scope.querySelectorAll<HTMLElement>(".shop-filter-item"));
+
+    // A panel that floats over the band closes like one: Escape (focus back
+    // on the toggle) or a press anywhere outside panel and toggle.
+    const toggle = document.querySelector<HTMLButtonElement>(`[data-filter-toggle][aria-controls="${root.id}"]`);
+    if (toggle) {
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || root.hidden) return;
+        toggle.click();
+        toggle.focus();
+      });
+      document.addEventListener("pointerdown", (event) => {
+        const target = event.target as Node;
+        if (!root.hidden && !root.contains(target) && !toggle.contains(target)) toggle.click();
+      });
+    }
 
     mountFilterBar(root, {
       items,

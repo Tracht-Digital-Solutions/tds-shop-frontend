@@ -155,7 +155,14 @@ const jsonLd = asGraph([
     <div class="shop-intro__main">
       <div class="shop-intro__head">
         <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
-        {products.length > 1 ? <ShopFilterToggle lang={lang} /> : null}
+        {/* Toggle and panel share one anchor: the panel unfolds from the
+            button's right edge toward the left, over the band. */}
+        {products.length > 1 ? (
+          <div class="shop-filter">
+            <ShopFilterToggle lang={lang} />
+            <ShopFilterBar lang={lang} />
+          </div>
+        ) : null}
       </div>
       {/* Decorative by definition — aria-hidden is required at the call site. */}
       <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
@@ -206,7 +213,14 @@ const jsonLd = asGraph([
     ) : null}
   </section>
 
-  {products.length > 1 ? <ShopFilterBar lang={lang} /> : null}
+  {/* What the filter reports, in the flow above the results; the script in
+      ShopFilterBar finds both by attribute. */}
+  {products.length > 1 ? (
+    <>
+      <p class="sr-only" role="status" data-filter-status></p>
+      <p class="shop-filter-empty" data-filter-empty></p>
+    </>
+  ) : null}
 
   {
     comingSoon ? (

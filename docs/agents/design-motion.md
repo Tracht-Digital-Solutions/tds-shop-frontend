@@ -53,3 +53,7 @@ rows, because a separator between two small targets makes both worse.
 - An empty front page renders `.shop-soon` (eight service areas in 1/2/4 columns, the one CTA wash
   band, journal/tools cards), not a lone box. Keep the area count divisible by four.
 - An unlisted category is a 404 (`categoryExists`, fails open on an outage), never an empty grid.
+- The intro is a full-bleed band (`margin-inline: calc(50% - 50vw)`, padding back to the shell edge)
+  on the journal's tint; its lede is ink-72%, because `--color-muted` on the tint fails AA.
+- The filter panel is anchored to its toggle (`.shop-filter`) and unfolds leftward
+  (`shop-filter-unfold`, clip-path, off under reduced motion); Escape or a press outside closes it.
