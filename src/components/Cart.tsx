@@ -10,6 +10,10 @@ interface Props {
   lang: Lang;
   /** Where "Zur Kasse" goes. Passed in so the page owns its own routing. */
   checkoutHref: string;
+  /** The empty basket's second way out: the contact page and the header's own
+   *  words for it. Passed in, so the island does not bundle the nav helpers. */
+  contactHref?: string;
+  contactLabel?: string;
 }
 
 /**
@@ -32,7 +36,7 @@ interface Props {
  * and hears nothing at all. The region is `polite` and carries a sentence, not
  * a number.
  */
-export default function Cart({ lang, checkoutHref }: Props) {
+export default function Cart({ lang, checkoutHref, contactHref, contactLabel }: Props) {
   const t = tx(lang).cart;
   const [lines, setLines] = useState<CartLine[] | null>(null);
   // Debounced: each quantity keystroke re-quotes.
@@ -78,12 +82,19 @@ export default function Cart({ lang, checkoutHref }: Props) {
 
   if (lines.length === 0) {
     return (
-      <div className="cart cart--empty">
-        <p className="shop-lede">{t.empty}</p>
-        <p>{t.emptyBody}</p>
-        <a className="btn btn-primary" href={homePath(lang)}>
-          {t.keepShopping}
-        </a>
+      <div className="cart cart--empty shop-empty">
+        <p className="shop-empty__title">{t.empty}</p>
+        <p className="shop-empty__body">{t.emptyBody}</p>
+        <p className="shop-empty__actions">
+          <a className="btn btn-primary" href={homePath(lang)}>
+            {t.keepShopping}
+          </a>
+          {contactHref && contactLabel ? (
+            <a className="link-underline shop-empty__link" href={contactHref}>
+              {contactLabel}
+            </a>
+          ) : null}
+        </p>
       </div>
     );
   }

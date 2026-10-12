@@ -135,6 +135,25 @@ export async function listCategories(lang: Lang): Promise<CategoryCount[]> {
 }
 
 /**
+ * Whether a category page should exist: the API lists it, so it holds at least
+ * one published product in this language.
+ *
+ * Every valid-looking slug used to render a 200 catalogue with an empty grid,
+ * a soft 404 under any address somebody typed. Fails OPEN: when the API
+ * cannot be reached the answer is "yes", because a real category must not
+ * turn into a 404 during an outage. A demo build checks its own fixtures.
+ */
+export async function categoryExists(category: string, lang: Lang): Promise<boolean> {
+  if (DEMO_MODE) return demoCategories(lang).some((c) => c.category === category);
+  const body = await readJson<{ categories: CategoryCount[] } | null>(
+    `/shop/categories?lang=${lang}`,
+    null,
+    "categories",
+  );
+  return body === null || body.categories.some((c) => c.category === category);
+}
+
+/**
  * Resolve an offer's outbound target, counting the click on the way.
  *
  * Returns null when the offer is unknown, so `/go/{id}` can 404 rather than

@@ -56,3 +56,14 @@ describe("Cart quantity field", () => {
     expect(alert.textContent).toContain("nicht berechnet");
   });
 });
+
+describe("Cart when empty", () => {
+  it("offers the catalogue and the contact page, once each", async () => {
+    render(<Cart lang="de" checkoutHref="/kasse" contactHref="https://example.test/kontakt" contactLabel="Unverbindlich anfragen" />);
+    expect(await screen.findByText("Ihr Warenkorb ist leer.")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Weiter einkaufen" }).getAttribute("href")).toBe("/");
+    expect(screen.getByRole("link", { name: "Unverbindlich anfragen" }).getAttribute("href")).toBe(
+      "https://example.test/kontakt",
+    );
+  });
+});

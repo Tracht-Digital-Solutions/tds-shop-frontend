@@ -128,10 +128,17 @@ describe("the blend", () => {
     expect(body).toMatch(/transform:\s*none/);
   });
 
-  it("keeps the decoration to one band", () => {
+  it("caps the product grid at four columns", () => {
+    // The shared grid is auto-fill; on the 120rem shell an 18rem floor gave
+    // five or six tracks, and a shelf of four left empty columns standing.
+    expect(code).toMatch(/--tds-product-grid-min:\s*max\(18rem,\s*calc\(\(100% - 3rem\) \/ 4\)\)/);
+  });
+
+  it("keeps the decoration to one file", () => {
     // The journal uses `.tds-wash` in one file, the landingpage in nineteen.
-    // Landing between them means ONE — this counts the class in the markup, so
-    // a second one has to be argued for rather than added.
+    // Landing between them means ONE — Catalogue.astro, where it paints the
+    // intro and, on the empty front page only, the one call-to-action band.
+    // This counts files with the class, so a second one has to be argued for.
     const pages = import.meta.glob("../{components,pages,layouts}/**/*.astro", {
       eager: true,
       query: "?raw",

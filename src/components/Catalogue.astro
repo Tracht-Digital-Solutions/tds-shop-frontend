@@ -17,7 +17,9 @@ import {
 } from "../lib/jsonld";
 import { categoryAlternate, homeAlternate } from "../lib/alternates";
 import { categoryCopy } from "../lib/categoryCopy";
-import { site } from "../lib/seo";
+import { site, siteLinks } from "../lib/seo";
+import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
+import { propertyContact } from "@tracht-digital-solutions/tds-shared/nav";
 
 /**
  * The catalogue, shared by the German and English index routes.
@@ -105,6 +107,17 @@ const shelves = grouped
       .filter((shelf) => shelf.items.length > 0)
   : [];
 
+/**
+ * The front page with nothing in it — the live state while the catalogue is
+ * stocked. A lone grey box under the hero read as a broken page; this is a
+ * short page of its own instead: what is coming, a way to ask now, and where
+ * to read meanwhile. A category page never gets here (an unknown category is a
+ * 404, see `pages/kategorie/[cat].astro`).
+ */
+const comingSoon = category === null && products.length === 0;
+const contact = propertyContact(lang);
+const links = siteLinks(lang);
+
 const jsonLd = asGraph([
   websiteSchema(lang),
   /* The organisation as a REAL node, on the front pages only. `organizationRef`
@@ -139,49 +152,103 @@ const jsonLd = asGraph([
     edge of the tint. Everything inside shares that one inner edge.
   */}
   <section class="shop-intro tds-wash" aria-labelledby="catalogue-heading">
-    <div class="shop-intro__head">
-      <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
-      {products.length > 1 ? <ShopFilterToggle lang={lang} /> : null}
-    </div>
-    {/* Decorative by definition — aria-hidden is required at the call site. */}
-    <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
-    <p class="shop-lede">{site.description[lang]}</p>
+    <div class="shop-intro__main">
+      <div class="shop-intro__head">
+        <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
+        {products.length > 1 ? <ShopFilterToggle lang={lang} /> : null}
+      </div>
+      {/* Decorative by definition — aria-hidden is required at the call site. */}
+      <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
+      <p class="shop-lede">{site.description[lang]}</p>
 
-    {/* The entry answer: what belongs in this category, for whom, and on what
-        grounds it was chosen. Only where it has been written — see
-        `categoryCopy.ts` for why an unwritten category gets nothing rather
-        than a generated paragraph. */}
-    {copy && <p class="shop-answer">{copy.answer}</p>}
+      {/* The entry answer: what belongs in this category, for whom, and on what
+          grounds it was chosen. Only where it has been written — see
+          `categoryCopy.ts` for why an unwritten category gets nothing rather
+          than a generated paragraph. */}
+      {copy && <p class="shop-answer">{copy.answer}</p>}
 
-    {
-      /* Chips, not a run of links: each category is a distinct target, and the
-         pill is the blend's one borrowed gesture for things you press. */
-      categories.length > 0 ? (
-        <nav class="shop-catnav" aria-label={t.categories}>
-          <a class="shop-chip" href={homePath(lang)} aria-current={category === null ? "page" : undefined}>
-            {t.allCategories} <span class="shop-chip__count">{total}</span>
-          </a>
-          {categories.map(({ category: name, label, total: count }) => (
-            <a
-              class="shop-chip"
-              href={categoryPath(name, lang)}
-              aria-current={name === category ? "page" : undefined}
-            >
-              {categoryName(name, label)} <span class="shop-chip__count">{count}</span>
+      {
+        /* Chips, not a run of links: each category is a distinct target, and the
+           pill is the blend's one borrowed gesture for things you press. */
+        categories.length > 0 ? (
+          <nav class="shop-catnav" aria-label={t.categories}>
+            <a class="shop-chip" href={homePath(lang)} aria-current={category === null ? "page" : undefined}>
+              {t.allCategories} <span class="shop-chip__count">{total}</span>
             </a>
-          ))}
-        </nav>
-      ) : null
-    }
+            {categories.map(({ category: name, label, total: count }) => (
+              <a
+                class="shop-chip"
+                href={categoryPath(name, lang)}
+                aria-current={name === category ? "page" : undefined}
+              >
+                {categoryName(name, label)} <span class="shop-chip__count">{count}</span>
+              </a>
+            ))}
+          </nav>
+        ) : null
+      }
 
-    {/* The standing disclosure, above the products rather than under them. */}
-    {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
+      {/* The standing disclosure, above the products rather than under them. */}
+      {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
+    </div>
+
+    {/* The front page's second column. The wash band is the full shell wide and
+        its text stopped at 44rem, so on a desktop the right half was tint and
+        nothing else. Three plain facts fill it; a category page keeps one
+        column, because its entry answer already does this job. */}
+    {category === null ? (
+      <aside class="shop-glance" aria-labelledby="glance-heading">
+        <h2 class="shop-glance__title" id="glance-heading">{t.glance.title}</h2>
+        <ul class="shop-glance__list">
+          {t.glance.points.map((point) => <li>{point}</li>)}
+        </ul>
+      </aside>
+    ) : null}
   </section>
 
   {products.length > 1 ? <ShopFilterBar lang={lang} /> : null}
 
   {
-    grouped ? (
+    comingSoon ? (
+      <div class="shop-soon">
+        <section class="shop-soon__areas" aria-labelledby="soon-areas">
+          <h2 class="shop-section-title" id="soon-areas">{t.soon.areasTitle}</h2>
+          <p class="shop-soon__note">{t.empty.title}</p>
+          <ul class="shop-soon__grid">
+            {t.soon.areas.map((area) => (
+              <li class="shop-soon__tile">
+                <h3 class="shop-soon__name">{area.name}</h3>
+                <p class="shop-soon__text">{area.text}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* The second (and last) wash band on the site — the blend allows the
+            hero and one call to action. */}
+        <section class="shop-soon__cta tds-wash" aria-labelledby="soon-cta">
+          <div>
+            <h2 class="shop-soon__cta-title" id="soon-cta">{t.soon.ctaTitle}</h2>
+            <p class="shop-soon__cta-body">{t.soon.ctaBody}</p>
+          </div>
+          <a class="btn btn-primary" href={contact}>{translations[lang].nav.cta}</a>
+        </section>
+
+        <section aria-labelledby="soon-onward">
+          <h2 class="shop-section-title" id="soon-onward">{t.soon.onwardTitle}</h2>
+          <div class="shop-soon__onward">
+            <a class="shop-soon__link" href={links.blog}>
+              <span class="shop-soon__name">{t.soon.journal.name}</span>
+              <span class="shop-soon__text">{t.soon.journal.text}</span>
+            </a>
+            <a class="shop-soon__link" href={links.tools}>
+              <span class="shop-soon__name">{t.soon.tools.name}</span>
+              <span class="shop-soon__text">{t.soon.tools.text}</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    ) : grouped ? (
       <>
       {/* Filled from the template by the filter bar; empty until then. */}
       <div class="shop-filter-results" data-filter-results />

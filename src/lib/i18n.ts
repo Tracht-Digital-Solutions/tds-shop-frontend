@@ -112,6 +112,36 @@ export const TX = {
       journal: "Einschätzungen im Journal lesen",
       tools: "Werkzeuge ausprobieren",
     },
+    /** Beside the front page's headline: three plain facts, no prices — a price
+     *  lives on the product and nowhere else. */
+    glance: {
+      title: "Auf einen Blick",
+      points: [
+        "Fester Preis, bevor die Arbeit beginnt.",
+        "Für Selbstständige und kleine Betriebe.",
+        "Ein Ansprechpartner von der Anfrage bis zur Übergabe.",
+      ],
+    },
+    // The front page while the catalogue is empty: what is coming, a way to ask
+    // now, and where to read meanwhile. No free consultation, no customer names.
+    soon: {
+      areasTitle: "Was hier entsteht",
+      areas: [
+        { name: "Webauftritt", text: "Neue Website oder Überarbeitung, gebaut für kleine Betriebe." },
+        { name: "SEO", text: "Gefunden werden: Technik, Inhalte und lokale Einträge." },
+        { name: "E-Mail", text: "Eigene Domain, sauberes Postfach, verlässliche Zustellung." },
+        { name: "Wartung", text: "Updates, Backups und ein regelmäßiger Blick auf die Sicherheit." },
+        { name: "Recht", text: "Pflichtangaben der Website technisch sauber umgesetzt." },
+        { name: "Digitalisierung", text: "Abläufe im Betrieb mit passenden Werkzeugen vereinfachen." },
+        { name: "Schulung", text: "Einweisung für Sie und Ihr Team, verständlich und praktisch." },
+        { name: "Technik", text: "Geräte für Büro und Netz, mit eigener Einschätzung statt Werbetext." },
+      ],
+      ctaTitle: "Lieber gleich sprechen?",
+      ctaBody: "Schreiben Sie, was Sie vorhaben. Sie bekommen ein Angebot mit festem Preis.",
+      onwardTitle: "Bis dahin",
+      journal: { name: "Journal", text: "Einschätzungen zu Technik im Betrieb." },
+      tools: { name: "Tools", text: "Werkzeuge, die direkt im Browser laufen." },
+    },
     breadcrumb: "Pfadnavigation",
     offers: "Angebote",
     relatedCategory: "Mehr aus dieser Kategorie",
@@ -209,6 +239,32 @@ export const TX = {
       body: "Meanwhile, our assessments of business technology are in the journal, and the tools site has utilities you can use right in your browser.",
       journal: "Read assessments in the journal",
       tools: "Try the tools",
+    },
+    glance: {
+      title: "At a glance",
+      points: [
+        "A fixed price before any work starts.",
+        "For freelancers and small businesses.",
+        "One contact from first request to handover.",
+      ],
+    },
+    soon: {
+      areasTitle: "What is coming",
+      areas: [
+        { name: "Website", text: "A new website or a rework, built for small businesses." },
+        { name: "SEO", text: "Being found: technology, content and local listings." },
+        { name: "Email", text: "Your own domain, a tidy mailbox, reliable delivery." },
+        { name: "Maintenance", text: "Updates, backups and a regular look at security." },
+        { name: "Legal", text: "A website's mandatory details, implemented cleanly." },
+        { name: "Digitalisation", text: "Simpler day-to-day work with the right tools." },
+        { name: "Training", text: "Hands-on instruction for you and your team." },
+        { name: "Technology", text: "Office and network devices, with our own assessment, not ad copy." },
+      ],
+      ctaTitle: "Rather talk now?",
+      ctaBody: "Tell us what you have in mind. You get a quote with a fixed price.",
+      onwardTitle: "Meanwhile",
+      journal: { name: "Journal", text: "Assessments of business technology." },
+      tools: { name: "Tools", text: "Utilities that run right in your browser." },
     },
     breadcrumb: "Breadcrumb",
     offers: "Offers",

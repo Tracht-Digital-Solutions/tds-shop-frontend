@@ -1,10 +1,15 @@
 ---
 import Catalogue from "../../../components/Catalogue.astro";
 
+import { categoryExists } from "../../../lib/content-api";
+
 export const prerender = false;
 
 const category = String(Astro.params.cat ?? "").trim();
 if (!/^[a-z0-9-]{2,60}$/.test(category)) return Astro.rewrite("/404");
+// A category the API does not list has no products in this language: 404,
+// not an empty catalogue under an address nobody published.
+if (!(await categoryExists(category, "en"))) return Astro.rewrite("/404");
 ---
 
 <Catalogue lang="en" category={category} />

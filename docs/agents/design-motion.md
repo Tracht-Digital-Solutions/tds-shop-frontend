@@ -44,3 +44,12 @@ The library's `pointer: coarse` block lifts `.btn` and `.field-boxed` to 44 px a
 (against iOS auto-zoom). Plain navigation links (header, category, footer legal links) are lifted
 here; `.tds-product-card__title` is lifted in tds-shared. Middot-separated link runs are wrapping
 rows, because a separator between two small targets makes both worse.
+
+## No gaps, with or without products
+
+- `--tds-product-grid-min` is `max(18rem, (100% - 3rem) / 4)`: the shared grid is `auto-fill`, so an
+  18rem floor alone left empty tracks on the 120rem shell. Four columns at most; `surface.test.ts`
+  pins it.
+- An empty front page renders `.shop-soon` (eight service areas in 1/2/4 columns, the one CTA wash
+  band, journal/tools cards), not a lone box. Keep the area count divisible by four.
+- An unlisted category is a 404 (`categoryExists`, fails open on an outage), never an empty grid.
