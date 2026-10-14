@@ -171,14 +171,8 @@ const image = ogImage ?? `${site.url}/og-default.png`;
     <meta name="twitter:image" content={image} />
     <meta name="author" content={site.legalName} />
 
-    {/* The brand mark shared by every TDS property — byte-identical to the
-        landingpage's, the journal's and the tools site's. This site links back
-        to all three and is indexable, so a different tab icon would read as a
-        different service. `sizes="any"` stops Chrome asking for a /favicon.ico
-        that does not exist. Until now the file itself was missing: the tag was
-        here, `public/favicon.png` was not, and a 404 icon looks exactly like a
-        site that never declared one. */}
-    <link rel="icon" type="image/png" href="/favicon.png" sizes="any" />
+    {/* Byte-identical to the approved favicon used across TDS properties. */}
+    <link rel="icon" type="image/png" href="/favicon-tds-2026.png" sizes="64x64" />
 
     {/* Where the islands send their requests.
         Rendered here because `src/lib/connection.ts` is SERVER-ONLY — it reads
