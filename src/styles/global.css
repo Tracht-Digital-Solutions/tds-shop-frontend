@@ -251,6 +251,12 @@
   font-size: 1rem;
   color: var(--color-ink);
 }
+
+/* Local image composition; shared surfaces and controls keep their tokens. */
+.shop-editorial { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.shop-editorial--hero { aspect-ratio: 16 / 9; margin-bottom: 1.25rem; }
+.shop-editorial--shelf { height: clamp(7rem, 12vw, 11rem); margin-bottom: 1.25rem; object-position: center 45%; }
+.shop-soon__tile > .shop-editorial { margin-bottom: .75rem; }
 .shop-glance__list {
   display: grid;
   gap: 0.625rem;
