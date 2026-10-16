@@ -33,6 +33,13 @@ every listing page, so `Layout.astro` renders hreflang only from a resolved `alt
 
 ## Sitemap
 
+The shop extension sends `product` cache events with the actual slug and language, plus
+`category` events with a category slug. `cache.ts` resolves these into the public routes.
+Product changes also refresh `/llms.txt`; category events cover both languages, including
+the last product being removed. Deploy this event mapping before enabling publication
+notifications in the API extension. The API's `shop/cache_token` must match the Node host's
+`TDS_CACHE_TOKEN`.
+
 Sectioned: `sitemap-{pages,categories,products,legal}.xml` (`src/lib/sitemapSections.ts`), products
 with their photo as `image:image`. Don't reintroduce `@astrojs/sitemap`: under `output: "server"` a
 build emits no routes, and it would ship a sitemap with only the pages its own filter excluded.

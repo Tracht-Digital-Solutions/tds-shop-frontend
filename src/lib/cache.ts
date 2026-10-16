@@ -29,16 +29,19 @@ import { SITEMAP_PATHS } from "./sitemapSections";
 export const contentCache = createGenerationCache();
 
 /** Entry points rebuilt whatever changed. */
-export const alwaysPaths: string[] = ["/", "/en/", ...SITEMAP_PATHS];
+export const alwaysPaths: string[] = ["/", "/en/", "/llms.txt", ...SITEMAP_PATHS];
 
 /** The listing pages a product appears on, in one language. */
 function listingPages(lang: Lang, category?: string): string[] {
-  const pages = [`${prefix(lang)}/`, ...SITEMAP_PATHS];
+  const pages = [`${prefix(lang)}/`, "/llms.txt", ...SITEMAP_PATHS];
   if (category) pages.push(categoryPath(category, lang));
   return pages;
 }
 
 export const cacheEvents: EventMap = {
+  /** Category identity is sent separately from the language-specific product slug. */
+  category: (event: CacheEvent) =>
+    forLanguages(event, (lang) => event.id ? [categoryPath(event.id, lang as Lang)] : []),
   /**
    * A product was saved, published or withdrawn.
    *
