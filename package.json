@@ -1,7 +1,7 @@
 {
   "name": "tds-shop-frontend",
   "license": "UNLICENSED",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -27,7 +27,7 @@
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
     "@tailwindcss/postcss": "^4.3.3",
-    "@tracht-digital-solutions/tds-shared": "^0.55.1",
+    "@tracht-digital-solutions/tds-shared": "^0.56.1",
     "astro": "^7.2.5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

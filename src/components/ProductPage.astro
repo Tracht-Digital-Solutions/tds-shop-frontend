@@ -22,6 +22,7 @@ import { productAlternate } from "../lib/alternates";
 import { withAttribution } from "../lib/offers";
 import { canonical, site } from "../lib/seo";
 import type { ProductPage as ProductPageData } from "../lib/types";
+import { productImageAttributes, productImage, productImageSrcset, productImageSchema } from '../lib/productImages';
 
 /**
  * The product is fetched by the PAGE and handed in here, never fetched here.
@@ -40,6 +41,9 @@ interface Props {
 
 const { lang, product } = Astro.props;
 const t = tx(lang);
+const imageAttributes=productImageAttributes(product,lang,true);
+const artwork=imageAttributes ? productImage(product.slug) : undefined;
+const imageNode=productImageSchema(product,lang);
 
 /**
  * A product without its own written assessment renders and is reachable, but
@@ -132,6 +136,7 @@ const jsonLd = asGraph([
     breadcrumbId,
   }),
   productSchema(product, lang),
+  imageNode,
   ...(sellsDirectly ? [serviceSchema(product, lang)] : []),
   ...(faq.length > 0 ? [faqPageSchema(faq)] : []),
   breadcrumbSchema(
@@ -164,6 +169,9 @@ const revised = product.updatedAt
   lang={lang}
   noindex={!indexable}
   ogImage={product.imageUrl}
+  ogImageAlt={imageAttributes?.alt}
+  ogImageWidth={artwork?.width}
+  ogImageHeight={artwork?.height}
   ogType="product"
   altUrl={altUrl}
   jsonLd={jsonLd}
@@ -220,13 +228,22 @@ const revised = product.updatedAt
         </p>
       ) : null}
 
+      {artwork && (
+        <figure class="shop-product__figure">
+          <picture>
+            <source type="image/avif" srcset={productImageSrcset(artwork.src,'avif')} sizes={imageAttributes?.sizes}/>
+            <img src={product.imageUrl!} srcset={imageAttributes?.srcSet} sizes={imageAttributes?.sizes} alt={imageAttributes?.alt ?? ''} width={artwork.width} height={artwork.height} fetchpriority="high" decoding="async"/>
+          </picture>
+          <figcaption>{lang==='de' ? `Symbolbild zur Leistung „${product.title}“, KI-generiert.` : `AI-generated illustration of the service “${product.title}”.`}</figcaption>
+        </figure>
+      )}
       {hasAffiliate ? <p class="shop-disclosure">{t.affiliateNotice}</p> : null}
     </div>
 
     {/* The offer list. `ProductCard` carries the advertising label and drops a
         price older than 24 hours by itself — this page decides neither. */}
     <aside class="shop-product__offers" id="offers" aria-label={t.offers}>
-      <ProductCard product={{ ...product, offers }} lang={lang} variant="list" />
+      <ProductCard product={{ ...product, offers, imageUrl:artwork ? null : product.imageUrl }} lang={lang} variant="list" />
 
       {/* Only for something TDS sells itself. An affiliate product is bought at
           the merchant, and a basket button beside it would promise a checkout

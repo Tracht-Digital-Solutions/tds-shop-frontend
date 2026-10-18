@@ -4,6 +4,7 @@ import { contentApiBase } from "./connection";
 import { assertKeyAccepted, readContentJson, siteKeyHeaders } from "./siteKey";
 import { DEMO_MODE, demoCategories, demoProduct, demoProducts } from "./demoContent";
 import type { Lang } from "./i18n";
+import { withProductImage } from './productImages';
 
 /**
  * Reads against the composed API's `/content/shop*` routes.
@@ -62,11 +63,12 @@ export async function listProducts(query: CatalogQuery): Promise<CatalogPage> {
   if (query.category) params.set("category", query.category);
   if (query.tag) params.set("tag", query.tag);
 
-  return readJson<CatalogPage>(
+  const page = await readJson<CatalogPage>(
     `/shop?${params}`,
     { products: demoProducts(query.lang, query.category ?? undefined), nextCursor: null },
     "catalogue",
   );
+  return {...page,products:page.products.map(withProductImage)};
 }
 
 /** Safety stop for `listAllProducts`: 20 pages × 48 is far beyond the catalogue. */
@@ -107,7 +109,7 @@ export async function getProduct(slug: string, lang: Lang): Promise<ProductPage 
     // product under a slug nobody published.
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return (await res.json()) as ProductPage;
+    return withProductImage((await res.json()) as ProductPage);
   } catch (err) {
     if (err instanceof Error && err.name === "SiteKeyRejectedError") throw err;
     console.warn(`[tds-shop] product ${slug} unreachable — serving fallback:`, err);

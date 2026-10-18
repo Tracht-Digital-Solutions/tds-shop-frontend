@@ -254,6 +254,9 @@
 
 /* Local image composition; shared surfaces and controls keep their tokens. */
 .shop-editorial { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.shop-product__figure { margin: 1.5rem 0; }
+.shop-product__figure img { display:block; width:100%; height:auto; aspect-ratio:3 / 2; object-fit:cover; }
+.shop-product__figure figcaption { margin-top:.5rem; font-size:.8125rem; color:var(--color-muted); }
 .shop-editorial--hero { aspect-ratio: 16 / 9; margin-bottom: 1.25rem; }
 .shop-editorial--shelf { height: clamp(7rem, 12vw, 11rem); margin-bottom: 1.25rem; object-position: center 45%; }
 .shop-soon__tile > .shop-editorial { margin-bottom: .75rem; }

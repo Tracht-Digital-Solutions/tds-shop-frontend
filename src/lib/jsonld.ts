@@ -3,6 +3,7 @@ import { displayPrice } from "@tracht-digital-solutions/tds-shared/schemas";
 
 import { canonical, site } from "./seo";
 import { productCategoryName, productPath, type Lang } from "./i18n";
+import { productImageSchema } from './productImages';
 
 /**
  * Structured data.
@@ -194,7 +195,7 @@ export function productSchema(product: ProductPage, lang: Lang, now = Date.now()
     // English page's markup used to say it in German.
     category: productCategoryName(product),
   };
-  if (product.imageUrl) node.image = product.imageUrl;
+  if (product.imageUrl) node.image = productImageSchema(product,lang) ?? product.imageUrl;
 
   const ownOffers = (product.offers ?? []).filter((offer) => offer.kind === "own");
   const priced = ownOffers

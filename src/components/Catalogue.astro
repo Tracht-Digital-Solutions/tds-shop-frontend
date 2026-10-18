@@ -20,6 +20,7 @@ import { categoryCopy } from "../lib/categoryCopy";
 import { site, siteLinks } from "../lib/seo";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { propertyContact } from "@tracht-digital-solutions/tds-shared/nav";
+import { imageHints, imageObject } from '../lib/imageCatalog';
 import { categoryArtwork, editorialSrc, editorialSrcset, soonArtwork } from '../lib/editorialImages';
 
 /**
@@ -129,6 +130,7 @@ const jsonLd = asGraph([
      properties, described once. */
   ...(category ? [] : [organizationSchema()]),
   collectionPageSchema(heading, path, lang),
+  imageObject(editorialSrc(artwork ?? 'hero'), lang, new URL(path, site.url).href),
   /* The trail a category page has always DRAWN and never declared. */
   ...(category
     ? [
@@ -207,7 +209,7 @@ const jsonLd = asGraph([
         column, because its entry answer already does this job. */}
     {category === null ? (
       <aside class="shop-glance" aria-labelledby="glance-heading">
-        <img class="shop-editorial shop-editorial--hero" src={editorialSrc('hero')} srcset={editorialSrcset('hero')} sizes="(min-width: 64rem) 384px, 100vw" width="960" height="540" alt="" decoding="async" />
+        <img class="shop-editorial shop-editorial--hero" src={editorialSrc('hero')} srcset={imageHints(editorialSrc('hero'), lang)?.srcSet ?? editorialSrcset('hero')} sizes="(min-width: 64rem) 384px, 100vw" width="960" height="540" alt="" decoding="async" />
         <h2 class="shop-glance__title" id="glance-heading">{t.glance.title}</h2>
         <ul class="shop-glance__list">
           {t.glance.points.map((point) => <li>{point}</li>)}
@@ -215,7 +217,7 @@ const jsonLd = asGraph([
       </aside>
     ) : artwork ? (
       <aside class="shop-glance" aria-hidden="true">
-        <img class="shop-editorial" src={editorialSrc(artwork)} srcset={editorialSrcset(artwork)} sizes="(min-width: 64rem) 384px, 100vw" width="960" height="640" alt="" decoding="async" />
+        <img class="shop-editorial" src={editorialSrc(artwork)} srcset={imageHints(editorialSrc(artwork), lang)?.srcSet ?? editorialSrcset(artwork)} sizes="(min-width: 64rem) 384px, 100vw" width="960" height="640" alt="" decoding="async" />
       </aside>
     ) : null}
   </section>
@@ -238,7 +240,7 @@ const jsonLd = asGraph([
           <ul class="shop-soon__grid">
             {t.soon.areas.map((area, index) => (
               <li class="shop-soon__tile">
-                <img class="shop-editorial" src={editorialSrc(soonArtwork[index])} srcset={editorialSrcset(soonArtwork[index])} sizes="(min-width: 64rem) 25vw, 50vw" width="960" height="640" alt="" loading="lazy" decoding="async" />
+                <img class="shop-editorial" src={editorialSrc(soonArtwork[index])} srcset={imageHints(editorialSrc(soonArtwork[index]), lang)?.srcSet ?? editorialSrcset(soonArtwork[index])} sizes="(min-width: 64rem) 25vw, 50vw" width="960" height="640" alt="" loading="lazy" decoding="async" />
                 <h3 class="shop-soon__name">{area.name}</h3>
                 <p class="shop-soon__text">{area.text}</p>
               </li>
@@ -280,7 +282,7 @@ const jsonLd = asGraph([
       {shelves.map((shelf) => (
         <section class="shop-shelf" data-filter-shelf aria-labelledby={`shelf-${shelf.category}`}>
           {categoryArtwork(shelf.category) && (
-            <img class="shop-editorial shop-editorial--shelf" src={editorialSrc(categoryArtwork(shelf.category)!)} srcset={editorialSrcset(categoryArtwork(shelf.category)!)} sizes="100vw" width="1440" height="960" alt="" loading="lazy" decoding="async" />
+            <img class="shop-editorial shop-editorial--shelf" src={editorialSrc(categoryArtwork(shelf.category)!)} srcset={imageHints(editorialSrc(categoryArtwork(shelf.category)!), lang)?.srcSet ?? editorialSrcset(categoryArtwork(shelf.category)!)} sizes="100vw" width="1440" height="960" alt="" loading="lazy" decoding="async" />
           )}
           <div class="shop-shelf__head">
             <h2 class="shop-section-title shop-shelf__title" id={`shelf-${shelf.category}`}>

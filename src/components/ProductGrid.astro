@@ -6,6 +6,7 @@ import type { Lang } from "../lib/i18n";
 import { tx } from "../lib/i18n";
 import { siteLinks } from "../lib/seo";
 import { withAttribution } from "../lib/offers";
+import { productImageAttributes } from '../lib/productImages';
 
 interface Props {
   products: CatalogProduct[];
@@ -60,10 +61,10 @@ const searchOf = (product: CatalogProduct): string =>
             data-title={products[i].title}
             data-published={products[i].publishedAt ?? ""}
           >
-            <ProductCard product={product} lang={lang} variant="card" />
+            <ProductCard product={product} lang={lang} variant="card" image={productImageAttributes(product,lang)} />
           </div>
         ) : (
-          <ProductCard product={product} lang={lang} variant="card" />
+          <ProductCard product={product} lang={lang} variant="card" image={productImageAttributes(product,lang)} />
         ),
       )}
     </div>

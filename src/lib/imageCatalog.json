@@ -1,0 +1,402 @@
+{
+  "/images/editorial/hero-2026-1440.webp": {
+    "src": "/images/editorial/hero-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Ausgewählte Arbeitsgeräte als Symbol für den TDS-Shop.",
+      "en": "Selected work equipment illustrating the TDS shop."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/hero-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "1d1f25ccbc37",
+        "bytes": 15474
+      },
+      {
+        "src": "/images/editorial/hero-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "6c1e321822e2",
+        "bytes": 33956
+      },
+      {
+        "src": "/images/editorial/hero-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "4c432c746f7e",
+        "bytes": 44812
+      },
+      {
+        "src": "/images/editorial/hero-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "9b2413a45085",
+        "bytes": 78830
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/network-2026-1440.webp": {
+    "src": "/images/editorial/network-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Netzwerkgerät und Kabel als Symbol für Büro-WLAN.",
+      "en": "Network device and cable illustrating office Wi-Fi."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/network-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "3d4d63b8bc7b",
+        "bytes": 19572
+      },
+      {
+        "src": "/images/editorial/network-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "7b6501d118a3",
+        "bytes": 39786
+      },
+      {
+        "src": "/images/editorial/network-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "f79cec252daf",
+        "bytes": 51660
+      },
+      {
+        "src": "/images/editorial/network-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "deefaf77136c",
+        "bytes": 101872
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/workplace-2026-1440.webp": {
+    "src": "/images/editorial/workplace-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Kamera, Mikrofon und Bildschirm als Symbol für Videocalls und Homeoffice.",
+      "en": "Camera, microphone and monitor illustrating video calls and home working."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/workplace-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "af9bd6a52ad9",
+        "bytes": 24514
+      },
+      {
+        "src": "/images/editorial/workplace-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "e69c48f9024b",
+        "bytes": 52054
+      },
+      {
+        "src": "/images/editorial/workplace-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "5924499c51ad",
+        "bytes": 68362
+      },
+      {
+        "src": "/images/editorial/workplace-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "ea5797b08b7b",
+        "bytes": 121580
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/backup-2026-1440.webp": {
+    "src": "/images/editorial/backup-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Separate Datenträger als Symbol für betriebliche Datensicherung.",
+      "en": "Separate storage drives illustrating business backups."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/backup-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "d405f4bd64d8",
+        "bytes": 19032
+      },
+      {
+        "src": "/images/editorial/backup-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "a217dab7afd4",
+        "bytes": 38504
+      },
+      {
+        "src": "/images/editorial/backup-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "3ae1fe347856",
+        "bytes": 51218
+      },
+      {
+        "src": "/images/editorial/backup-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "050426db9d20",
+        "bytes": 93992
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/mobile-2026-1440.webp": {
+    "src": "/images/editorial/mobile-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Laptop und Zubehör am Zugfenster als Symbol für mobiles Arbeiten.",
+      "en": "Laptop and accessories beside a train window illustrating mobile work."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/mobile-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "974e4b65c144",
+        "bytes": 20622
+      },
+      {
+        "src": "/images/editorial/mobile-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "6228bc1db9c6",
+        "bytes": 43988
+      },
+      {
+        "src": "/images/editorial/mobile-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "0d186e209549",
+        "bytes": 57432
+      },
+      {
+        "src": "/images/editorial/mobile-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "29b802a6bbb9",
+        "bytes": 99894
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/documents-2026-1440.webp": {
+    "src": "/images/editorial/documents-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Dokumentenscanner und Ablage als Symbol für ein papierloses Büro.",
+      "en": "Document scanner and filing folder illustrating a paperless office."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/documents-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "0ce3319555c0",
+        "bytes": 19424
+      },
+      {
+        "src": "/images/editorial/documents-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "d30174e3d275",
+        "bytes": 37118
+      },
+      {
+        "src": "/images/editorial/documents-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "afe10fa2153d",
+        "bytes": 48562
+      },
+      {
+        "src": "/images/editorial/documents-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "1aa58949cda4",
+        "bytes": 84206
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/web-2026-1440.webp": {
+    "src": "/images/editorial/web-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Laptop, Telefon und Layoutkarten als Symbol für Webauftritte und Onlineshops.",
+      "en": "Laptop, phone and layout cards illustrating websites and online shops."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/web-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "ed3d4a68ffd6",
+        "bytes": 20800
+      },
+      {
+        "src": "/images/editorial/web-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "bb8f17eb1123",
+        "bytes": 40176
+      },
+      {
+        "src": "/images/editorial/web-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "9451e04af982",
+        "bytes": 51104
+      },
+      {
+        "src": "/images/editorial/web-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "270c0adc7f66",
+        "bytes": 84496
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/planning-2026-1440.webp": {
+    "src": "/images/editorial/planning-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Hände und Planungskarten als Symbol für Beratung und Konzeption.",
+      "en": "Hands and planning cards illustrating consulting and planning."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/planning-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "7b8a81985c71",
+        "bytes": 21632
+      },
+      {
+        "src": "/images/editorial/planning-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "f84f7cea1de7",
+        "bytes": 43466
+      },
+      {
+        "src": "/images/editorial/planning-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "93cfb15804ef",
+        "bytes": 56904
+      },
+      {
+        "src": "/images/editorial/planning-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "c92f76dc29db",
+        "bytes": 97338
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/process-2026-1440.webp": {
+    "src": "/images/editorial/process-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Geordnete Ablagen und Paket als Symbol für betriebliche Prozessoptimierung.",
+      "en": "Organised trays and a parcel illustrating business process optimisation."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/process-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "f10487ae27d7",
+        "bytes": 26880
+      },
+      {
+        "src": "/images/editorial/process-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "93a9d71708ab",
+        "bytes": 56254
+      },
+      {
+        "src": "/images/editorial/process-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "9eeddbe7050b",
+        "bytes": 71950
+      },
+      {
+        "src": "/images/editorial/process-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "542845c9e2f6",
+        "bytes": 131820
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/legal-2026-1440.webp": {
+    "src": "/images/editorial/legal-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Dokumentmappen als Symbol für Website-Pflichtangaben.",
+      "en": "Document folders illustrating website compliance information."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/legal-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "01bb349e6e27",
+        "bytes": 20590
+      },
+      {
+        "src": "/images/editorial/legal-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "e93832123ec0",
+        "bytes": 41884
+      },
+      {
+        "src": "/images/editorial/legal-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "2a766d73d178",
+        "bytes": 52682
+      },
+      {
+        "src": "/images/editorial/legal-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "5d4c31dd6b2c",
+        "bytes": 91472
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  }
+}
