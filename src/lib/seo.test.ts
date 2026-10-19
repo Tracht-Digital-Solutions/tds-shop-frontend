@@ -160,15 +160,15 @@ describe("structured data", () => {
 
 describe("titles and descriptions", () => {
   it("keeps the brand when the whole title fits", () => {
-    expect(pageTitle("NAS mit vier Einschüben")).toBe("NAS mit vier Einschüben — TDShop");
+    expect(pageTitle("NAS mit vier Einschüben")).toBe("NAS mit vier Einschüben — Digitalmarkt");
   });
 
   it("drops the BRAND, never the subject, when it does not", () => {
-    // A truncated result that keeps "— TDShop" and loses the product name is a
+    // A truncated result that keeps "— Digitalmarkt" and loses the product name is a
     // result nobody can identify.
     const long = "Ein außerordentlich ausführlich benanntes Netzwerkspeichergerät für Büros";
     expect(pageTitle(long)).toBe(long);
-    expect(pageTitle(long)).not.toContain("TDShop");
+    expect(pageTitle(long)).not.toContain("Digitalmarkt");
   });
 
   it("clamps to a whole word and marks the cut", () => {

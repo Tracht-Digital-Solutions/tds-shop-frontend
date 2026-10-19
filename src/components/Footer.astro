@@ -49,8 +49,8 @@ const groups = [
     id: "footer-company",
     head: t.footer.company,
     items: [
-      { href: links.blog, label: "Journal" },
-      { href: links.tools, label: "Tools" },
+      { href: links.blog, label: "Ratgeber" },
+      { href: links.tools, label: "Online-Tools" },
       { href: links.main, label: t.nav.main },
     ],
   },
@@ -63,11 +63,11 @@ const year = new Date().getFullYear();
   <div class="tds-shell shop-footer__grid">
     <div>
       {/* `--inverse`: the mask paints in the page's ink token otherwise, which
-          disappears on navy. The "TD" the mark stands for is restated for
-          assistive tech, or the block announces as the bare word "Shop". */}
+          disappears on navy. The business behind the name is restated for
+          assistive tech, as the mark is hidden from it. */}
       <p class="brand-wordmark shop-footer__wordmark">
         <span class="brand-logo brand-logo--inverse" aria-hidden="true"></span>
-        <span><span class="sr-only">TD </span><span class="shop-footer__accent">Shop</span></span>
+        <span><span class="shop-footer__accent">Digitalmarkt</span><span class="sr-only"> von Tracht Digital Solutions</span></span>
       </p>
       <span class="tds-brandbar tds-brandbar--sm tds-brandbar--on-dark" aria-hidden="true"></span>
       <p class="shop-footer__blurb">{t.footer.blurb}</p>

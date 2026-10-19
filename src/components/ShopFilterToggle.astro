@@ -3,9 +3,9 @@ import { tx, type Lang } from "../lib/i18n";
 
 /**
  * The catalogue's filter toggle — tds-shared's `.tds-filterbar__toggle`, a
- * brand button — at the right end of the intro's heading row. It controls
- * the panel `ShopFilterBar` renders below the intro; `mountFilterBar()`
- * finds it through `aria-controls`.
+ * brand button — at the right end of the filter row under the hero. It
+ * controls the panel `ShopFilterBar` renders in the same row and hides while
+ * that panel is open; `mountFilterBar()` finds it through `aria-controls`.
  */
 interface Props {
   lang: Lang;
@@ -17,7 +17,7 @@ const f = tx(lang).filter;
 
 <button
   type="button"
-  class="btn btn-primary tds-filterbar__toggle shop-intro__filter"
+  class="btn btn-primary tds-filterbar__toggle"
   data-filter-toggle
   aria-expanded="false"
   aria-controls="catalogue-filter"

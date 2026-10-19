@@ -26,6 +26,7 @@ import {
   themeBootstrapScript,
 } from "@tracht-digital-solutions/tds-shared/astro";
 import AppChrome from "../components/AppChrome.astro";
+import CartWiring from "../components/CartWiring.astro";
 
 import "../styles/global.css";
 import { apiBase } from "../lib/connection";
@@ -135,7 +136,7 @@ const image = ogImage ?? `${site.url}/og-default.png`;
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="TD Shop" />
+    <meta name="apple-mobile-web-app-title" content="Digitalmarkt" />
     <title>{pageTitle(title)}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={url} />
@@ -160,7 +161,7 @@ const image = ogImage ?? `${site.url}/og-default.png`;
     }
 
     <meta property="og:type" content={ogType} />
-    <meta property="og:site_name" content={site.name} />
+    <meta property="og:site_name" content={site.fullName} />
     <meta property="og:title" content={pageTitle(title)} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
@@ -234,6 +235,7 @@ const image = ogImage ?? `${site.url}/og-default.png`;
 
     <Footer lang={lang} />
     <AppChrome lang={lang} altUrl={altUrl} />
+    <CartWiring lang={lang} />
 
     <script>
       import { startAccountPrefsSync } from "@tracht-digital-solutions/tds-shared/prefs";

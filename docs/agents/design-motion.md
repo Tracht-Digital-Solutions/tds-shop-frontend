@@ -8,6 +8,8 @@ block of `global.css` uses the shared duration and easing tokens.
 | Movement | Question it answers |
 |---|---|
 | Basket count pops | "Did that add?" |
+| Product picture flies into the header basket, which wobbles (`CartWiring.astro`) | "Where did it go?" |
+| Basket peek drops in on hover/focus and for ~3 s after an add | "What is in there, and can I pay now?" |
 | Basket row collapses on remove | "Which row went?" |
 | Total washes once when it changes | "Did the total move?" (it updates after a debounced round trip) |
 | Submit button pulses while busy | `aria-busy` for screen readers; this for everyone else |
@@ -55,5 +57,11 @@ rows, because a separator between two small targets makes both worse.
 - An unlisted category is a 404 (`categoryExists`, fails open on an outage), never an empty grid.
 - The intro is a full-bleed band (`margin-inline: calc(50% - 50vw)`, padding back to the shell edge)
   on the journal's tint; its lede is ink-72%, because `--color-muted` on the tint fails AA.
-- The filter panel is anchored to its toggle (`.shop-filter`) and unfolds leftward
-  (`shop-filter-unfold`, clip-path, off under reduced motion); Escape or a press outside closes it.
+- The filter row sits directly under the hero (`.tds-filterbar.shop-filterrow`): product count left,
+  toggle right. Pressing the toggle hides it and the panel takes the whole row (tds-shared ≥ 0.57,
+  same on Ratgeber and Online-Tools); the close button or Escape brings the toggle back.
+- Product cards come from tds-shared with `addToCart`: own offers show "ab" prices, "In den Warenkorb"
+  as the filled button and "Direkt zur Kasse" beside it; buttons line up per grid row. One delegated
+  listener (`CartWiring.astro`, in the layout) handles every `button[data-add-to-cart]`.
+- The header basket (`CartBadge.tsx`) is always visible as an icon; the count badge appears from one
+  item. Its peek prices lines via `POST /shop/quote` only while open.

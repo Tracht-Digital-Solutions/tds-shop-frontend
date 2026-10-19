@@ -35,6 +35,13 @@ export const CART_KEY = "tds-shop-cart";
 /** Fired on every change, so a badge in the header and a page body agree. */
 export const CART_EVENT = "tds:cart-change";
 
+/**
+ * Fired by an add-to-basket button after the write (`CartWiring.astro`), with
+ * `{ slug, title }`. The header's basket opens its peek on it; a change from
+ * another tab or a quantity stepper is a change, not an "added".
+ */
+export const CART_ADDED_EVENT = "tds:cart-added";
+
 /** Per line. 99 is also enforced on the server — an unbounded quantity is an unbounded charge. */
 export const MAX_QUANTITY = 99;
 
@@ -162,3 +169,6 @@ export function onCartChange(fn: (lines: CartLine[]) => void): () => void {
 
 /** `/warenkorb` / `/en/cart`. Reserved in robots.txt and the no-cache list already. */
 export const cartPath = (lang: Lang): string => (lang === "en" ? "/en/cart" : "/warenkorb");
+
+/** The basket's checkout, `/kasse` / `/en/checkout` (never cached either). */
+export const checkoutPath = (lang: Lang): string => (lang === "en" ? "/en/checkout" : "/kasse");

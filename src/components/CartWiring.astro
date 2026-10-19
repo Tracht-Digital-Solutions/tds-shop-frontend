@@ -1,0 +1,159 @@
+---
+import { tx, type Lang } from "../lib/i18n";
+
+/**
+ * Wires every add-to-basket button on the page — tds-shared's ProductCard
+ * renders own offers as `button[data-add-to-cart=<slug>]` when the shop asks
+ * for it (`addToCart`), in the catalogue grid and on the product page alike.
+ * One delegated listener in the layout, so a card needs no island of its own.
+ *
+ * A press writes the basket, then answers "did that add?" three ways:
+ * - the button says "Hinzugefügt" for a beat,
+ * - a copy of the product picture flies into the basket in the header (or the
+ *   tab bar on a phone), which then bumps — off under reduced motion,
+ * - the polite live region below says it in words, and the header's basket
+ *   opens its peek with "Zur Kasse" (`CART_ADDED_EVENT`).
+ *
+ * Copy travels in data attributes: the i18n module stays on the server.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = tx(lang).cart;
+---
+
+<p
+  class="sr-only"
+  role="status"
+  id="cart-wiring"
+  data-added={t.justAdded}
+  data-status-one={t.badge(1)}
+  data-status-many={t.badge(2).replace("2", "{n}")}
+>
+</p>
+
+<script>
+  import { addToCart, cartCount, CART_ADDED_EVENT } from "../lib/cart";
+
+  const status = document.getElementById("cart-wiring");
+  const { added = "", statusOne = "", statusMany = "" } = status?.dataset ?? {};
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /** A duration token in ms, so the flight keeps the site's tempo. */
+  const token = (name: string, fallback: number): number => {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const value = parseFloat(raw);
+    if (!Number.isFinite(value)) return fallback;
+    return raw.endsWith("ms") ? value : value * 1000;
+  };
+
+  /** The basket the reader can see: the header icon, or the phone's tab. */
+  const target = (): HTMLElement | null => {
+    const candidates = [
+      document.querySelector<HTMLElement>("[data-cart-target]"),
+      document.getElementById("app-cart-badge")?.closest<HTMLElement>(".tds-tabbar__item") ?? null,
+    ];
+    return (
+      candidates.find((el) => {
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < window.innerHeight;
+      }) ?? null
+    );
+  };
+
+  /** A copy of the product picture (or a dot) arcs from the button into the basket. */
+  function fly(button: HTMLElement, basket: HTMLElement): Promise<void> {
+    const from = button.getBoundingClientRect();
+    const to = basket.getBoundingClientRect();
+    // The card's own picture; on a product page the card has none and the
+    // page's figure stands in.
+    const picture =
+      button.closest(".tds-product-card")?.querySelector<HTMLImageElement>("img") ??
+      button.closest(".shop-product")?.querySelector<HTMLImageElement>("img");
+
+    const ghost = document.createElement("span");
+    ghost.className = "shop-cart-fly";
+    ghost.setAttribute("aria-hidden", "true");
+    if (picture?.currentSrc || picture?.src) {
+      ghost.style.backgroundImage = `url("${(picture.currentSrc || picture.src).replace(/"/g, "%22")}")`;
+    }
+    document.body.append(ghost);
+
+    const size = ghost.getBoundingClientRect().width || 56;
+    const x0 = from.left + from.width / 2 - size / 2;
+    const y0 = from.top + from.height / 2 - size / 2;
+    const x1 = to.left + to.width / 2 - size / 2;
+    const y1 = to.top + to.height / 2 - size / 2;
+    // The arc: up and over, then down into the basket.
+    const lift = Math.min(160, Math.abs(y1 - y0) / 2 + 60);
+    const midX = x0 + (x1 - x0) * 0.5;
+    const midY = Math.min(y0, y1) - lift;
+
+    const animation = ghost.animate(
+      [
+        { transform: `translate(${x0}px, ${y0}px) scale(1)`, opacity: 1 },
+        { transform: `translate(${midX}px, ${midY}px) scale(0.75)`, opacity: 1, offset: 0.55 },
+        { transform: `translate(${x1}px, ${y1}px) scale(0.25)`, opacity: 0.4 },
+      ],
+      { duration: token("--tds-dur-slow", 420) * 1.6, easing: "cubic-bezier(0.45, 0, 0.25, 1)" },
+    );
+    return animation.finished.then(
+      () => ghost.remove(),
+      () => ghost.remove(),
+    );
+  }
+
+  function bump(basket: HTMLElement) {
+    basket.classList.remove("is-bumped");
+    // Restart the keyframes on an element that never left the DOM.
+    void basket.offsetWidth;
+    basket.classList.add("is-bumped");
+    basket.addEventListener("animationend", () => basket.classList.remove("is-bumped"), { once: true });
+  }
+
+  const timers = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>();
+
+  document.addEventListener("click", (event) => {
+    const button = (event.target as Element | null)?.closest<HTMLButtonElement>("button[data-add-to-cart]");
+    if (!button) return;
+    const slug = button.dataset.addToCart;
+    if (!slug) return;
+
+    const lines = addToCart(slug, 1);
+    const count = cartCount(lines);
+
+    // The label changes for a beat: nothing is loading (the basket is local),
+    // so the only open question is "did that register?".
+    if (!button.dataset.label) button.dataset.label = button.textContent ?? "";
+    button.textContent = added;
+    button.dataset.added = "true";
+    const previous = timers.get(button);
+    if (previous) clearTimeout(previous);
+    timers.set(
+      button,
+      setTimeout(() => {
+        button.textContent = button.dataset.label ?? "";
+        delete button.dataset.added;
+      }, 1400),
+    );
+
+    if (status) status.textContent = count === 1 ? statusOne : statusMany.replace("{n}", String(count));
+
+    const basket = target();
+    const announce = () =>
+      window.dispatchEvent(
+        new CustomEvent(CART_ADDED_EVENT, { detail: { slug, title: button.dataset.productTitle ?? "" } }),
+      );
+    if (basket && !reduced.matches && typeof button.animate === "function") {
+      void fly(button, basket).then(() => {
+        bump(basket);
+        announce();
+      });
+    } else {
+      announce();
+    }
+  });
+</script>

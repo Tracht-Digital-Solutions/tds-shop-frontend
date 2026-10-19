@@ -74,7 +74,7 @@ export const productCategoryName = (product: { category: string; categoryLabel?:
 
 export const TX = {
   de: {
-    brand: "TDShop",
+    brand: "Digitalmarkt",
     tagline: "Technik und Digitalisierung, kuratiert.",
     nav: {
       catalogue: "Katalog",
@@ -100,6 +100,7 @@ export const TX = {
       sort: "Sortierung",
       sorts: { default: "Empfohlen", new: "Neueste", az: "A–Z" },
       reset: "Filter zurücksetzen",
+      close: "Filter schließen",
       none: "Keine Produkte passen zu diesen Filtern.",
       shown: (n: number) => (n === 1 ? "1 Produkt" : `${n} Produkte`),
     },
@@ -108,8 +109,8 @@ export const TX = {
     // names — the same copy rules the tools site pins.
     empty: {
       title: "Der Katalog wird gerade bestückt.",
-      body: "Bis dahin stehen unsere Einschätzungen zu Technik im Betrieb im Journal, und die Tools-Seite hat Werkzeuge, die Sie direkt im Browser nutzen können.",
-      journal: "Einschätzungen im Journal lesen",
+      body: "Bis dahin stehen unsere Einschätzungen zu Technik im Betrieb im Ratgeber, und die Online-Tools sind Werkzeuge, die Sie direkt im Browser nutzen können.",
+      journal: "Einschätzungen im Ratgeber lesen",
       tools: "Werkzeuge ausprobieren",
     },
     /** Beside the front page's headline: three plain facts, no prices — a price
@@ -139,8 +140,8 @@ export const TX = {
       ctaTitle: "Lieber gleich sprechen?",
       ctaBody: "Schreiben Sie, was Sie vorhaben. Sie bekommen ein Angebot mit festem Preis.",
       onwardTitle: "Bis dahin",
-      journal: { name: "Journal", text: "Einschätzungen zu Technik im Betrieb." },
-      tools: { name: "Tools", text: "Werkzeuge, die direkt im Browser laufen." },
+      journal: { name: "Ratgeber", text: "Einschätzungen zu Technik im Betrieb." },
+      tools: { name: "Online-Tools", text: "Werkzeuge, die direkt im Browser laufen." },
     },
     breadcrumb: "Pfadnavigation",
     offers: "Angebote",
@@ -157,14 +158,14 @@ export const TX = {
       "Einige Links auf dieser Seite sind Partnerlinks. Kaufen Sie darüber, erhalten wir eine Provision — am Preis ändert sich für Sie nichts.",
     backToCatalogue: "Zurück zum Katalog",
     toCatalogue: "Zum Katalog",
-    toJournal: "Zum Journal",
+    toJournal: "Zum Ratgeber",
     // Rendered for EVERY unknown path, legal pages included — so it must not
     // talk about products.
     notFound: "Diese Adresse gibt es hier nicht.",
     notFoundBody: "Der Link ist veraltet oder vertippt. Im Katalog steht, was es gerade gibt.",
     footer: {
       blurb: "Digitale Leistungen zum Festpreis und Technik mit eigener Einschätzung, von Tracht Digital Solutions.",
-      shop: "Shop",
+      shop: "Digitalmarkt",
       company: "Tracht Digital",
       legal: "Rechtliches",
     },
@@ -197,6 +198,7 @@ export const TX = {
       shippingFrom: (amount: string) => `Versandkostenfrei ab ${amount}`,
       digitalOnly: "Keine Lieferung nötig — sofortige Erbringung nach Zahlung.",
       toCheckout: "Zur Kasse",
+      view: "Warenkorb ansehen",
       keepShopping: "Weiter einkaufen",
       loading: "Wird berechnet …",
       gone: "Mindestens ein Artikel ist nicht mehr verfügbar. Bitte entfernen Sie ihn.",
@@ -208,7 +210,7 @@ export const TX = {
     },
   },
   en: {
-    brand: "TDShop",
+    brand: "Digitalmarkt",
     tagline: "Technology and digitalisation, curated.",
     nav: {
       catalogue: "Catalogue",
@@ -231,13 +233,14 @@ export const TX = {
       sort: "Sort",
       sorts: { default: "Recommended", new: "Newest", az: "A–Z" },
       reset: "Reset filters",
+      close: "Close filters",
       none: "No products match these filters.",
       shown: (n: number) => (n === 1 ? "1 product" : `${n} products`),
     },
     empty: {
       title: "The catalogue is being stocked.",
-      body: "Meanwhile, our assessments of business technology are in the journal, and the tools site has utilities you can use right in your browser.",
-      journal: "Read assessments in the journal",
+      body: "Meanwhile, our assessments of business technology are in the Ratgeber, and the Online-Tools are utilities you can use right in your browser.",
+      journal: "Read assessments in the Ratgeber",
       tools: "Try the tools",
     },
     glance: {
@@ -263,8 +266,8 @@ export const TX = {
       ctaTitle: "Rather talk now?",
       ctaBody: "Tell us what you have in mind. You get a quote with a fixed price.",
       onwardTitle: "Meanwhile",
-      journal: { name: "Journal", text: "Assessments of business technology." },
-      tools: { name: "Tools", text: "Utilities that run right in your browser." },
+      journal: { name: "Ratgeber", text: "Assessments of business technology." },
+      tools: { name: "Online-Tools", text: "Utilities that run right in your browser." },
     },
     breadcrumb: "Breadcrumb",
     offers: "Offers",
@@ -278,12 +281,12 @@ export const TX = {
       "Some links on this page are affiliate links. If you buy through them we earn a commission — the price is the same for you.",
     backToCatalogue: "Back to the catalogue",
     toCatalogue: "To the catalogue",
-    toJournal: "To the journal",
+    toJournal: "To the Ratgeber",
     notFound: "This address does not exist here.",
     notFoundBody: "The link is outdated or mistyped. The catalogue shows what is currently available.",
     footer: {
       blurb: "Digital services at a fixed price and technology with our own assessment, by Tracht Digital Solutions.",
-      shop: "Shop",
+      shop: "Digitalmarkt",
       company: "Tracht Digital",
       legal: "Legal",
     },
@@ -310,6 +313,7 @@ export const TX = {
       shippingFrom: (amount: string) => `Free delivery from ${amount}`,
       digitalOnly: "Nothing to deliver — performed immediately after payment.",
       toCheckout: "Checkout",
+      view: "View basket",
       keepShopping: "Keep shopping",
       loading: "Calculating …",
       gone: "At least one item is no longer available. Please remove it.",

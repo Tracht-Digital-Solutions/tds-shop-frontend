@@ -11,6 +11,13 @@ declaration is made on our page; the provider is only the payment step that foll
 `CheckoutPage.astro` is server-rendered because the details must be in the document the reader
 receives, not assembled by a script that may not run.
 
+## Package prices are "ab" prices
+
+Own offers are service packages and read "ab 890,00 €" in every card. The order charges the
+package price; more hours than the package includes are billed only with the customer's consent at
+the hourly rate (AGB 4.3). The checkout says so beside the totals for any line without shipping.
+A reviewed AGB published through the CMS overrides `agb.de.md` and must carry 4.3 as well.
+
 ## The withdrawal checkbox is a precondition
 
 For a digital service the right of withdrawal lapses on full performance only with the customer's

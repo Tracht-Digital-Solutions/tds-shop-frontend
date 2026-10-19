@@ -61,10 +61,10 @@ const searchOf = (product: CatalogProduct): string =>
             data-title={products[i].title}
             data-published={products[i].publishedAt ?? ""}
           >
-            <ProductCard product={product} lang={lang} variant="card" image={productImageAttributes(product,lang)} />
+            <ProductCard product={product} lang={lang} variant="card" addToCart image={productImageAttributes(product,lang)} />
           </div>
         ) : (
-          <ProductCard product={product} lang={lang} variant="card" image={productImageAttributes(product,lang)} />
+          <ProductCard product={product} lang={lang} variant="card" addToCart image={productImageAttributes(product,lang)} />
         ),
       )}
     </div>

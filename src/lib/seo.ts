@@ -15,7 +15,14 @@ import type { Lang } from "./i18n";
  */
 
 export const site = {
-  name: "TDShop",
+  /**
+   * The property's proper name since 2026-10-19 (was "TDShop"): a name that
+   * says what the site is, for search engines and answer engines alike. Short
+   * in titles; `fullName` ties it to the business wherever there is room
+   * (WebSite node, og:site_name, llms.txt, manifest).
+   */
+  name: "Digitalmarkt",
+  fullName: "Digitalmarkt von Tracht Digital Solutions",
   url: "https://shop.tracht-digital.de",
   /** The canonical identity lives on the marketing site; we reference it by @id. */
   organizationId: "https://tracht-digital.de/#organization",
@@ -54,7 +61,7 @@ const TITLE_BUDGET = 60;
  * Compose a page title within the budget a search result actually shows.
  *
  * When the combined form is too long the BRAND is dropped, never the subject —
- * a truncated title that keeps "— TDShop" and loses the product name is a
+ * a truncated title that keeps "— Digitalmarkt" and loses the product name is a
  * result nobody can identify.
  */
 export function pageTitle(subject: string): string {

@@ -6,7 +6,7 @@ review: Vor Livegang anwaltlich pruefen lassen. Diese Vorlage ist vollstaendig
   diese Datei.
 ---
 Allgemeine Geschäftsbedingungen für Bestellungen über
-**shop.tracht-digital.de**. Stand: September 2026.
+**shop.tracht-digital.de**. Stand: Oktober 2026.
 
 ## 1. Geltungsbereich und Vertragspartner
 
@@ -67,7 +67,18 @@ der Bestellübersicht gesondert ausgewiesen.
 
 **4.2** Der Preis, der Ihnen unmittelbar vor dem Absenden der Bestellung
 angezeigt wird, ist der Preis, der berechnet wird. Er wird bei jedem Aufruf des
-Warenkorbs neu vom Server ermittelt.
+Warenkorbs neu vom Server ermittelt. Für Mehrarbeit bei Leistungspaketen gilt
+Ziffer 4.3.
+
+**4.3** *Leistungspakete.* Leistungspakete sind mit einem **„ab“-Preis**
+ausgezeichnet. Der Paketpreis umfasst den in der Leistungsbeschreibung
+genannten Umfang einschließlich des dort angegebenen Stundenkontingents.
+Erfordert die Umsetzung mehr Arbeitszeit, als im Paket enthalten ist, teilen
+wir Ihnen das vor Beginn der Mehrarbeit mit und nennen den voraussichtlichen
+Mehraufwand. Mehrarbeit erbringen wir nur nach Ihrer Zustimmung (Textform
+genügt) und berechnen sie nach dem in der Leistungsbeschreibung genannten
+Stundensatz gesondert. Stimmen Sie nicht zu, bleibt es beim Paketpreis und dem
+vereinbarten Umfang.
 
 ## 5. Zahlung
 

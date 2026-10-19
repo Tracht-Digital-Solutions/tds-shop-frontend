@@ -45,6 +45,8 @@ const TX = {
     deliveryDigital: "Sofortige Erbringung nach Zahlung. Kein Versand.",
     deliveryGoods: "Lieferung innerhalb Deutschlands.",
     deliveryMixed: "Leistungen sofort nach Zahlung, Waren per Versand.",
+    extraWork:
+      "Der Paketpreis gilt für den beschriebenen Umfang und die darin enthaltenen Stunden. Mehraufwand berechnen wir nur nach Ihrer Zustimmung zum Stundensatz (AGB Ziffer 4.3).",
     submit: "Zahlungspflichtig bestellen",
     working: "Wird vorbereitet …",
     loading: "Ihre Bestellung wird geladen …",
@@ -77,6 +79,8 @@ const TX = {
     deliveryDigital: "Performed immediately after payment. Nothing is shipped.",
     deliveryGoods: "Delivered within Germany.",
     deliveryMixed: "Services immediately after payment, goods by post.",
+    extraWork:
+      "The package price covers the described scope and the hours it includes. Additional work is only charged at the hourly rate with your consent (terms, clause 4.3).",
     submit: "Order with obligation to pay",
     working: "Preparing …",
     loading: "Loading your order …",
@@ -304,6 +308,12 @@ export default function CheckoutForm({ lang, slug }: Props) {
           </div>
         </dl>
         <p className="checkout__delivery">{deliveryNote}</p>
+        {/* Service packages are shown "ab" in the catalogue: what this order
+            buys is the package's scope, and more work needs the customer's
+            say-so first. Said here, next to the button, not only in the AGB. */}
+        {quote.lines.some((line) => !line.requiresShipping) ? (
+          <p className="checkout__delivery">{t.extraWork}</p>
+        ) : null}
       </section>
 
       <label>

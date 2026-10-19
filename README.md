@@ -1,6 +1,6 @@
 # tds-shop-frontend
 
-**TDShop** — `shop.tracht-digital.de`. A curated catalogue of technology for
+**Digitalmarkt** (until 2026-10-19 "TDShop") — `shop.tracht-digital.de`. A curated catalogue of technology for
 digitalising a business: affiliate offers (Amazon and other partner
 programmes) alongside TDS's own digital service packages.
 

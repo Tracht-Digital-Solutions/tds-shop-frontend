@@ -1,6 +1,6 @@
 # AGENTS.md — tds-shop-frontend
 
-**TDShop**, `shop.tracht-digital.de`. Astro 7, `output: "server"` under Passenger, behind the
+**Digitalmarkt** (formerly TDShop), `shop.tracht-digital.de`. Astro 7, `output: "server"` under Passenger, behind the
 shared file-backed page cache. It renders the catalogue and checkout from
 `tds-ext-shop-pkg` (via `tds-core-frontend-api`) and shares the journal's design (`blog`
 surface). Read [README.md](README.md) first for the four standing rules and the cache

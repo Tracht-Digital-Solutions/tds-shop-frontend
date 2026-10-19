@@ -3,7 +3,6 @@ import { ProductCard } from "@tracht-digital-solutions/tds-shared/components";
 import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
 
 import Layout from "../layouts/Layout.astro";
-import AddToCart from "./AddToCart.tsx";
 import ProductGrid from "./ProductGrid.astro";
 import { listProducts } from "../lib/content-api";
 import { categoryPath, homePath, productCategoryName, productPath, tx, type Lang } from "../lib/i18n";
@@ -243,17 +242,13 @@ const revised = product.updatedAt
     {/* The offer list. `ProductCard` carries the advertising label and drops a
         price older than 24 hours by itself — this page decides neither. */}
     <aside class="shop-product__offers" id="offers" aria-label={t.offers}>
-      <ProductCard product={{ ...product, offers, imageUrl:artwork ? null : product.imageUrl }} lang={lang} variant="list" />
-
-      {/* Only for something TDS sells itself. An affiliate product is bought at
-          the merchant, and a basket button beside it would promise a checkout
-          this shop cannot honour.
-
-          Directly under the card, and the quieter of the two: the card's
-          "Kaufen" goes straight to the one-product checkout and stays the
-          filled button. Both ways to buy sit in one place — the basket button
-          used to stand under the lede, a column away from the price it adds. */}
-      {sellsDirectly ? <AddToCart client:idle slug={product.slug} lang={lang} variant="secondary" /> : null}
+      {/* `addToCart`: an own offer's filled button puts the product in the
+          basket (CartWiring.astro), and "Direkt zur Kasse" beside it goes
+          straight to the one-product checkout — the same two ways to buy as
+          in the catalogue, in one place. An affiliate offer keeps its link to
+          the merchant: a basket button there would promise a checkout this
+          shop cannot honour. */}
+      <ProductCard product={{ ...product, offers, imageUrl:artwork ? null : product.imageUrl }} lang={lang} variant="list" addToCart />
 
       {/* The facts next to the price: scope, duration, effort, result — what a
           buyer compares between two packages, as a definition list so each

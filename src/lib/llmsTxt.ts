@@ -52,7 +52,7 @@ export function renderLlmsTxt(input: LlmsInput): string {
   const lines: string[] = [];
   const out = (line = "") => lines.push(line);
 
-  out(`# ${site.name}`);
+  out(`# ${site.fullName}`);
   out();
   out("> Kuratierte Technik für die Digitalisierung im Betrieb: Hardware, Netzwerk");
   out("> und Software, jeweils mit einer eigenen Einschätzung statt des");

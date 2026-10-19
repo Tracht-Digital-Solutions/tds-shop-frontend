@@ -6,6 +6,7 @@ import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shar
 
 import CartBadge from "./CartBadge.tsx";
 import { homePath, tx, type Lang } from "../lib/i18n";
+import { site } from "../lib/seo";
 
 /**
  * The public property bar — the one top bar the journal, the tools site and
@@ -67,18 +68,18 @@ const cta = translations[lang].nav.cta;
         the wordmark and the property list here, everything the reader acts
         with in the second. Below 64rem the wrappers vanish from layout. */}
     <div class="tds-sitebar__island">
-      {/* The mark IS the "TD" of the name, so only "Shop" is set in type and the
-          accessible name restates the whole brand — as "TD Shop", because WCAG
-          2.5.3 (axe `label-content-name-mismatch`) wants the visible word "Shop"
-          as a word of the name, which "TDShop" is not. `.brand-wordmark` is what
+      {/* The TD mark, then the property's name "Digitalmarkt" (since
+          2026-10-19, was "TD Shop"). The accessible name restates the whole
+          brand and keeps the visible word as a word of the name, as WCAG 2.5.3
+          (axe `label-content-name-mismatch`) wants. `.brand-wordmark` is what
           puts `.accent-italic` back upright (primitives.css). */}
       <a
         class="tds-sitebar__brand brand-wordmark"
         href={homePath(lang)}
-        aria-label={`TD Shop — ${t.nav.catalogue}`}
+        aria-label={`${site.fullName} — ${t.nav.catalogue}`}
       >
         <span class="brand-logo" aria-hidden="true"></span>
-        <span class="accent-italic">Shop</span>
+        <span class="accent-italic">Digitalmarkt</span>
       </a>
       <span class="tds-sitebar__divider" aria-hidden="true"></span>
 

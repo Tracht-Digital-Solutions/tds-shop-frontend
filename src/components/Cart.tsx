@@ -77,7 +77,7 @@ export default function Cart({ lang, checkoutHref, contactHref, contactLabel }: 
     return onCartChange(setLines);
   }, []);
 
-  // Nothing until the basket has been read — see the note in AddToCart.
+  // Nothing until the basket has been read — whether a line exists changes the page, so it waits for the read.
   if (lines === null) return null;
 
   if (lines.length === 0) {

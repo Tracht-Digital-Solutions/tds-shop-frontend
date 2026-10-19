@@ -48,7 +48,7 @@ describe("the brand assets", () => {
   });
 
   it("names the brand on the link the mark replaced", () => {
-    // The mark carries the "TD" of TDShop, so only "Shop" is set in type. That
+    // The TD mark stands before the name "Digitalmarkt", and the mark is hidden from assistive tech. That
     // makes the accessible name a requirement rather than a nicety: without the
     // label the home link announces as "Shop", and the mark must not be
     // announced twice.

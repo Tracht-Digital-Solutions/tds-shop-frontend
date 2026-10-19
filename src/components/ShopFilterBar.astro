@@ -4,7 +4,8 @@ import { tx, type Lang } from "../lib/i18n";
 /**
  * The catalogue's filter panel — tds-shared's `.tds-filterbar__panel`, wired
  * by `mountFilterBar()`. Closed by default; opened by `ShopFilterToggle`,
- * the brand button at the right end of the intro's heading row.
+ * which then steps aside so the panel takes the whole filter row. The close
+ * button (or Escape) brings the toggle back.
  *
  * Everything happens in the browser over cards already in the page: the page
  * cache keys on the path alone, so `?art=…` could never change what is
@@ -25,8 +26,8 @@ const kinds = ["all", "own", "affiliate"] as const;
 const sorts = ["default", "new", "az"] as const;
 ---
 
-{/* The panel; its toggle (ShopFilterToggle) sits beside the H1 in the
-    intro and finds it through `aria-controls`. */}
+{/* The panel; its toggle (ShopFilterToggle) stands before it in the filter
+    row and finds it through `aria-controls`. */}
 <div
   class="tds-filterbar__panel"
   id="catalogue-filter"
@@ -66,6 +67,7 @@ const sorts = ["default", "new", "az"] as const;
       </div>
     </fieldset>
     <button type="button" class="tds-filterbar__reset" data-filter-reset>{f.reset}</button>
+    <button type="button" class="tds-filterbar__close" data-filter-close aria-label={f.close} title={f.close}></button>
 </div>
 
 <script>
@@ -78,6 +80,7 @@ const sorts = ["default", "new", "az"] as const;
     const { shownOne = "", shownMany = "", none = "" } = root.dataset;
     const shown = (n: number) => (n === 1 ? shownOne : shownMany.replace("{n}", String(n)));
     const status = document.querySelector<HTMLElement>("[data-filter-status]");
+    const count = document.querySelector<HTMLElement>("[data-filter-count]");
     const empty = document.querySelector<HTMLElement>("[data-filter-empty]");
 
     // Grouped front page: the full catalogue waits in a template and stands
@@ -88,21 +91,6 @@ const sorts = ["default", "new", "az"] as const;
     if (template && results) results.append(template.content.cloneNode(true));
     const scope: ParentNode = template && results ? results : document;
     const items = Array.from(scope.querySelectorAll<HTMLElement>(".shop-filter-item"));
-
-    // A panel that floats over the band closes like one: Escape (focus back
-    // on the toggle) or a press anywhere outside panel and toggle.
-    const toggle = document.querySelector<HTMLButtonElement>(`[data-filter-toggle][aria-controls="${root.id}"]`);
-    if (toggle) {
-      document.addEventListener("keydown", (event) => {
-        if (event.key !== "Escape" || root.hidden) return;
-        toggle.click();
-        toggle.focus();
-      });
-      document.addEventListener("pointerdown", (event) => {
-        const target = event.target as Node;
-        if (!root.hidden && !root.contains(target) && !toggle.contains(target)) toggle.click();
-      });
-    }
 
     mountFilterBar(root, {
       items,
@@ -119,6 +107,7 @@ const sorts = ["default", "new", "az"] as const;
         if (results) results.hidden = !active;
         for (const shelf of shelves) shelf.hidden = active;
         if (status) status.textContent = active ? shown(visible) : "";
+        if (count) count.textContent = shown(active ? visible : Number(count.dataset.total ?? visible));
         if (empty) empty.textContent = active && visible === 0 ? none : "";
       },
     });
