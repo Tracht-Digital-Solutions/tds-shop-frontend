@@ -69,6 +69,18 @@ describe("llms.txt", () => {
     }
   });
 
+  it("names an English page only where the English tree holds it", () => {
+    // Paired by slug like the sitemap; a different English slug is listed on its own.
+    const [first] = input.products;
+    const text = renderLlmsTxt({
+      ...input,
+      products: [{ ...first!, english: true }],
+      englishOnly: [{ slug: "wifi-router", title: "Wi-Fi router" }],
+    });
+    expect(text).toContain(`(English: ${canonical(productPath(first!.slug, "en"))})`);
+    expect(text).toContain(`- Wi-Fi router: ${canonical(productPath("wifi-router", "en"))}`);
+  });
+
   it("prefers the Kurz-gesagt summary over the teaser", () => {
     const text = renderLlmsTxt({
       ...input,

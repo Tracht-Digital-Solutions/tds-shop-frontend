@@ -35,6 +35,12 @@ export interface LlmsProduct {
   category: string;
   /** "Kurz gesagt" (tds-ext-shop ≥ 0.6); preferred over the teaser, which sells. */
   summary?: string | null;
+  /**
+   * True when an indexable English product carries the SAME slug — the pairing
+   * rule `sitemap.ts` uses for its alternates. Then `/en/product/<slug>` is a
+   * page, and the file names it beside the German one.
+   */
+  english?: boolean;
 }
 
 export interface LlmsInput {
@@ -46,6 +52,12 @@ export interface LlmsInput {
    * sitemap lists), German first. Optional so an older caller still renders.
    */
   legal?: readonly { title: string; url: string }[];
+  /**
+   * Indexable English products with no German twin of the same slug. The
+   * sitemap lists them, so the file has to name them too (2026-10-19: every
+   * English product page was in the sitemap and missing here).
+   */
+  englishOnly?: readonly { slug: string; title: string }[];
 }
 
 export function renderLlmsTxt(input: LlmsInput): string {
@@ -112,6 +124,18 @@ export function renderLlmsTxt(input: LlmsInput): string {
       // 404 for every product whose slugs differ — and a dead link is worse
       // than none in a file an assistant reads as ground truth.
       out(`  ${canonical(productPath(product.slug, "de"))}`);
+      // Named only when the English tree holds the same slug: the case the
+      // comment above is about stays covered by `englishOnly` below.
+      if (product.english) out(`  (English: ${canonical(productPath(product.slug, "en"))})`);
+    }
+    out();
+  }
+
+  if (input.englishOnly && input.englishOnly.length > 0) {
+    out("## English product pages");
+    out();
+    for (const product of input.englishOnly) {
+      out(`- ${product.title}: ${canonical(productPath(product.slug, "en"))}`);
     }
     out();
   }
