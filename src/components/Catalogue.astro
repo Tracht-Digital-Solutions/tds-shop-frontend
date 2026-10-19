@@ -118,6 +118,30 @@ const shelves = grouped
  * 404, see `pages/kategorie/[cat].astro`).
  */
 const comingSoon = category === null && products.length === 0;
+
+/**
+ * What the filter bar offers beyond kind and sort (2026-10-19): every category
+ * on the front page, and the ten most common tags on whatever this page holds.
+ * A tag on one product only is still a tag; it just ranks last.
+ */
+const filterCategories =
+  category === null
+    ? categories.map((c) => ({ slug: c.category, name: categoryName(c.category, c.label) }))
+    : [];
+const tagCounts = new Map<string, { name: string; count: number }>();
+for (const product of products) {
+  for (const tag of product.tags ?? []) {
+    const key = tag.trim().toLowerCase();
+    if (!key) continue;
+    const entry = tagCounts.get(key) ?? { name: tag.trim(), count: 0 };
+    entry.count += 1;
+    tagCounts.set(key, entry);
+  }
+}
+const filterTags = [...tagCounts.values()]
+  .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, lang))
+  .slice(0, 10)
+  .map((entry) => entry.name);
 const contact = propertyContact(lang);
 const links = siteLinks(lang);
 
@@ -157,10 +181,47 @@ const jsonLd = asGraph([
   */}
   <section class="shop-intro tds-wash" aria-labelledby="catalogue-heading">
     <div class="shop-intro__main">
-      <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
+      {/* The front page's hero (2026-10-19): who runs the market, the promise
+          with its accent, the lede, a way into the catalogue and a way to ask,
+          and three figures. A category page keeps the plain statement. */}
+      {category === null ? (
+        <>
+          <p class="shop-intro__eyebrow">{t.hero.eyebrow}</p>
+          <h1 class="shop-title shop-intro__title" id="catalogue-heading">
+            {t.hero.titleLead} <span class="shop-intro__accent">{t.hero.titleAccent}</span>
+          </h1>
+        </>
+      ) : (
+        <h1 class="shop-title shop-intro__title" id="catalogue-heading">{headline}</h1>
+      )}
       {/* Decorative by definition — aria-hidden is required at the call site. */}
       <span class="tds-brandbar tds-brandbar--sm shop-intro__bar" aria-hidden="true"></span>
       <p class="shop-lede">{site.description[lang]}</p>
+      {category === null && products.length > 1 ? (
+        <>
+          <div class="shop-intro__ctas">
+            <a class="btn btn-primary" href="#katalog">
+              {t.hero.browse}
+              <span aria-hidden="true">↓</span>
+            </a>
+            <a class="btn btn-ghost" href={contact}>{translations[lang].nav.cta}</a>
+          </div>
+          <dl class="shop-intro__stats">
+            <div>
+              <dt>{t.hero.products(total)}</dt>
+              <dd>{total}</dd>
+            </div>
+            <div>
+              <dt>{t.hero.categories(categories.length)}</dt>
+              <dd>{categories.length}</dd>
+            </div>
+            <div>
+              <dt>{t.hero.contact}</dt>
+              <dd>1</dd>
+            </div>
+          </dl>
+        </>
+      ) : null}
 
       {/* The entry answer: what belongs in this category, for whom, and on what
           grounds it was chosen. Only where it has been written — see
@@ -173,7 +234,12 @@ const jsonLd = asGraph([
            pill is the blend's one borrowed gesture for things you press. */
         categories.length > 0 ? (
           <nav class="shop-catnav" aria-label={t.categories}>
-            <a class="shop-chip" href={homePath(lang)} aria-current={category === null ? "page" : undefined}>
+            <a
+              class="shop-chip"
+              href={homePath(lang)}
+              aria-current={category === null ? "page" : undefined}
+              data-filter-category={category === null ? "all" : undefined}
+            >
               {t.allCategories} <span class="shop-chip__count">{total}</span>
             </a>
             {categories.map(({ category: name, label, total: count }) => (
@@ -181,6 +247,7 @@ const jsonLd = asGraph([
                 class="shop-chip"
                 href={categoryPath(name, lang)}
                 aria-current={name === category ? "page" : undefined}
+                data-filter-category={category === null ? name : undefined}
               >
                 {categoryName(name, label)} <span class="shop-chip__count">{count}</span>
               </a>
@@ -220,10 +287,10 @@ const jsonLd = asGraph([
       count, the live region and the empty note by attribute. */}
   {products.length > 1 ? (
     <>
-      <div class="tds-filterbar shop-filterrow">
+      <div class="tds-filterbar shop-filterrow" id="katalog">
         <p class="shop-filterrow__count" data-filter-count data-total={products.length}>{t.filter.shown(products.length)}</p>
         <ShopFilterToggle lang={lang} />
-        <ShopFilterBar lang={lang} />
+        <ShopFilterBar lang={lang} categories={filterCategories} tags={filterTags} />
       </div>
       <p class="sr-only" role="status" data-filter-status></p>
       <p class="shop-filter-empty" data-filter-empty></p>

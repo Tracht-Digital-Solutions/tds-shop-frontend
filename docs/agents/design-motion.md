@@ -9,7 +9,7 @@ block of `global.css` uses the shared duration and easing tokens.
 |---|---|
 | Basket count pops | "Did that add?" |
 | Product picture flies into the header basket, which wobbles (`CartWiring.astro`) | "Where did it go?" |
-| Basket peek drops in on hover/focus and for ~3 s after an add | "What is in there, and can I pay now?" |
+| Mini basket unfolds from the icon (bounce-in) on hover/focus and for ~3.6 s after an add; lines arrive 45 ms apart, the just-added one tinted with "Hinzugefügt"; stepper and remove in place; the total pops on every new quote | "What is in there, and can I pay now?" |
 | Basket row collapses on remove | "Which row went?" |
 | Total washes once when it changes | "Did the total move?" (it updates after a debounced round trip) |
 | Submit button pulses while busy | `aria-busy` for screen readers; this for everyone else |

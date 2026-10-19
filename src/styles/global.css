@@ -1092,7 +1092,7 @@
   color: var(--color-accent);
 }
 
-.shop-chip[aria-current="page"] {
+.shop-chip[aria-current] {
   background: var(--color-surface-navy);
   color: #fff;
   /* A navy chip never casts the navy ink (tds-shared 0.49.5): its offset is
@@ -1109,7 +1109,7 @@
   color: var(--color-muted);
 }
 
-.shop-chip[aria-current="page"] .shop-chip__count {
+.shop-chip[aria-current] .shop-chip__count {
   color: rgb(255 255 255 / 0.7);
 }
 
@@ -1148,21 +1148,31 @@
   font-size: 0.625rem;
 }
 
-/* The peek: a small card under the icon, anchored to its right edge. Width
+/* The mini basket (2026-10-19, reworked): a card that unfolds from the icon
+   (transform-origin top right), its lines arriving one after another (`--i`),
+   each with a stepper and a remove button, the just-added line tinted. Width
    stops at the viewport less the gutters, so on a phone it still fits. */
 .shop-cart__peek {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 0.625rem);
   right: 0;
   z-index: 40;
-  width: min(20rem, calc(100vw - 2rem));
-  padding: 1rem;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 1rem 1rem 1.125rem;
   background: var(--color-card);
   border: var(--tds-border-hairline) solid var(--color-line);
   border-radius: var(--tds-radius-card);
   box-shadow: var(--tds-shadow-hard);
   color: var(--color-ink);
   text-align: start;
+  transform-origin: calc(100% - 1.375rem) 0;
+}
+.shop-cart__peek:focus {
+  outline: none;
+}
+.shop-cart__peek:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 .shop-cart__peek[hidden] {
   display: none;
@@ -1171,10 +1181,27 @@
 .shop-cart__peek::before {
   content: "";
   position: absolute;
-  inset: -0.5rem 0 100% 0;
+  inset: -0.625rem 0 100% 0;
+}
+/* A notch under the icon, so the card visibly comes from it. */
+.shop-cart__peek::after {
+  content: "";
+  position: absolute;
+  top: -0.4375rem;
+  right: 1.0625rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--color-card);
+  border-top: var(--tds-border-hairline) solid var(--color-line);
+  border-left: var(--tds-border-hairline) solid var(--color-line);
+  rotate: 45deg;
 }
 .shop-cart__head {
-  margin: 0 0 0.625rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
   font-family: var(--tds-eyebrow-family);
   font-size: 0.6875rem;
   font-weight: var(--tds-eyebrow-weight);
@@ -1182,7 +1209,39 @@
   text-transform: uppercase;
   color: var(--color-muted);
 }
-.shop-cart__empty,
+.shop-cart__head-count {
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.shop-cart__empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0 0.25rem;
+  text-align: center;
+}
+.shop-cart__empty-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.25rem;
+  border-radius: var(--tds-radius-pill);
+  background: color-mix(in srgb, var(--color-accent) 12%, var(--color-card));
+  color: var(--color-accent);
+}
+.shop-cart__empty-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.shop-cart__empty-title {
+  margin: 0;
+  font-weight: 700;
+}
+.shop-cart__browse {
+  margin-top: 0.5rem;
+}
 .shop-cart__note {
   margin: 0;
   font-size: 0.875rem;
@@ -1190,43 +1249,108 @@
 }
 .shop-cart__lines {
   display: grid;
-  gap: 0.5rem;
-  max-height: 16rem;
-  margin: 0;
+  gap: 0.375rem;
+  max-height: 18rem;
+  margin: 0 -0.5rem;
   padding: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   list-style: none;
 }
 .shop-cart__line {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0 0.75rem;
+  gap: 0.375rem 0.75rem;
+  padding: 0.5rem;
+  border-radius: var(--tds-radius-sm);
   font-size: 0.875rem;
+  transition: background-color var(--tds-dur-slow) var(--tds-ease-out);
+}
+.shop-cart__line[data-fresh] {
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
 }
 .shop-cart__title {
   grid-column: 1;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
-.shop-cart__qty {
-  grid-column: 1;
-  font-size: 0.75rem;
-  color: var(--color-muted);
+.shop-cart__fresh {
+  display: inline-block;
+  margin-inline-start: 0.375rem;
+  padding: 0.0625rem 0.4375rem;
+  border-radius: var(--tds-radius-pill);
+  background: var(--color-surface-accent);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  vertical-align: 0.0625rem;
 }
 .shop-cart__price {
   grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
+  grid-row: 1;
   font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.shop-cart__controls {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+/* `.btn .btn-ghost` round: the shared geometry, shadow and lift, at the size
+   of a stepper key. */
+.shop-cart__stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.shop-cart__step,
+.shop-cart__remove {
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: var(--tds-radius-pill);
+  font-size: 1rem;
+  line-height: 1;
+}
+.shop-cart__qty {
+  min-width: 1.75rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: center;
+}
+.shop-cart__remove {
+  color: var(--color-muted);
+}
+.shop-cart__remove svg {
+  width: 1rem;
+  height: 1rem;
+}
+.shop-cart__remove:hover {
+  color: var(--color-accent);
+}
+@media (pointer: coarse) {
+  .shop-cart__step,
+  .shop-cart__remove {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
 }
 .shop-cart__total {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   margin: 0.75rem 0 0;
-  padding-top: 0.625rem;
+  padding-top: 0.75rem;
   border-top: var(--tds-border-hairline) solid var(--color-line);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+.shop-cart__sum {
+  display: inline-block;
+  font-size: 1.125rem;
 }
 .shop-cart__actions {
   display: flex;
@@ -1237,6 +1361,12 @@
 .shop-cart__actions > .btn {
   flex: 1 1 auto;
   justify-content: center;
+}
+.shop-cart__checkout > span {
+  transition: translate var(--tds-dur-fast) var(--tds-ease-out);
+}
+.shop-cart__checkout:hover > span {
+  translate: 0.1875rem 0;
 }
 
 /* The product picture that flies into the basket (CartWiring.astro). Fixed at
@@ -1516,16 +1646,35 @@ button[data-add-to-cart][data-added="true"] {
   animation: shop-basket-bump var(--tds-dur-slow) var(--tds-ease-out);
 }
 
-/* 1c. The peek appears with a short drop and fade. */
+/* 1c. The mini basket unfolds from the icon on a light overshoot; its lines
+       follow 45 ms apart, and the total pops on every new quote (`key` on the
+       settle counter in CartBadge.tsx). */
 @keyframes shop-peek-in {
   from {
     opacity: 0;
-    transform: translateY(-0.375rem);
+    transform: translateY(-0.5rem) scale(0.92);
+  }
+}
+
+@keyframes shop-line-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.5rem);
   }
 }
 
 .shop-cart__peek:not([hidden]) {
-  animation: shop-peek-in var(--tds-dur-base) var(--tds-ease-out);
+  animation: shop-peek-in var(--tds-dur-slow) var(--tds-ease-bounce-in);
+}
+
+.shop-cart__peek:not([hidden]) .shop-cart__line {
+  animation: shop-line-in var(--tds-dur-slow) var(--tds-ease-out) both;
+  animation-delay: calc(var(--tds-dur-fast) / 2 + var(--i, 0) * 45ms);
+}
+
+.shop-cart__sum,
+.shop-cart__qty {
+  animation: shop-pop var(--tds-dur-base) var(--tds-ease-out);
 }
 
 /* 2. A line left the basket. It fades and slides off the leading edge rather
@@ -1595,6 +1744,9 @@ button[data-add-to-cart][data-added="true"] {
   .shop-header__cart-count,
   .is-bumped,
   .shop-cart__peek:not([hidden]),
+  .shop-cart__peek:not([hidden]) .shop-cart__line,
+  .shop-cart__sum,
+  .shop-cart__qty,
   .checkout button[aria-busy="true"] {
     animation: none;
   }
@@ -1843,4 +1995,80 @@ button[data-add-to-cart][data-added="true"] {
 }
 .shop-filter-empty:empty {
   display: none;
+}
+
+/* --- the front page's hero (2026-10-19) ---------------------------------- */
+
+/* Who runs the market, above the promise. */
+.shop-intro__eyebrow {
+  margin: 0 0 0.875rem;
+  font-family: var(--tds-eyebrow-family);
+  font-size: 0.75rem;
+  font-weight: var(--tds-eyebrow-weight);
+  letter-spacing: var(--tds-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+/* The promise carries the accent: the one coloured phrase on the page. */
+.shop-intro__accent {
+  color: var(--color-accent);
+  font-style: italic;
+}
+.shop-intro__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1.75rem;
+}
+.shop-intro__ctas .btn span {
+  transition: translate var(--tds-dur-fast) var(--tds-ease-out);
+}
+.shop-intro__ctas .btn:hover span {
+  translate: 0 0.125rem;
+}
+/* Three figures in a row, each a number over its word, divided by hairlines. */
+.shop-intro__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0 0 1.75rem;
+}
+.shop-intro__stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-inline: 1.25rem;
+  border-inline-start: var(--tds-border-hairline) solid color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+.shop-intro__stats > div:first-child {
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+.shop-intro__stats dt {
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--color-ink) 72%, var(--color-soft));
+}
+.shop-intro__stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+/* The picture leans out of the glance card on the desktop: the card overlaps
+   its lower edge instead of stacking under it. */
+@media (min-width: 64rem) {
+  .shop-glance {
+    position: relative;
+  }
+  .shop-glance .shop-editorial--hero {
+    margin: -3rem -2.5rem 1.25rem 2.5rem;
+    box-shadow: var(--tds-shadow-hard);
+    rotate: 1.5deg;
+  }
+}
+/* Anchored from the hero's "Katalog ansehen": clear of the sticky header. */
+#katalog {
+  scroll-margin-top: 6rem;
 }

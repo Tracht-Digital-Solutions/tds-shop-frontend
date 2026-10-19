@@ -49,9 +49,14 @@ build emits no routes, and it would ship a sitemap with only the pages its own f
 - `ShopFilterToggle.astro` (a brand button) closes the intro's heading row (`.shop-intro__head`) on the right;
   `ShopFilterBar.astro` renders the panel under the intro: tds-shared's `.tds-filterbar__*` + `mountFilterBar()`,
   closed by default. Search, Art (own / affiliate from `offers[].kind`; a product with both
-  matches both) and order (Empfohlen = API order, Neueste by `publishedAt`, A–Z). Never a price (24-hour rule).
-- Client-side only: the page cache keys on the path, so a query string never reaches the server's answer. The
-  category chips stay links between categories.
+  matches both), Kategorie (front page only), Themen (the ten most common tags on the page) and order (Empfohlen =
+  API order, Neueste by `publishedAt`, A–Z, Preis ↑/↓).
+- **The price sort reads `data-price`, written through `displayPrice`** — exactly the figure the card shows in the
+  same render, so a partner price past the 24-hour rule is neither shown nor sorted by; products without a showable
+  price go last both ways.
+- Client-side only: the page cache keys on the path, so a query string never reaches the server's answer. On the
+  front page the hero's category chips (`a[data-filter-category]`) drive the Kategorie group without a page load
+  (2026-10-19); they stay links for crawlers, modifier clicks and no-JS. On a category page they navigate.
 - `ProductGrid filterable` wraps each card in a `display: contents` `.shop-filter-item` with the data. On the grouped
   front page (more than 12 products, four per shelf) the full grid ships in a `<template data-filter-all>` and
   replaces the shelves while a filter is set; the default view is the shelves.

@@ -7,6 +7,7 @@ import { tx } from "../lib/i18n";
 import { siteLinks } from "../lib/seo";
 import { withAttribution } from "../lib/offers";
 import { productImageAttributes } from '../lib/productImages';
+import { displayPrice } from "@tracht-digital-solutions/tds-shared/schemas";
 
 interface Props {
   products: CatalogProduct[];
@@ -30,6 +31,18 @@ const attributed = products.map((product) => withAttribution(product, lang, plac
 const kindOf = (product: CatalogProduct): string => {
   const kinds = new Set(product.offers.map((o) => o.kind));
   return kinds.size === 2 ? "own affiliate" : [...kinds][0] ?? "";
+};
+/**
+ * The lowest price this card may SHOW, for the filter bar's price sort. Read
+ * through `displayPrice`, so a partner price past the 24-hour rule is not in
+ * the markup either; a product without a showable price sorts last.
+ */
+const now = Date.now();
+const priceOf = (product: CatalogProduct): string => {
+  const cents = product.offers
+    .map((offer) => displayPrice(offer, now)?.cents)
+    .filter((value): value is number => typeof value === "number");
+  return cents.length > 0 ? String(Math.min(...cents)) : "";
 };
 const searchOf = (product: CatalogProduct): string =>
   [product.title, product.teaser, product.categoryLabel ?? product.category, ...(product.tags ?? [])]
@@ -57,6 +70,9 @@ const searchOf = (product: CatalogProduct): string =>
           <div
             class="shop-filter-item"
             data-kind={kindOf(products[i])}
+            data-category={products[i].category}
+            data-tags={(products[i].tags ?? []).map((tag) => tag.toLowerCase()).join("|")}
+            data-price={priceOf(products[i])}
             data-search={searchOf(products[i])}
             data-title={products[i].title}
             data-published={products[i].publishedAt ?? ""}

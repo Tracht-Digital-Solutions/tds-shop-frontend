@@ -9,8 +9,10 @@ import { tx, type Lang } from "../lib/i18n";
  *
  * Everything happens in the browser over cards already in the page: the page
  * cache keys on the path alone, so `?art=…` could never change what is
- * served. The category chips above stay the navigation between categories;
- * this narrows and orders what one page holds.
+ * served. Since 2026-10-19 categories and tags filter here too, the way the
+ * Ratgeber's do — without a page load. On the front page the category chips
+ * in the hero drive the same group (they stay links for crawlers, a new tab
+ * and a reader without JavaScript); on a category page only the tags show.
  *
  * On the grouped front page the shelves show only four cards each, so the
  * full catalogue comes along in a `<template>` (inert, not rendered, not read
@@ -18,12 +20,16 @@ import { tx, type Lang } from "../lib/i18n";
  */
 interface Props {
   lang: Lang;
+  /** The categories to choose between — only on the front page. */
+  categories?: { slug: string; name: string }[];
+  /** The most common tags on this page, most common first. */
+  tags?: string[];
 }
 
-const { lang } = Astro.props;
+const { lang, categories = [], tags = [] } = Astro.props;
 const f = tx(lang).filter;
 const kinds = ["all", "own", "affiliate"] as const;
-const sorts = ["default", "new", "az"] as const;
+const sorts = ["default", "new", "az", "priceUp", "priceDown"] as const;
 ---
 
 {/* The panel; its toggle (ShopFilterToggle) stands before it in the filter
@@ -56,6 +62,32 @@ const sorts = ["default", "new", "az"] as const;
         ))}
       </div>
     </fieldset>
+    {categories.length > 1 && (
+      <fieldset class="tds-filterbar__group">
+        <legend class="tds-filterbar__legend">{f.category}</legend>
+        <div class="tds-toolbar">
+          <button type="button" class="chip" data-filter-group="category" data-value="all" aria-pressed="true">{f.all}</button>
+          {categories.map((c) => (
+            <button type="button" class="chip" data-filter-group="category" data-value={c.slug} aria-pressed="false">
+              {c.name}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+    )}
+    {tags.length > 1 && (
+      <fieldset class="tds-filterbar__group">
+        <legend class="tds-filterbar__legend">{f.tags}</legend>
+        <div class="tds-toolbar">
+          <button type="button" class="chip" data-filter-group="tag" data-value="all" aria-pressed="true">{f.all}</button>
+          {tags.map((tag) => (
+            <button type="button" class="chip" data-filter-group="tag" data-value={tag.toLowerCase()} aria-pressed="false">
+              #{tag}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+    )}
     <fieldset class="tds-filterbar__group">
       <legend class="tds-filterbar__legend">{f.sort}</legend>
       <div class="tds-toolbar">
@@ -92,18 +124,56 @@ const sorts = ["default", "new", "az"] as const;
     const scope: ParentNode = template && results ? results : document;
     const items = Array.from(scope.querySelectorAll<HTMLElement>(".shop-filter-item"));
 
+    /** Products without a showable price go last in both directions. */
+    const price = (item: HTMLElement): number | null =>
+      item.dataset.price ? Number(item.dataset.price) : null;
+    const byPrice = (a: HTMLElement, b: HTMLElement, dir: 1 | -1): number => {
+      const pa = price(a);
+      const pb = price(b);
+      if (pa === null || pb === null) return pa === pb ? 0 : pa === null ? 1 : -1;
+      return (pa - pb) * dir;
+    };
+
+    // The hero's category chips are links; on the front page they set the
+    // category group instead of loading the category page.
+    const panelChip = (value: string) =>
+      root.querySelector<HTMLButtonElement>(`button[data-filter-group="category"][data-value="${CSS.escape(value)}"]`);
+    const heroChips = Array.from(document.querySelectorAll<HTMLAnchorElement>("a[data-filter-category]"));
+    for (const link of heroChips) {
+      link.addEventListener("click", (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const chip = panelChip(link.dataset.filterCategory ?? "");
+        if (!chip) return;
+        event.preventDefault();
+        chip.click();
+        document.querySelector(".shop-filterrow")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
     mountFilterBar(root, {
       items,
       match: (item, s) =>
-        (s.groups.kind === "all" || (item.dataset.kind ?? "").split(" ").includes(s.groups.kind)) &&
+        (s.groups.kind === undefined || s.groups.kind === "all" || (item.dataset.kind ?? "").split(" ").includes(s.groups.kind)) &&
+        (s.groups.category === undefined || s.groups.category === "all" || item.dataset.category === s.groups.category) &&
+        (s.groups.tag === undefined || s.groups.tag === "all" || (item.dataset.tags ?? "").split("|").includes(s.groups.tag)) &&
         matchesAllWords(item.dataset.search ?? "", s.query),
       compare: (a, b, s) => {
         if (s.groups.sort === "new") return (b.dataset.published ?? "").localeCompare(a.dataset.published ?? "");
         if (s.groups.sort === "az") return (a.dataset.title ?? "").localeCompare(b.dataset.title ?? "", lang);
+        if (s.groups.sort === "priceUp") return byPrice(a, b, 1);
+        if (s.groups.sort === "priceDown") return byPrice(a, b, -1);
         return 0;
       },
       onChange: (visible, s) => {
-        const active = s.query !== "" || s.groups.kind !== "all" || s.groups.sort !== "default";
+        const category = s.groups.category ?? "all";
+        for (const link of heroChips) {
+          const on = (link.dataset.filterCategory ?? "") === category;
+          if (on) link.setAttribute("aria-current", "true");
+          else link.removeAttribute("aria-current");
+        }
+        const active =
+          s.query !== "" ||
+          Object.entries(s.groups).some(([group, value]) => value !== (group === "sort" ? "default" : "all"));
         if (results) results.hidden = !active;
         for (const shelf of shelves) shelf.hidden = active;
         if (status) status.textContent = active ? shown(visible) : "";
