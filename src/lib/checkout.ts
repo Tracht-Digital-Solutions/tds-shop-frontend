@@ -293,13 +293,5 @@ export async function getOrder(token: string): Promise<OrderView | null> {
   }
 }
 
-export function formatPrice(cents: number, currency: string, lang: Lang): string {
-  try {
-    return new Intl.NumberFormat(lang === "de" ? "de-DE" : "en-GB", {
-      style: "currency",
-      currency,
-    }).format(cents / 100);
-  } catch {
-    return `${(cents / 100).toFixed(2)} ${currency}`;
-  }
-}
+/** The same price text the shared product card shows (tds-shared `formatPrice`). */
+export { formatPrice } from "@tracht-digital-solutions/tds-shared/format";

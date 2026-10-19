@@ -157,13 +157,6 @@ export function renderUrlset(entries: SitemapEntry[]): string {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 }
 
-export function renderIndex(sitemaps: string[]): string {
-  const items = sitemaps
-    .map((loc) => `  <sitemap>\n    <loc>${escapeXml(loc)}</loc>\n  </sitemap>`)
-    .join("\n");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${items}\n</sitemapindex>\n`;
-}
-
 /**
  * The sectioned index (2026-10-06): one child per non-empty section, each with
  * the newest real date inside it (none for the legal texts, which carry no date).

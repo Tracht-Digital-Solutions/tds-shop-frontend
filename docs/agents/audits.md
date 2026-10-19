@@ -2,9 +2,9 @@
 
 ## Search and answer engines: `npm run audit:geo -- <url>`
 
-`scripts/geo-audit.mjs` is the same file in all four public repos; only its `PROFILE` differs, and
-`src/lib/geoAudit.test.ts` holds the shared check list. No browser: it reads the raw server HTML a
-crawler gets, starting from `robots.txt` and the sitemap.
+The audit is tds-shared's `tds-geo-audit` (since 0.59, check list pinned there); this repo keeps only
+`scripts/geo-audit.profile.mjs`, which `src/lib/geoAudit.test.ts` checks against robots.txt. No browser:
+it reads the raw server HTML a crawler gets, starting from `robots.txt` and the sitemap.
 
 Shop-specific rules:
 

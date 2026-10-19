@@ -140,16 +140,20 @@ export function renderLlmsTxt(input: LlmsInput): string {
     out();
   }
 
-  out("## Maschinenlesbare Quellen");
   if (input.legal && input.legal.length > 0) {
-    out();
     out("## Rechtliches");
     out();
     // The shop sells in its own name, so its terms, privacy notice and imprint
     // are its own pages — and every URL the sitemap lists is named here
     // (geo-audit `llmsCovers`), so an answer engine can cite the right text.
     for (const doc of input.legal) out(`- ${doc.title}: ${doc.url}`);
+    out();
   }
+
+  // The sitemap under its own heading. It used to follow "Rechtliches", so the
+  // "Maschinenlesbare Quellen" heading stood empty and the sitemap read as a
+  // legal text.
+  out("## Maschinenlesbare Quellen");
   out();
   out(`- Sitemap: ${canonical("/sitemap-index.xml")}`);
   out();

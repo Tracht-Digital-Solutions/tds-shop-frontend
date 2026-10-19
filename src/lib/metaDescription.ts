@@ -1,3 +1,5 @@
+import { clampToWord } from "@tracht-digital-solutions/tds-shared/format";
+
 /**
  * Meta descriptions, kept inside the range a search result renders whole.
  *
@@ -12,18 +14,9 @@ export const MAX_LENGTH = 160;
 
 /**
  * Trim to a whole word, never mid-word, and never leaving dangling
- * punctuation. An ellipsis is added only when something was actually cut.
+ * punctuation (tds-shared, shared with the journal). Default budget: 160.
  */
-export function clampToWord(text: string, max: number = MAX_LENGTH): string {
-  const clean = text.replace(/\s+/g, " ").trim();
-  if (clean.length <= max) return clean;
-
-  // -1 for the ellipsis we are about to add.
-  const cut = clean.slice(0, max - 1);
-  const lastSpace = cut.lastIndexOf(" ");
-  const head = (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[\s,;:.\-–—]+$/, "");
-  return `${head}…`;
-}
+export { clampToWord };
 
 /**
  * Build a description from a lead and, if it falls short of the floor, top it
