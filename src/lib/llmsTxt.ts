@@ -60,6 +60,28 @@ export interface LlmsInput {
   englishOnly?: readonly { slug: string; title: string }[];
 }
 
+/** Longest product description the file carries, in characters. */
+export const PRODUCT_LINE_MAX = 80;
+
+/**
+ * The first sentence of a product description, clamped at a word boundary.
+ *
+ * The file has to name every product the sitemap lists (geo-audit
+ * `llmsCovers`), so its size grows with the catalogue. The full "Kurz gesagt"
+ * text made every entry ~230 bytes and pushed the live file to 19.7 KB with 43
+ * products; the product page carries the rest, and this file only has to say
+ * what the entry is.
+ */
+export function productLine(text: string, max = PRODUCT_LINE_MAX): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  // At least 40 characters before the stop: "z. B." and "ca." must not end it.
+  const sentence = clean.match(/^.{40,}?[.!?](?=\s|$)/)?.[0] ?? clean;
+  if (sentence.length <= max) return sentence;
+  const cut = sentence.slice(0, max - 1);
+  const atWord = cut.slice(0, Math.max(cut.lastIndexOf(" "), 1));
+  return `${atWord.replace(/[\s,;:–—-]+$/, "")}…`;
+}
+
 export function renderLlmsTxt(input: LlmsInput): string {
   const lines: string[] = [];
   const out = (line = "") => lines.push(line);
@@ -118,7 +140,7 @@ export function renderLlmsTxt(input: LlmsInput): string {
     out("## Leistungen und Produkte");
     out();
     for (const product of input.products) {
-      out(`- **${product.title}** — ${product.summary?.trim() || product.teaser}`);
+      out(`- **${product.title}** — ${productLine(product.summary?.trim() || product.teaser)}`);
       // German URL only. A product's English slug is its own (the API pairs
       // translations by id, not by slug), so `/en/product/<german-slug>` was a
       // 404 for every product whose slugs differ — and a dead link is worse

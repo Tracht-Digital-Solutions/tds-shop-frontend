@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { describedCategories } from "./categoryCopy";
 import { categoryPath, homePath, productPath } from "./i18n";
-import { renderLlmsTxt, type LlmsInput } from "./llmsTxt";
+import { PRODUCT_LINE_MAX, productLine, renderLlmsTxt, type LlmsInput } from "./llmsTxt";
 import { canonical } from "./seo";
 
 /**
@@ -123,5 +123,49 @@ describe("llms.txt", () => {
       // The first sentence of the category's own answer, not a generated one.
       expect(llms, slug).toMatch(new RegExp(`\\*\\*[^*]+\\*\\* — `));
     }
+  });
+});
+
+describe("productLine", () => {
+  it("keeps the first sentence", () => {
+    expect(productLine("Einrichtung des Routers samt Gastnetz und Sicherung. Danach eine kurze Einweisung.")).toBe(
+      "Einrichtung des Routers samt Gastnetz und Sicherung.",
+    );
+  });
+
+  it("does not stop at an abbreviation early in the text", () => {
+    expect(productLine("Z. B. für Praxen und Kanzleien: ein eigenes Netz für Gäste.")).toBe(
+      "Z. B. für Praxen und Kanzleien: ein eigenes Netz für Gäste.",
+    );
+  });
+
+  it("clamps a long sentence at a word boundary", () => {
+    const line = productLine(`${"Wort ".repeat(40)}Ende.`);
+    expect(line.length).toBeLessThanOrEqual(PRODUCT_LINE_MAX);
+    expect(line.endsWith("Wort…")).toBe(true);
+  });
+});
+
+describe("llms.txt size", () => {
+  // The live file was 19.7 KB with 43 products (2026-10-21) against a 12 KB
+  // budget. The audit budget is now 24 KB; this pins that a catalogue 40 % over
+  // today's size, with long summaries and every product in both trees, fits.
+  it("stays under 24 KB for 60 products in each tree", () => {
+    const long = "Eine ausführliche Einschätzung, die deutlich länger ist als eine Zeile im Index sein sollte. ".repeat(3);
+    const big: LlmsInput = {
+      categories: input.categories,
+      products: Array.from({ length: 60 }, (_, i) => ({
+        slug: `produkt-mit-einem-laengeren-slug-${i}`,
+        title: `Ein Produkt mit einem typischen Titel Nummer ${i}`,
+        teaser: long,
+        summary: long,
+        category: "netzwerk",
+      })),
+      englishOnly: Array.from({ length: 60 }, (_, i) => ({
+        slug: `product-with-a-longer-slug-${i}`,
+        title: `A product with a typical title number ${i}`,
+      })),
+    };
+    expect(Buffer.byteLength(renderLlmsTxt(big), "utf8")).toBeLessThan(24 * 1024);
   });
 });

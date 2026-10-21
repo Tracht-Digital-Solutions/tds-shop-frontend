@@ -113,7 +113,14 @@ export default {
    */
   bannedWords: /testsieger|testurteil|bestseller|unschlagbar|garantierte lieferung|kostenlose r[üu]cksendung/i,
 
-  llmsBudgetBytes: 12 * 1024,
+  /**
+   * 24 KB, like the journal: both are catalogues whose file must name every
+   * listed page (here every product, in both trees). 12 KB was the marketing
+   * site's figure and the live file passed it at 19.7 KB with 43 products
+   * (2026-10-21). Product lines are clamped (`productLine`) so growth is one
+   * short line per product.
+   */
+  llmsBudgetBytes: 24 * 1024,
 
   /**
    * The audit must never follow the click redirect. It counts a click and
