@@ -117,7 +117,7 @@ const body = product.body && product.bodyFormat === "markdown" ? renderMarkdown(
  * a product's translation may live under a different slug, so a pasted `/en/`
  * would be a 404, and one dangling alternate invalidates the whole set.
  */
-const altUrl = indexable ? await productAlternate(product.slug, lang) : null;
+const altUrl = indexable ? await productAlternate(product, lang) : null;
 
 const selfPath = productPath(product.slug, lang);
 const breadcrumbId = `${canonical(selfPath)}#breadcrumb`;

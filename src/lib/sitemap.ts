@@ -2,6 +2,7 @@ import { listAllProducts, listCategories } from "./content-api";
 import { categoryPath, homePath, legalPath, productPath, LANGS, type Lang } from "./i18n";
 import { publishedLegalSlugs } from "./legal";
 import { isIndexable } from "./indexing";
+import { productPairKey } from "./alternates";
 import { canonical } from "./seo";
 import { escapeXml, newestDay, renderSectionedSitemapIndex } from "@tracht-digital-solutions/tds-shared/site";
 import { SITEMAP_SECTIONS, sectionPath, type SitemapSection } from "./sitemapSections";
@@ -55,11 +56,9 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
    * all — the same gap as the missing hreflang in the markup, in the other
    * document a crawler reads.
    *
-   * A product keys on its SLUG, which pairs only when the translation uses the
-   * same one. The API pairs translations on the product id and the payload
-   * carries neither that id nor the counterpart slug, so a product published
-   * under a different slug per language stays unpaired here — exactly as it
-   * stays unpaired in `alternates.ts`. The two have to agree: a sitemap that
+   * A product keys on `productPairKey()` — its German slug, known on both
+   * sides through the API's `alternateSlug` — so it pairs exactly as
+   * `alternates.ts` pairs the page's hreflang. The two have to agree: a sitemap that
    * claims a pairing the page does not emit is a contradiction a crawler
    * resolves against us.
    */
@@ -100,7 +99,7 @@ export async function buildEntries(): Promise<SitemapEntry[]> {
         lastmod: isoDay(product.publishedAt ?? null),
         ...(product.imageUrl?.startsWith("http") ? { image: { loc: product.imageUrl, title: product.title } } : {}),
       });
-      remember(`prod:${product.slug}`, lang, loc);
+      remember(productPairKey(product, lang), lang, loc);
     }
 
     // The legal pages are indexable (a consumer looking for the withdrawal

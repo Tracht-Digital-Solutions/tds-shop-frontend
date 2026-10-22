@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { listAllProducts, listCategories } from "~/lib/content-api";
 import { isIndexable } from "~/lib/indexing";
+import { productPairKey } from "~/lib/alternates";
 import { renderLlmsTxt } from "~/lib/llmsTxt";
 import { LEGAL_TITLES, publishedLegalSlugs } from "../lib/legal";
 import { legalPath } from "../lib/i18n";
@@ -31,26 +32,28 @@ export const prerender = false;
 export const GET: APIRoute = async () => {
   // German is the root tree and this file is German. The English tree is read
   // too, because its product slugs are its own: a German slug says nothing
-  // about whether `/en/product/<slug>` exists. Paired by slug, as the sitemap
-  // pairs its alternates; the rest is listed on its own.
+  // about whether `/en/product/<slug>` exists. Paired with `productPairKey()`,
+  // as the sitemap pairs its alternates; the rest is listed on its own.
   const [all, allEn, categories] = await Promise.all([
     listAllProducts({ lang: "de" }),
     listAllProducts({ lang: "en" }),
     listCategories("de"),
   ]);
 
-  const english = new Set(allEn.filter(isIndexable).map((product) => product.slug));
+  const english = new Map(
+    allEn.filter(isIndexable).map((product) => [productPairKey(product, "en"), product.slug] as const),
+  );
   const products = all.filter(isIndexable).map((product) => ({
     slug: product.slug,
     title: product.title,
     teaser: product.teaser,
     summary: product.summary ?? null,
     category: product.category,
-    english: english.has(product.slug),
+    englishSlug: english.get(productPairKey(product, "de")),
   }));
-  const german = new Set(products.map((product) => product.slug));
+  const german = new Set(all.filter(isIndexable).map((product) => productPairKey(product, "de")));
   const englishOnly = allEn
-    .filter((product) => isIndexable(product) && !german.has(product.slug))
+    .filter((product) => isIndexable(product) && !german.has(productPairKey(product, "en")))
     .map((product) => ({ slug: product.slug, title: product.title }));
 
   const body = renderLlmsTxt({

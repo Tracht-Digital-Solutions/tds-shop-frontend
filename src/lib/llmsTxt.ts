@@ -36,11 +36,12 @@ export interface LlmsProduct {
   /** "Kurz gesagt" (tds-ext-shop ≥ 0.6); preferred over the teaser, which sells. */
   summary?: string | null;
   /**
-   * True when an indexable English product carries the SAME slug — the pairing
-   * rule `sitemap.ts` uses for its alternates. Then `/en/product/<slug>` is a
-   * page, and the file names it beside the German one.
+   * The English slug of the same product when it is indexable — paired with
+   * `productPairKey()`, the rule `sitemap.ts` uses for its alternates. Then
+   * `/en/product/<englishSlug>` is a page, and the file names it beside the
+   * German one.
    */
-  english?: boolean;
+  englishSlug?: string;
 }
 
 export interface LlmsInput {
@@ -141,14 +142,11 @@ export function renderLlmsTxt(input: LlmsInput): string {
     out();
     for (const product of input.products) {
       out(`- **${product.title}** — ${productLine(product.summary?.trim() || product.teaser)}`);
-      // German URL only. A product's English slug is its own (the API pairs
-      // translations by id, not by slug), so `/en/product/<german-slug>` was a
-      // 404 for every product whose slugs differ — and a dead link is worse
-      // than none in a file an assistant reads as ground truth.
       out(`  ${canonical(productPath(product.slug, "de"))}`);
-      // Named only when the English tree holds the same slug: the case the
-      // comment above is about stays covered by `englishOnly` below.
-      if (product.english) out(`  (English: ${canonical(productPath(product.slug, "en"))})`);
+      // Never `/en/product/<german-slug>`: a product's English slug is its own,
+      // and a dead link is worse than none in a file an assistant reads as
+      // ground truth. Named only when the API paired it.
+      if (product.englishSlug) out(`  (English: ${canonical(productPath(product.englishSlug, "en"))})`);
     }
     out();
   }

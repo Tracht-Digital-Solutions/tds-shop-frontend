@@ -54,7 +54,18 @@ export type CatalogProduct = Omit<ShopProductRef, "offers"> & {
    * rather than in the shared schema for the same reason as the fields above.
    */
   categoryLabel?: string;
-} & AnswerFields;
+} & AnswerFields &
+  TwinFields;
+
+export interface TwinFields {
+  /**
+   * The same product's slug in the other language, or `null` when it has no
+   * translation there (tds-ext-shop ≥ 0.6.9). Slugs may differ per language,
+   * so this is the only safe pairing. Absent on an older API build — then
+   * `alternates.ts` falls back to probing the same slug.
+   */
+  alternateSlug?: string | null;
+}
 
 /** A question and its answer, as the API serves product and category FAQs. */
 export interface FaqItem {
@@ -82,7 +93,8 @@ interface AnswerFields {
 }
 
 export type ProductPage = Omit<ShopProduct, "offers"> &
-  AnswerFields & {
+  AnswerFields &
+  TwinFields & {
     offers: SellableOffer[];
     editorialStatus?: EditorialStatus;
     categoryLabel?: string;

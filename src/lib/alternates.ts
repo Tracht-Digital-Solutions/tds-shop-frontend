@@ -25,19 +25,31 @@
  * answer. For a category that is a count in the other language; for a product
  * it costs one extra read, which the page cache absorbs.
  *
- * ### The gap this cannot close
+ * ### Products with different slugs per language
  *
- * `ShopProduct` carries no product id and no counterpart slug, so a product
- * whose translation lives under a DIFFERENT slug cannot be paired from here —
- * the probe looks for the same slug and correctly finds nothing. Closing that
- * needs a field from the API (tds-ext-shop + tds-core-frontend-api); until
- * then such a product ships no hreflang, which is the honest outcome rather
- * than a guess.
+ * Since tds-ext-shop 0.6.9 every public product read carries `alternateSlug`:
+ * the same product's slug in the other language, paired on the product id.
+ * That is the answer, so no probe is needed. An older API omits the field;
+ * then the probe looks for the SAME slug, and a translation under a different
+ * slug stays unpaired — the honest outcome rather than a guess.
  */
 
 import { getProduct, listCategories } from "./content-api";
 import { canonical } from "./seo";
 import { categoryPath, homePath, productPath, type Lang } from "./i18n";
+import type { TwinFields } from "./types";
+
+/**
+ * Language-neutral key of a product, so the two trees pair in the sitemap and
+ * llms.txt exactly as the page pairs its hreflang. The German slug when it is
+ * known; a product without a twin gets a key of its own. Without the field (an
+ * older API) the slug itself is the key, the old same-slug rule.
+ */
+export function productPairKey(product: { slug: string } & TwinFields, lang: Lang): string {
+  if (product.alternateSlug === undefined) return `prod:${product.slug}`;
+  if (!product.alternateSlug) return `prod:${lang}:${product.slug}`;
+  return `prod:${lang === "de" ? product.slug : product.alternateSlug}`;
+}
 
 /** The other language. */
 export const otherLang = (lang: Lang): Lang => (lang === "de" ? "en" : "de");
@@ -76,9 +88,16 @@ export async function categoryAlternate(category: string, lang: Lang): Promise<s
  * What must never happen is a confident alternate for a product the API says
  * does not exist in that language, and a 404 is passed through.
  */
-export async function productAlternate(slug: string, lang: Lang): Promise<string | null> {
+export async function productAlternate(
+  product: { slug: string } & TwinFields,
+  lang: Lang,
+): Promise<string | null> {
   const other = otherLang(lang);
-  const twin = await getProduct(slug, other);
+  // The API answered the question on the product itself.
+  if (product.alternateSlug !== undefined) {
+    return product.alternateSlug ? canonical(productPath(product.alternateSlug, other)) : null;
+  }
+  const twin = await getProduct(product.slug, other);
   if (!twin) return null;
   // The API may serve the translation under its own slug; trust what came
   // back rather than the slug we asked for.
