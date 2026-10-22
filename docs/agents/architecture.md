@@ -22,10 +22,9 @@ every listing page, so `Layout.astro` renders hreflang only from a resolved `alt
 - DE and EN product slugs may differ (the API pairs translations by product id). Don't "fix" this.
 - **`src/lib/alternates.ts` resolves counterparts.** Every function returns `null` unless the
   counterpart is known to answer: a category needs a non-zero count in the other language, a
-  product is confirmed with a second read.
-- A product whose translation lives under a **different slug can't be paired yet**: the payload
-  carries neither the product id nor the counterpart slug, so it ships without hreflang rather than
-  with a guess. Fixing that needs a field from `tds-ext-shop-pkg`.
+  product uses the API's `alternateSlug` (tds-ext-shop >= 0.6.9; slugs may differ per language).
+- Page hreflang, sitemap alternates and llms.txt all pair products with `productPairKey()`; keep
+  them on that one rule. Without the field (older API) a product is probed under the same slug.
 - `Header.astro`'s language switch uses the resolved alternate and falls back to the home page.
 - `Layout.astro` makes any site-relative `altUrl` absolute (hreflang must be fully qualified).
   Markup uses `de` / `en`; the sitemap's `xhtml:link` uses `de-DE` / `en-GB`. All four public
