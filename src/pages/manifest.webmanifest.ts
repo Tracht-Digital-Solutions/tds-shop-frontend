@@ -8,8 +8,8 @@ export const GET: APIRoute = () =>
   new Response(
     JSON.stringify(
       buildManifest({
-        name: "Digitalmarkt von Tracht Digital Solutions",
-        shortName: "Digitalmarkt",
+        name: "Shop von Tracht Digital Solutions",
+        shortName: "Shop",
         description: "Digitale Leistungen zum Festpreis und Technik für den Betrieb, von uns eingeschätzt.",
         lang: "de",
         themeColor: "#fafaf7",

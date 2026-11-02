@@ -16,7 +16,7 @@ import { connection } from "./connection";
  */
 const guard = createSiteKeyGuard(connection, {
   label: "tds-shop",
-  reconnectHint: "Bitte den Shop in den Digitalmarkt-Einstellungen neu verbinden.",
+  reconnectHint: "Bitte den Shop in den Shop-Einstellungen neu verbinden.",
 });
 
 export const { currentSiteKey, siteKeyHeaders, assertKeyAccepted } = guard;

@@ -74,7 +74,7 @@ export const productCategoryName = (product: { category: string; categoryLabel?:
 
 export const TX = {
   de: {
-    brand: "Digitalmarkt",
+    brand: "Shop",
     tagline: "Technik und Digitalisierung, kuratiert.",
     nav: {
       catalogue: "Katalog",
@@ -91,7 +91,7 @@ export const TX = {
     /** The front page's hero (2026-10-19): the H1 in two parts, so the promise
      *  can carry the accent; together they read as `catalogueHeadline`. */
     hero: {
-      eyebrow: "Digitalmarkt · Tracht Digital Solutions",
+      eyebrow: "Shop · Tracht Digital Solutions",
       titleLead: "Digitale Leistungen",
       titleAccent: "mit klarem Ab-Preis",
       browse: "Katalog ansehen",
@@ -179,7 +179,7 @@ export const TX = {
     notFoundBody: "Der Link ist veraltet oder vertippt. Im Katalog steht, was es gerade gibt.",
     footer: {
       blurb: "Digitale Lösungen mit Ab-Preis und Technik mit eigener Einschätzung, von Tracht Digital Solutions.",
-      shop: "Digitalmarkt",
+      shop: "Shop",
       company: "Tracht Digital",
       legal: "Rechtliches",
     },
@@ -224,7 +224,7 @@ export const TX = {
     },
   },
   en: {
-    brand: "Digitalmarkt",
+    brand: "Shop",
     tagline: "Technology and digitalisation, curated.",
     nav: {
       catalogue: "Catalogue",
@@ -237,7 +237,7 @@ export const TX = {
     faqHeading: "Common questions",
     catalogueHeadline: "Digital solutions with a clear starting price",
     hero: {
-      eyebrow: "Digitalmarkt · Tracht Digital Solutions",
+      eyebrow: "Shop · Tracht Digital Solutions",
       titleLead: "Digital services",
       titleAccent: "with a clear starting price",
       browse: "Browse the catalogue",
@@ -312,7 +312,7 @@ export const TX = {
     notFoundBody: "The link is outdated or mistyped. The catalogue shows what is currently available.",
     footer: {
       blurb: "Digital solutions with a starting price and technology with our own assessment, by Tracht Digital Solutions.",
-      shop: "Digitalmarkt",
+      shop: "Shop",
       company: "Tracht Digital",
       legal: "Legal",
     },
