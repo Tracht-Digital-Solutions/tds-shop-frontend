@@ -150,6 +150,10 @@ const sorts = ["default", "new", "az", "priceUp", "priceDown"] as const;
       });
     }
 
+    // `?art=own`, the landing page's "Alle Leistungen": the page cache keys on
+    // the path, so the address only ever selects a chip here.
+    const requestedKind = new URLSearchParams(window.location.search).get("art");
+
     mountFilterBar(root, {
       items,
       match: (item, s) =>
@@ -181,5 +185,9 @@ const sorts = ["default", "new", "az", "priceUp", "priceDown"] as const;
         if (empty) empty.textContent = active && visible === 0 ? none : "";
       },
     });
+
+    if (requestedKind === "own" || requestedKind === "affiliate") {
+      root.querySelector<HTMLButtonElement>(`button[data-filter-group="kind"][data-value="${requestedKind}"]`)?.click();
+    }
   }
 </script>

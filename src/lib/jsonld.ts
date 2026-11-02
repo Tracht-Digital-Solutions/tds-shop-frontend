@@ -1,3 +1,4 @@
+import { imageRights } from "@tracht-digital-solutions/tds-shared/site";
 import type { CatalogProduct, ProductPage } from "./types";
 import { displayPrice } from "@tracht-digital-solutions/tds-shared/schemas";
 
@@ -69,6 +70,7 @@ export function organizationSchema(): Node {
       url: site.logo.url,
       width: site.logo.width,
       height: site.logo.height,
+      ...imageRights("de"),
     },
     sameAs: [...site.socials],
   };
@@ -211,6 +213,13 @@ export function productSchema(product: ProductPage, lang: Lang, now = Date.now()
       url,
       price: (price.cents / 100).toFixed(2),
       priceCurrency: price.currency,
+      // The page says "ab": this is a starting price, not the sum on an invoice.
+      priceSpecification: {
+        "@type": "PriceSpecification",
+        minPrice: (price.cents / 100).toFixed(2),
+        priceCurrency: price.currency,
+        valueAddedTaxIncluded: true,
+      },
       availability:
         offer.availability === "out_of_stock"
           ? "https://schema.org/OutOfStock"

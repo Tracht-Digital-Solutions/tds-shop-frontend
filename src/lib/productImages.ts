@@ -1,6 +1,7 @@
 import catalog from './productImages.json';
 import type {CatalogProduct} from './types';
 import type {Lang} from './i18n';
+import {imageRights} from '@tracht-digital-solutions/tds-shared/site';
 
 interface ProductImage {slug:string;slugs:Record<Lang,string>;title:Record<Lang,string>;alt:Record<Lang,string>;width:number;height:number;src:string;digitalSourceType:string}
 export const productImageCatalog = catalog as Record<string,ProductImage>;
@@ -30,5 +31,5 @@ export function productImageSchema(product:Pick<CatalogProduct,'slug'|'imageUrl'
   return {'@type':'ImageObject','@id':product.url+'#product-image',contentUrl:product.imageUrl,url:product.imageUrl,
     name:product.title,caption:image.alt[lang],description:lang==='de'?`KI-generiertes Symbolbild zur Leistung: ${product.title}.`:`AI-generated illustration of the service: ${product.title}.`,
     width:image.width,height:image.height,encodingFormat:'image/webp',representativeOfPage:true,
-    creditText:'Tracht Digital Solutions',digitalSourceType:image.digitalSourceType,about:{'@id':product.url}};
+    ...imageRights(lang),digitalSourceType:image.digitalSourceType,about:{'@id':product.url}};
 }

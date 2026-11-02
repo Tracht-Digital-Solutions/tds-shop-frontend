@@ -119,7 +119,6 @@ describe("the property bar", () => {
     expect(first).not.toContain("tds-sitebar__actions");
     expect(second).toContain('<div class="tds-sitebar__desktop">');
     expect(second).toContain('<div class="tds-sitebar__actions">');
-    expect(second.indexOf("<CartBadge")).toBeGreaterThan(-1);
   });
 
   it("marks the shop current and sends the CTA in the reader's language", () => {
@@ -129,12 +128,10 @@ describe("the property bar", () => {
     expect(header).toMatch(/<div class="tds-sitebar__wide">\s*<a href=\{contact\} class="btn btn-primary"/);
   });
 
-  it("keeps the account menu and the basket in the bar at every width", () => {
+  it("keeps the account menu in the bar and no basket: own services are quoted", () => {
     const actions = header.slice(header.indexOf('<div class="tds-sitebar__actions">'));
-    const account = actions.indexOf("<AccountMenu");
-    const cart = actions.indexOf("<CartBadge");
-    expect(account, "no account menu in the actions").toBeGreaterThan(-1);
-    expect(cart).toBeGreaterThan(account);
+    expect(actions.indexOf("<AccountMenu"), "no account menu in the actions").toBeGreaterThan(-1);
+    expect(actions).not.toContain("<CartBadge");
   });
 
   it("keeps the blend's pill actions out of the shared bar", () => {

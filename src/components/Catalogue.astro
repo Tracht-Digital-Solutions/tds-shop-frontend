@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PriceCalculator from "./PriceCalculator.astro";
+import PriceMode from "./PriceMode.astro";
 import ProductGrid from "./ProductGrid.astro";
 import ShopFilterBar from "./ShopFilterBar.astro";
 import ShopFilterToggle from "./ShopFilterToggle.astro";
@@ -289,6 +291,10 @@ const jsonLd = asGraph([
     <>
       <div class="tds-filterbar shop-filterrow" id="katalog">
         <p class="shop-filterrow__count" data-filter-count data-total={products.length}>{t.filter.shown(products.length)}</p>
+        <div class="shop-filterrow__tools">
+          {products.some((p) => p.offers.some((o) => o.kind === "own")) ? <PriceMode lang={lang} /> : null}
+          <PriceCalculator lang={lang} products={products} />
+        </div>
         <ShopFilterToggle lang={lang} />
         <ShopFilterBar lang={lang} categories={filterCategories} tags={filterTags} />
       </div>

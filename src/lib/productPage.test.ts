@@ -22,18 +22,18 @@ const grid = readFileSync(
 );
 const layout = readFileSync(fileURLToPath(new URL("../layouts/Layout.astro", import.meta.url)), "utf8");
 
-describe("the buy actions", () => {
-  it("asks the offer card for the basket button on the product page", () => {
+describe("the offer actions", () => {
+  it("asks the offer card for the quote button on the product page", () => {
     const aside = /<aside class="shop-product__offers"[\s\S]*?<\/aside>/.exec(page)?.[0] ?? "";
     expect(aside, "no offer column on the product page").not.toBe("");
-    expect(aside).toMatch(/<ProductCard\b[^>]*\baddToCart\b/);
+    expect(aside).toMatch(/<ProductCard\b[^>]*\bquoteHref=/);
     expect(page).not.toMatch(/<AddToCart\b/);
   });
 
   it("asks for it in every catalogue card too", () => {
     const cards = grid.match(/<ProductCard\b[^>]*>/g) ?? [];
     expect(cards.length).toBeGreaterThan(0);
-    for (const card of cards) expect(card).toMatch(/\baddToCart\b/);
+    for (const card of cards) expect(card).toMatch(/\bquoteHref=/);
   });
 
   it("wires the buttons once, in the layout", () => {

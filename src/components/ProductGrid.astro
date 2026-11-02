@@ -7,6 +7,7 @@ import { tx } from "../lib/i18n";
 import { siteLinks } from "../lib/seo";
 import { withAttribution } from "../lib/offers";
 import { productImageAttributes } from '../lib/productImages';
+import { quoteHref } from "../lib/quote";
 import { displayPrice } from "@tracht-digital-solutions/tds-shared/schemas";
 
 interface Props {
@@ -77,10 +78,10 @@ const searchOf = (product: CatalogProduct): string =>
             data-title={products[i].title}
             data-published={products[i].publishedAt ?? ""}
           >
-            <ProductCard product={product} lang={lang} variant="card" addToCart image={productImageAttributes(product,lang)} />
+            <ProductCard product={product} lang={lang} variant="card" quoteHref={quoteHref(lang)} image={productImageAttributes(product,lang)} />
           </div>
         ) : (
-          <ProductCard product={product} lang={lang} variant="card" addToCart image={productImageAttributes(product,lang)} />
+          <ProductCard product={product} lang={lang} variant="card" quoteHref={quoteHref(lang)} image={productImageAttributes(product,lang)} />
         ),
       )}
     </div>

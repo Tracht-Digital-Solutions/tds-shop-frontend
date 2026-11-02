@@ -87,13 +87,13 @@ export const TX = {
     catalogue: "Produkte",
     faqHeading: "Häufige Fragen",
     /** The catalogue's H1. The <title> stays "Produkte" — short, and the brand follows it. */
-    catalogueHeadline: "Digitale Leistungen zum Festpreis",
+    catalogueHeadline: "Digitale Lösungen mit klarem Ab-Preis",
     /** The front page's hero (2026-10-19): the H1 in two parts, so the promise
      *  can carry the accent; together they read as `catalogueHeadline`. */
     hero: {
       eyebrow: "Digitalmarkt · Tracht Digital Solutions",
       titleLead: "Digitale Leistungen",
-      titleAccent: "zum Festpreis",
+      titleAccent: "mit klarem Ab-Preis",
       browse: "Katalog ansehen",
       products: (n: number) => (n === 1 ? "Produkt" : "Produkte"),
       categories: (n: number) => (n === 1 ? "Kategorie" : "Kategorien"),
@@ -178,7 +178,7 @@ export const TX = {
     notFound: "Diese Adresse gibt es hier nicht.",
     notFoundBody: "Der Link ist veraltet oder vertippt. Im Katalog steht, was es gerade gibt.",
     footer: {
-      blurb: "Digitale Leistungen zum Festpreis und Technik mit eigener Einschätzung, von Tracht Digital Solutions.",
+      blurb: "Digitale Lösungen mit Ab-Preis und Technik mit eigener Einschätzung, von Tracht Digital Solutions.",
       shop: "Digitalmarkt",
       company: "Tracht Digital",
       legal: "Rechtliches",
@@ -235,11 +235,11 @@ export const TX = {
     theme: { toDark: "Switch to dark mode", toLight: "Switch to light mode" },
     catalogue: "Products",
     faqHeading: "Common questions",
-    catalogueHeadline: "Digital services at a fixed price",
+    catalogueHeadline: "Digital solutions with a clear starting price",
     hero: {
       eyebrow: "Digitalmarkt · Tracht Digital Solutions",
       titleLead: "Digital services",
-      titleAccent: "at a fixed price",
+      titleAccent: "with a clear starting price",
       browse: "Browse the catalogue",
       products: (n: number) => (n === 1 ? "product" : "products"),
       categories: (n: number) => (n === 1 ? "category" : "categories"),
@@ -311,7 +311,7 @@ export const TX = {
     notFound: "This address does not exist here.",
     notFoundBody: "The link is outdated or mistyped. The catalogue shows what is currently available.",
     footer: {
-      blurb: "Digital services at a fixed price and technology with our own assessment, by Tracht Digital Solutions.",
+      blurb: "Digital solutions with a starting price and technology with our own assessment, by Tracht Digital Solutions.",
       shop: "Digitalmarkt",
       company: "Tracht Digital",
       legal: "Legal",

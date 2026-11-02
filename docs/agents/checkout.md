@@ -49,3 +49,7 @@ renders as "payment received, confirmation follows", never as a failure.
 - `/kasse` pre-fills the visible, editable code field from the address and shows "Empfohlen
   von …" via `GET /shop/referral/{code}`. "Wer hat uns empfohlen?" is free text. Both are
   optional and travel in `startCheckout()`. The server drops unknown codes.
+
+## Own services are quoted (2026-11-02)
+
+Own offers show "ab" plus the price and "Angebot anfordern" (`lib/quote.ts`), which prepares a draft in the marketing site's contact form. No card, header or tab leads to the basket any more; the routes stay for links already out there. `PriceMode.astro` switches net and gross in the browser, gross by default. `PriceCalculator.astro` adds the starting prices of the catalogue.

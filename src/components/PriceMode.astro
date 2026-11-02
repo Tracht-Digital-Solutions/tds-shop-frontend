@@ -1,0 +1,60 @@
+---
+import type { Lang } from "../lib/i18n";
+
+/**
+ * Netto / Brutto for every own price on the page. The markup states gross, the
+ * legal default for consumers; the choice stays in this browser. Client-side,
+ * because the page cache keys on the path alone.
+ */
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = lang === "en" ? { label: "Show prices", net: "Net", gross: "Gross" } : { label: "Preise anzeigen", net: "Netto", gross: "Brutto" };
+---
+
+<div class="tds-toolbar" role="group" aria-label={ui.label} data-price-mode-switch>
+  <button type="button" class="chip" data-price-mode="gross" aria-pressed="true">{ui.gross}</button>
+  <button type="button" class="chip" data-price-mode="net" aria-pressed="false">{ui.net}</button>
+</div>
+
+<script>
+  const KEY = "tds-price-mode";
+  type Mode = "net" | "gross";
+
+  const read = (): Mode => {
+    try {
+      return window.localStorage.getItem(KEY) === "net" ? "net" : "gross";
+    } catch {
+      return "gross";
+    }
+  };
+
+  const apply = (mode: Mode) => {
+    for (const el of document.querySelectorAll<HTMLElement>("[data-price-amount], [data-price-note]")) {
+      const text = mode === "net" ? el.dataset.priceNet : el.dataset.priceGross;
+      if (text) el.textContent = text;
+    }
+    for (const button of document.querySelectorAll<HTMLElement>("[data-price-mode]")) {
+      button.setAttribute("aria-pressed", String(button.dataset.priceMode === mode));
+    }
+    document.documentElement.dataset.priceMode = mode;
+    window.dispatchEvent(new CustomEvent("tds:price-mode", { detail: mode }));
+  };
+
+  document.addEventListener("click", (event) => {
+    const button = (event.target as Element).closest<HTMLElement>("[data-price-mode]");
+    if (!button) return;
+    const mode: Mode = button.dataset.priceMode === "net" ? "net" : "gross";
+    try {
+      window.localStorage.setItem(KEY, mode);
+    } catch {
+      // Storage blocked: the choice lasts for this page.
+    }
+    apply(mode);
+  });
+
+  apply(read());
+  // The filter bar clones the full catalogue in once its own script has run.
+  window.addEventListener("load", () => apply(read()));
+</script>

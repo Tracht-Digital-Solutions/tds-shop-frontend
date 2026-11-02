@@ -4,7 +4,6 @@ import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/islands/theme-
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
 
-import CartBadge from "./CartBadge.tsx";
 import { homePath, tx, type Lang } from "../lib/i18n";
 import { site } from "../lib/seo";
 
@@ -129,7 +128,6 @@ const cta = translations[lang].nav.cta;
           (AppChrome.astro), which carries the basket as a tab of its own. */}
       <div class="tds-sitebar__actions">
         <AccountMenu client:idle lang={lang} />
-        <CartBadge client:idle lang={lang} />
       </div>
     </div>
   </div>

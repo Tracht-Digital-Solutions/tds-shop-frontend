@@ -1,0 +1,268 @@
+---
+import { formatPrice } from "@tracht-digital-solutions/tds-shared/format";
+import { displayPrice } from "@tracht-digital-solutions/tds-shared/schemas";
+import PriceMode from "./PriceMode.astro";
+import type { Lang } from "../lib/i18n";
+import { categoryName } from "../lib/i18n";
+import { contactBase } from "../lib/quote";
+import type { CatalogProduct } from "../lib/types";
+
+/**
+ * The price calculator: adds the starting prices of the chosen services. It
+ * reads the catalogue, so it can never quote a figure the page does not, and it
+ * sends nothing: the selection becomes the draft of a quote request.
+ *
+ * Plain script. The trigger ships `hidden` and appears once the dialog can open.
+ */
+interface Props {
+  lang: Lang;
+  products: CatalogProduct[];
+}
+const { lang, products } = Astro.props;
+
+const rows = products.flatMap((product) => {
+  const own = product.offers.find((offer) => offer.kind === "own");
+  const price = own ? displayPrice(own) : null;
+  if (!own || !price) return [];
+  const net = own.netCents ?? Math.round(price.cents / 1.19);
+  return [{ product, gross: price.cents, net, currency: price.currency }];
+});
+
+const groups = [...new Set(rows.map((row) => row.product.category))].map((category) => {
+  const inGroup = rows.filter((row) => row.product.category === category);
+  return { category, name: categoryName(category, inGroup[0]!.product.categoryLabel), rows: inGroup };
+});
+
+const ui =
+  lang === "en"
+    ? {
+        open: "Price calculator",
+        title: "Price calculator",
+        intro: "Choose services. The total adds up their starting prices.",
+        total: "From",
+        netNote: "plus 19% VAT",
+        grossNote: "incl. 19% VAT",
+        hint: "The final price is in the written quote.",
+        empty: "Please choose at least one service.",
+        cta: "Request a quote",
+        close: "Close the price calculator",
+        draftHead: "Hello,\n\nplease send me a quote for:",
+        draftTotal: "Total of the starting prices",
+        draftTail: "About my business:\n\n\nKind regards",
+      }
+    : {
+        open: "Preisrechner",
+        title: "Preisrechner",
+        intro: "Leistungen auswählen. Die Summe addiert ihre Ab-Preise.",
+        total: "Ab",
+        netNote: "zzgl. 19 % MwSt.",
+        grossNote: "inkl. 19 % MwSt.",
+        hint: "Der endgültige Preis steht im schriftlichen Angebot.",
+        empty: "Bitte mindestens eine Leistung auswählen.",
+        cta: "Angebot anfordern",
+        close: "Preisrechner schließen",
+        draftHead: "Guten Tag,\n\nbitte senden Sie mir ein Angebot für:",
+        draftTotal: "Summe der Ab-Preise",
+        draftTail: "Zu meinem Betrieb:\n\n\nViele Grüße",
+      };
+const zero = rows[0]?.currency ? formatPrice(0, rows[0].currency, lang) : "0 €";
+---
+
+{
+  rows.length > 0 && (
+    <>
+      <button type="button" class="btn btn-ghost" data-calc-open hidden>{ui.open}</button>
+      <dialog
+        class="shop-calc"
+        data-calc
+        data-lang={lang}
+        data-currency={rows[0]!.currency}
+        data-contact={contactBase(lang)}
+        data-draft-head={ui.draftHead}
+        data-draft-total={ui.draftTotal}
+        data-draft-tail={ui.draftTail}
+        data-net-note={ui.netNote}
+        data-gross-note={ui.grossNote}
+        aria-labelledby="calc-title"
+      >
+        <div class="shop-calc__head">
+          <div>
+            <h2 class="shop-section-title" id="calc-title">{ui.title}</h2>
+            <p class="shop-calc__intro">{ui.intro}</p>
+          </div>
+          <button type="button" class="btn btn-ghost" data-calc-close aria-label={ui.close}>×</button>
+        </div>
+        <div class="shop-calc__list">
+          {groups.map((group) => (
+            <fieldset class="shop-calc__group">
+              <legend class="tds-filterbar__legend">{group.name}</legend>
+              {group.rows.map((row) => (
+                <label class="shop-calc__row">
+                  <input type="checkbox" data-calc-item data-title={row.product.title} data-gross={row.gross} data-net={row.net} />
+                  <span class="shop-calc__name">{row.product.title}</span>
+                  <span
+                    class="shop-calc__price"
+                    data-price-amount
+                    data-price-gross={formatPrice(row.gross, row.currency, lang)}
+                    data-price-net={formatPrice(row.net, row.currency, lang)}
+                  >
+                    {formatPrice(row.gross, row.currency, lang)}
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+          ))}
+        </div>
+        <div class="shop-calc__foot">
+          <PriceMode lang={lang} />
+          <output class="shop-calc__total" aria-live="polite">
+            <span>{ui.total} </span><strong data-calc-total>{zero}</strong>
+            <span class="shop-calc__note" data-calc-note>{ui.grossNote}</span>
+          </output>
+          <p class="shop-calc__intro" data-calc-hint data-empty={ui.empty} data-hint={ui.hint}>{ui.empty}</p>
+          <a class="btn btn-primary" href={`${contactBase(lang)}#contact`} rel="nofollow" data-calc-cta aria-disabled="true">{ui.cta}</a>
+        </div>
+      </dialog>
+    </>
+  )
+}
+
+<script>
+  import { formatPrice } from "@tracht-digital-solutions/tds-shared/format";
+
+  const dialog = document.querySelector<HTMLDialogElement>("[data-calc]");
+  if (dialog && typeof dialog.showModal === "function") {
+    const lang = dialog.dataset.lang === "en" ? "en" : "de";
+    const currency = dialog.dataset.currency ?? "EUR";
+    const items = [...dialog.querySelectorAll<HTMLInputElement>("[data-calc-item]")];
+    const total = dialog.querySelector<HTMLElement>("[data-calc-total]")!;
+    const note = dialog.querySelector<HTMLElement>("[data-calc-note]")!;
+    const hint = dialog.querySelector<HTMLElement>("[data-calc-hint]")!;
+    const cta = dialog.querySelector<HTMLAnchorElement>("[data-calc-cta]")!;
+    let mode: "net" | "gross" = document.documentElement.dataset.priceMode === "net" ? "net" : "gross";
+    const money = (cents: number) => formatPrice(cents, currency, lang);
+
+    const update = () => {
+      const chosen = items.filter((item) => item.checked);
+      const sum = chosen.reduce((acc, item) => acc + Number(item.dataset[mode]), 0);
+      const suffix = (mode === "net" ? dialog.dataset.netNote : dialog.dataset.grossNote) ?? "";
+      total.textContent = money(sum);
+      note.textContent = suffix;
+      hint.textContent = (chosen.length ? hint.dataset.hint : hint.dataset.empty) ?? "";
+      cta.setAttribute("aria-disabled", String(chosen.length === 0));
+      if (chosen.length === 0) return;
+      const lines = chosen.map((item) => `– ${item.dataset.title} (${money(Number(item.dataset[mode]))} ${suffix})`);
+      const message = [dialog.dataset.draftHead, ...lines, "", `${dialog.dataset.draftTotal}: ${money(sum)} ${suffix}`, "", dialog.dataset.draftTail].join("\n");
+      cta.href = `${dialog.dataset.contact}?anfrage=${encodeURIComponent(message)}#contact`;
+    };
+
+    items.forEach((item) => item.addEventListener("change", update));
+    window.addEventListener("tds:price-mode", (event) => {
+      mode = (event as CustomEvent<"net" | "gross">).detail;
+      update();
+    });
+    cta.addEventListener("click", (event) => {
+      if (cta.getAttribute("aria-disabled") === "true") event.preventDefault();
+    });
+    dialog.querySelector("[data-calc-close]")?.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    for (const button of document.querySelectorAll<HTMLButtonElement>("[data-calc-open]")) {
+      button.hidden = false;
+      button.addEventListener("click", () => dialog.showModal());
+    }
+    update();
+  }
+</script>
+
+<style>
+  [data-calc-open][hidden] {
+    display: none;
+  }
+  .shop-calc {
+    /* Preflight resets the margin; without this the modal opens top left. */
+    margin: auto;
+    width: min(96vw, 44rem);
+    max-width: none;
+    max-height: 92vh;
+    padding: 0;
+    border: 0;
+    border-radius: var(--tds-radius-card);
+    background: var(--color-paper);
+    color: var(--color-black);
+  }
+  .shop-calc[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .shop-calc::backdrop {
+    background: rgb(0 0 0 / 0.5);
+  }
+  .shop-calc__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 0.75rem;
+  }
+  .shop-calc__intro {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+  .shop-calc__list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 1.25rem;
+  }
+  .shop-calc__group {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: 0;
+  }
+  .shop-calc__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    cursor: pointer;
+  }
+  .shop-calc__name {
+    font-size: 0.9375rem;
+  }
+  .shop-calc__price {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    font-size: 0.875rem;
+  }
+  .shop-calc__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid color-mix(in srgb, var(--color-black) 12%, transparent);
+  }
+  .shop-calc__total {
+    font-size: 1.125rem;
+  }
+  .shop-calc__total strong {
+    font-variant-numeric: tabular-nums;
+  }
+  .shop-calc__note {
+    margin-left: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+  .shop-calc__foot [data-calc-hint] {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  [data-calc-cta][aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>

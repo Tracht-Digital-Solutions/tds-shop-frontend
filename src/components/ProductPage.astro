@@ -21,6 +21,8 @@ import { productAlternate } from "../lib/alternates";
 import { withAttribution } from "../lib/offers";
 import { canonical, site } from "../lib/seo";
 import type { ProductPage as ProductPageData } from "../lib/types";
+import PriceMode from "./PriceMode.astro";
+import { quoteHref } from "../lib/quote";
 import { productImageAttributes, productImage, productImageSrcset, productImageSchema } from '../lib/productImages';
 
 /**
@@ -242,13 +244,10 @@ const revised = product.updatedAt
     {/* The offer list. `ProductCard` carries the advertising label and drops a
         price older than 24 hours by itself — this page decides neither. */}
     <aside class="shop-product__offers" id="offers" aria-label={t.offers}>
-      {/* `addToCart`: an own offer's filled button puts the product in the
-          basket (CartWiring.astro), and "Direkt zur Kasse" beside it goes
-          straight to the one-product checkout — the same two ways to buy as
-          in the catalogue, in one place. An affiliate offer keeps its link to
-          the merchant: a basket button there would promise a checkout this
-          shop cannot honour. */}
-      <ProductCard product={{ ...product, offers, imageUrl:artwork ? null : product.imageUrl }} lang={lang} variant="list" addToCart />
+      {/* An own service is quoted: its button prepares a request in the contact
+          form. An affiliate offer keeps its link to the merchant. */}
+      {sellsDirectly ? <PriceMode lang={lang} /> : null}
+      <ProductCard product={{ ...product, offers, imageUrl:artwork ? null : product.imageUrl }} lang={lang} variant="list" quoteHref={quoteHref(lang)} />
 
       {/* The facts next to the price: scope, duration, effort, result — what a
           buyer compares between two packages, as a definition list so each
