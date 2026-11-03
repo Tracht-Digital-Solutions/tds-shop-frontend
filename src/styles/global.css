@@ -162,8 +162,7 @@
 }
 /* 9% primary is indistinguishable from the dark paper (the journal measured
    1.02:1), so the dark tint takes 20%, as the journal's does. */
-:root[data-theme="dark"] .shop-intro,
-[data-theme="dark"]:not(:root) .shop-intro {
+:is(:root, .tds-theme-preview__page)[data-theme="dark"] .shop-intro:not(:where([data-theme="dark"] [data-theme="light"] *)) {
   --shop-intro-tint: color-mix(in srgb, var(--color-primary) 20%, var(--color-paper));
 }
 /* --color-muted on the tint is 4.26:1, below AA (the journal's measurement);
