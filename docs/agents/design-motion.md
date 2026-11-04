@@ -57,6 +57,14 @@ rows, because a separator between two small targets makes both worse.
 - An unlisted category is a 404 (`categoryExists`, fails open on an outage), never an empty grid.
 - The intro is a full-bleed band (`margin-inline: calc(50% - 50vw)`, padding back to the shell edge)
   on the journal's tint; its lede is ink-72%, because `--color-muted` on the tint fails AA.
+- The front page's hero is a store hero (2026-11-04, after Envato, Creative Market, Gumroad):
+  claim, a search form, three check-marked promises (`glance.points`) and up to four category
+  tiles with counts in the right column (two or four, never three: 2×2 grid). The search fills
+  the filter panel's own `[data-filter-search]` and fires `input`, so there is one search; the
+  tiles are `a[data-filter-category]` and ShopFilterBar wires them like the old chips. Category
+  pages keep the chip nav and their artwork.
+- In a grid the shared card clamps its teaser to two lines and shows a 16:9 picture
+  (tds-shared ≥ 0.64.6); the full teaser stays in the DOM and on the product page.
 - The filter row sits directly under the hero (`.tds-filterbar.shop-filterrow`): product count left,
   toggle right. Pressing the toggle hides it and the panel takes the whole row (tds-shared ≥ 0.57,
   same on Ratgeber and Online-Tools); the close button or Escape brings the toggle back.

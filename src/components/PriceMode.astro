@@ -35,7 +35,7 @@ const ui = lang === "en" ? { label: "Show prices", net: "Net", gross: "Gross" } 
       const text = mode === "net" ? el.dataset.priceNet : el.dataset.priceGross;
       if (text) el.textContent = text;
     }
-    for (const button of document.querySelectorAll<HTMLElement>("[data-price-mode]")) {
+    for (const button of document.querySelectorAll<HTMLElement>("button[data-price-mode]")) {
       button.setAttribute("aria-pressed", String(button.dataset.priceMode === mode));
     }
     document.documentElement.dataset.priceMode = mode;
@@ -43,7 +43,7 @@ const ui = lang === "en" ? { label: "Show prices", net: "Net", gross: "Gross" } 
   };
 
   document.addEventListener("click", (event) => {
-    const button = (event.target as Element).closest<HTMLElement>("[data-price-mode]");
+    const button = (event.target as Element).closest<HTMLElement>("button[data-price-mode]");
     if (!button) return;
     const mode: Mode = button.dataset.priceMode === "net" ? "net" : "gross";
     try {

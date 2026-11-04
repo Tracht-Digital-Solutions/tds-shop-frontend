@@ -94,10 +94,9 @@ export const TX = {
       eyebrow: "Shop · Tracht Digital Solutions",
       titleLead: "Digitale Leistungen",
       titleAccent: "mit klarem Ab-Preis",
-      browse: "Katalog ansehen",
-      products: (n: number) => (n === 1 ? "Produkt" : "Produkte"),
-      categories: (n: number) => (n === 1 ? "Kategorie" : "Kategorien"),
-      contact: "Ansprechpartner",
+      searchPlaceholder: "Was brauchen Sie? Website, E-Mail, Router …",
+      searchSubmit: "Suchen",
+      allProducts: (n: number) => (n === 1 ? "1 Produkt ansehen" : `Alle ${n} Produkte ansehen`),
     },
     showAll: (n: number) => `Alle ${n} anzeigen`,
     allCategories: "Alle",
@@ -130,7 +129,6 @@ export const TX = {
     /** Beside the front page's headline: three plain facts, no prices — a price
      *  lives on the product and nowhere else. */
     glance: {
-      title: "Auf einen Blick",
       points: [
         "Fester Preis, bevor die Arbeit beginnt.",
         "Für Selbstständige und kleine Betriebe.",
@@ -240,10 +238,9 @@ export const TX = {
       eyebrow: "Shop · Tracht Digital Solutions",
       titleLead: "Digital services",
       titleAccent: "with a clear starting price",
-      browse: "Browse the catalogue",
-      products: (n: number) => (n === 1 ? "product" : "products"),
-      categories: (n: number) => (n === 1 ? "category" : "categories"),
-      contact: "point of contact",
+      searchPlaceholder: "What do you need? Website, email, router …",
+      searchSubmit: "Search",
+      allProducts: (n: number) => (n === 1 ? "View 1 product" : `View all ${n} products`),
     },
     showAll: (n: number) => `Show all ${n}`,
     allCategories: "All",
@@ -270,7 +267,6 @@ export const TX = {
       tools: "Try the tools",
     },
     glance: {
-      title: "At a glance",
       points: [
         "A fixed price before any work starts.",
         "For freelancers and small businesses.",
