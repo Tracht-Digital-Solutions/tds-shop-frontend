@@ -1,0 +1,1 @@
+function e(e=`de`){return e===`en`?`en-GB`:`de-DE`}function t(t,n={}){if(t==null||!Number.isFinite(t))return n.fallback??`—`;let r=n.currency??`EUR`;try{return new Intl.NumberFormat(e(n.lang),{style:`currency`,currency:r}).format(t/100)}catch{return`${(t/100).toFixed(2)} ${r}`}}function n(e,n,r=`de`){return t(e,{currency:n,lang:r})}export{n as t};
