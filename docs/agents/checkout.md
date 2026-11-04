@@ -52,4 +52,4 @@ renders as "payment received, confirmation follows", never as a failure.
 
 ## Own services are quoted (2026-11-02)
 
-Own offers show "ab" plus the price and "Angebot anfordern" (`lib/quote.ts`), which prepares a draft in the marketing site's contact form. No card, header or tab leads to the basket any more; the routes stay for links already out there. `PriceMode.astro` switches net and gross in the browser, gross by default. `PriceCalculator.astro` adds the starting prices of the catalogue.
+Own offers show "ab" plus the price and "Angebot anfordern" (`lib/quote.ts`), which prepares a draft in the marketing site's contact form. No card, header or tab leads to the basket any more; the routes stay for links already out there. `PriceMode.astro` is one sliding switch (a checkbox with `role="switch"`) that flips net and gross in the browser, gross by default. It sits in the header beside the language switch, in the phone settings sheet and inside the price calculator dialog, never in the page body. `PriceCalculator.astro` adds the starting prices of the catalogue.

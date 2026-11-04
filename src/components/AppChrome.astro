@@ -14,6 +14,7 @@ import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shar
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { listAllProducts, listCategories } from "../lib/content-api";
 import { categoryName, categoryPath, homePath, productPath, tx, type Lang } from "../lib/i18n";
+import PriceMode from "./PriceMode.astro";
 
 interface Props {
   lang: Lang;
@@ -41,7 +42,7 @@ const c = de
       discoverLead: "Finden Sie das passende Produkt – oder stöbern Sie nach Kategorie.",
       searchLabel: "Produkte durchsuchen", searchPh: "Produkt, Marke oder Einsatz", none: "Kein Produkt passt dazu.",
       cats: "Kategorien", range: "Das ganze Sortiment",
-      look: "Darstellung", light: "Hell", dark: "Dunkel", auto: "Auto", language: "Sprache",
+      look: "Darstellung", light: "Hell", dark: "Dunkel", auto: "Auto", language: "Sprache", prices: "Preise",
       elsewhere: "Mehr von Tracht Digital",
       count: (n: number) => (n === 1 ? "1 Produkt" : `${n} Produkte`),
     }
@@ -50,7 +51,7 @@ const c = de
       discoverLead: "Find the right product — or browse by category.",
       searchLabel: "Search the products", searchPh: "Product, brand or use", none: "No product matches that.",
       cats: "Categories", range: "The whole range",
-      look: "Appearance", light: "Light", dark: "Dark", auto: "Auto", language: "Language",
+      look: "Appearance", light: "Light", dark: "Dark", auto: "Auto", language: "Language", prices: "Prices",
       elsewhere: "More from Tracht Digital",
       count: (n: number) => (n === 1 ? "1 product" : `${n} products`),
     };
@@ -157,6 +158,10 @@ const c = de
         <a class="tds-segmented__option" href={langHref("de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
         <a class="tds-segmented__option" href={langHref("en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
       </div>
+    </div>
+    <div class="tds-tabpage__section">
+      <p class="tds-sheet-heading">{c.prices}</p>
+      <PriceMode lang={lang} />
     </div>
     <div class="tds-tabpage__section">
       <p class="tds-sheet-heading">{c.elsewhere}</p>

@@ -6,6 +6,7 @@ import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shar
 
 import { homePath, tx, type Lang } from "../lib/i18n";
 import { site } from "../lib/seo";
+import PriceMode from "./PriceMode.astro";
 
 /**
  * The public property bar — the one top bar the journal, the tools site and
@@ -103,6 +104,9 @@ const cta = translations[lang].nav.cta;
           theirs. The CTA yields below 80rem through `.tds-sitebar__wide`, the
           same on all three bars. */}
       <div class="tds-sitebar__desktop">
+        {/* Netto / Brutto for every own price, beside the language: both are
+            reading preferences of the whole site. */}
+        <PriceMode lang={lang} />
         <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
           {langHrefs.map((l) => (
             <a

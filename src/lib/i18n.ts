@@ -176,7 +176,7 @@ export const TX = {
     notFound: "Diese Adresse gibt es hier nicht.",
     notFoundBody: "Der Link ist veraltet oder vertippt. Im Katalog steht, was es gerade gibt.",
     footer: {
-      blurb: "Digitale Lösungen mit Ab-Preis und Technik mit eigener Einschätzung, von Tracht Digital Solutions.",
+      blurb: "Digitale Lösungen von Tracht Digital Solutions.",
       shop: "Shop",
       company: "Tracht Digital",
       legal: "Rechtliches",
@@ -307,7 +307,7 @@ export const TX = {
     notFound: "This address does not exist here.",
     notFoundBody: "The link is outdated or mistyped. The catalogue shows what is currently available.",
     footer: {
-      blurb: "Digital solutions with a starting price and technology with our own assessment, by Tracht Digital Solutions.",
+      blurb: "Digital solutions by Tracht Digital Solutions.",
       shop: "Shop",
       company: "Tracht Digital",
       legal: "Legal",
