@@ -1,12 +1,12 @@
 /** Decorative category scenes; never substitute these for product photography. */
 const categories: Record<string, string> = {
   netzwerk: 'network', peripherie: 'workplace', technik: 'network',
-  webauftritt: 'web', 'seo-sichtbarkeit': 'planning', 'e-mail-domain': 'documents',
-  'wartung-betrieb': 'backup', 'recht-datenschutz': 'legal',
-  digitalisierung: 'process', leistungspakete: 'planning',
+  webauftritt: 'web', 'seo-sichtbarkeit': 'seo', 'e-mail-domain': 'email',
+  'wartung-betrieb': 'maintenance', 'recht-datenschutz': 'legal',
+  digitalisierung: 'digital', schulung: 'training', leistungspakete: 'packages',
   ausstattung: 'workplace', datensicherung: 'backup', 'mobiles-arbeiten': 'mobile',
 };
-export const soonArtwork = ['web','planning','documents','backup','legal','process','planning','network'];
+export const soonArtwork = ['web','seo','email','maintenance','legal','digital','training','packages'];
 export function categoryArtwork(category: string | null): string | null {
   return category === null ? 'hero' : categories[category] ?? null;
 }

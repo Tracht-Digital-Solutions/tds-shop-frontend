@@ -4,37 +4,37 @@
     "width": 1440,
     "height": 810,
     "alt": {
-      "de": "Ausgewählte Arbeitsgeräte als Symbol für den TDS-Shop.",
-      "en": "Selected work equipment illustrating the TDS shop."
+      "de": "Laptop, Smartphone, Tablet und Arbeitsmittel als Überblick über digitale Leistungen für kleine Betriebe.",
+      "en": "A laptop, smartphone, tablet and work items as an overview of digital services for small businesses."
     },
     "variants": [
       {
         "src": "/images/editorial/hero-2026-480.webp",
         "width": 480,
         "height": 270,
-        "hash": "1d1f25ccbc37",
-        "bytes": 15474
+        "hash": "3626e94ae807",
+        "bytes": 25968
       },
       {
         "src": "/images/editorial/hero-2026-800.webp",
         "width": 800,
         "height": 450,
-        "hash": "6c1e321822e2",
-        "bytes": 33956
+        "hash": "ee19168e32f3",
+        "bytes": 54274
       },
       {
         "src": "/images/editorial/hero-2026-960.webp",
         "width": 960,
         "height": 540,
-        "hash": "4c432c746f7e",
-        "bytes": 44812
+        "hash": "9b03a394f1f0",
+        "bytes": 72226
       },
       {
         "src": "/images/editorial/hero-2026-1440.webp",
         "width": 1440,
         "height": 810,
-        "hash": "9b2413a45085",
-        "bytes": 78830
+        "hash": "a8161627ee9b",
+        "bytes": 128282
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
@@ -44,37 +44,37 @@
     "width": 1440,
     "height": 960,
     "alt": {
-      "de": "Netzwerkgerät und Kabel als Symbol für Büro-WLAN.",
-      "en": "Network device and cable illustrating office Wi-Fi."
+      "de": "Flacher WLAN-Zugangspunkt an einer hellen Bürodecke.",
+      "en": "A flat Wi-Fi access point on a pale office ceiling."
     },
     "variants": [
       {
         "src": "/images/editorial/network-2026-480.webp",
         "width": 480,
         "height": 320,
-        "hash": "3d4d63b8bc7b",
-        "bytes": 19572
+        "hash": "851be01d88a1",
+        "bytes": 10074
       },
       {
         "src": "/images/editorial/network-2026-800.webp",
         "width": 800,
         "height": 533,
-        "hash": "7b6501d118a3",
-        "bytes": 39786
+        "hash": "e164e35260de",
+        "bytes": 20002
       },
       {
         "src": "/images/editorial/network-2026-960.webp",
         "width": 960,
         "height": 640,
-        "hash": "f79cec252daf",
-        "bytes": 51660
+        "hash": "3bbfb5f649d0",
+        "bytes": 27140
       },
       {
         "src": "/images/editorial/network-2026-1440.webp",
         "width": 1440,
         "height": 960,
-        "hash": "deefaf77136c",
-        "bytes": 101872
+        "hash": "34cff3df27c0",
+        "bytes": 53842
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
@@ -84,37 +84,37 @@
     "width": 1440,
     "height": 960,
     "alt": {
-      "de": "Kamera, Mikrofon und Bildschirm als Symbol für Videocalls und Homeoffice.",
-      "en": "Camera, microphone and monitor illustrating video calls and home working."
+      "de": "Schreibtisch mit Mikrofon, Kamera und Licht am Fenster.",
+      "en": "A desk with microphone, camera and window light."
     },
     "variants": [
       {
         "src": "/images/editorial/workplace-2026-480.webp",
         "width": 480,
         "height": 320,
-        "hash": "af9bd6a52ad9",
-        "bytes": 24514
+        "hash": "e8222fa5a913",
+        "bytes": 22606
       },
       {
         "src": "/images/editorial/workplace-2026-800.webp",
         "width": 800,
         "height": 533,
-        "hash": "e69c48f9024b",
-        "bytes": 52054
+        "hash": "d3eb243d995e",
+        "bytes": 51258
       },
       {
         "src": "/images/editorial/workplace-2026-960.webp",
         "width": 960,
         "height": 640,
-        "hash": "5924499c51ad",
-        "bytes": 68362
+        "hash": "a3d5833244b4",
+        "bytes": 70900
       },
       {
         "src": "/images/editorial/workplace-2026-1440.webp",
         "width": 1440,
         "height": 960,
-        "hash": "ea5797b08b7b",
-        "bytes": 121580
+        "hash": "eec641858bfb",
+        "bytes": 143706
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
@@ -124,37 +124,37 @@
     "width": 1440,
     "height": 960,
     "alt": {
-      "de": "Separate Datenträger als Symbol für betriebliche Datensicherung.",
-      "en": "Separate storage drives illustrating business backups."
+      "de": "Drei Festplatten nebeneinander, eine davon in einer Schutzhülle.",
+      "en": "Three drives side by side, one in a protective case."
     },
     "variants": [
       {
         "src": "/images/editorial/backup-2026-480.webp",
         "width": 480,
         "height": 320,
-        "hash": "d405f4bd64d8",
-        "bytes": 19032
+        "hash": "c2e72dcf8a71",
+        "bytes": 23620
       },
       {
         "src": "/images/editorial/backup-2026-800.webp",
         "width": 800,
         "height": 533,
-        "hash": "a217dab7afd4",
-        "bytes": 38504
+        "hash": "59ddc9a3e63a",
+        "bytes": 50882
       },
       {
         "src": "/images/editorial/backup-2026-960.webp",
         "width": 960,
         "height": 640,
-        "hash": "3ae1fe347856",
-        "bytes": 51218
+        "hash": "532366140362",
+        "bytes": 70594
       },
       {
         "src": "/images/editorial/backup-2026-1440.webp",
         "width": 1440,
         "height": 960,
-        "hash": "050426db9d20",
-        "bytes": 93992
+        "hash": "0b1627e3eb15",
+        "bytes": 145534
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
@@ -164,77 +164,37 @@
     "width": 1440,
     "height": 960,
     "alt": {
-      "de": "Laptop und Zubehör am Zugfenster als Symbol für mobiles Arbeiten.",
-      "en": "Laptop and accessories beside a train window illustrating mobile work."
+      "de": "Ausgeschalteter Laptop, Notizbuch und Ladegerät in einer Tasche.",
+      "en": "A switched-off laptop, notebook and charger in a bag."
     },
     "variants": [
       {
         "src": "/images/editorial/mobile-2026-480.webp",
         "width": 480,
         "height": 320,
-        "hash": "974e4b65c144",
-        "bytes": 20622
+        "hash": "0122c2be097d",
+        "bytes": 29312
       },
       {
         "src": "/images/editorial/mobile-2026-800.webp",
         "width": 800,
         "height": 533,
-        "hash": "6228bc1db9c6",
-        "bytes": 43988
+        "hash": "9b5b0e30196e",
+        "bytes": 74154
       },
       {
         "src": "/images/editorial/mobile-2026-960.webp",
         "width": 960,
         "height": 640,
-        "hash": "0d186e209549",
-        "bytes": 57432
+        "hash": "6f08c37dbfef",
+        "bytes": 105624
       },
       {
         "src": "/images/editorial/mobile-2026-1440.webp",
         "width": 1440,
         "height": 960,
-        "hash": "29b802a6bbb9",
-        "bytes": 99894
-      }
-    ],
-    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
-  },
-  "/images/editorial/documents-2026-1440.webp": {
-    "src": "/images/editorial/documents-2026-1440.webp",
-    "width": 1440,
-    "height": 960,
-    "alt": {
-      "de": "Dokumentenscanner und Ablage als Symbol für ein papierloses Büro.",
-      "en": "Document scanner and filing folder illustrating a paperless office."
-    },
-    "variants": [
-      {
-        "src": "/images/editorial/documents-2026-480.webp",
-        "width": 480,
-        "height": 320,
-        "hash": "0ce3319555c0",
-        "bytes": 19424
-      },
-      {
-        "src": "/images/editorial/documents-2026-800.webp",
-        "width": 800,
-        "height": 533,
-        "hash": "d30174e3d275",
-        "bytes": 37118
-      },
-      {
-        "src": "/images/editorial/documents-2026-960.webp",
-        "width": 960,
-        "height": 640,
-        "hash": "afe10fa2153d",
-        "bytes": 48562
-      },
-      {
-        "src": "/images/editorial/documents-2026-1440.webp",
-        "width": 1440,
-        "height": 960,
-        "hash": "1aa58949cda4",
-        "bytes": 84206
+        "hash": "f62c1c0f7675",
+        "bytes": 214244
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
@@ -242,119 +202,39 @@
   "/images/editorial/web-2026-1440.webp": {
     "src": "/images/editorial/web-2026-1440.webp",
     "width": 1440,
-    "height": 960,
+    "height": 810,
     "alt": {
-      "de": "Laptop, Telefon und Layoutkarten als Symbol für Webauftritte und Onlineshops.",
-      "en": "Laptop, phone and layout cards illustrating websites and online shops."
+      "de": "Laptop, Tablet und Smartphone zeigen dieselbe Website in drei Größen.",
+      "en": "A laptop, tablet and smartphone showing the same website in three sizes."
     },
     "variants": [
       {
         "src": "/images/editorial/web-2026-480.webp",
         "width": 480,
-        "height": 320,
-        "hash": "ed3d4a68ffd6",
-        "bytes": 20800
+        "height": 270,
+        "hash": "c8db7c610bf3",
+        "bytes": 16318
       },
       {
         "src": "/images/editorial/web-2026-800.webp",
         "width": 800,
-        "height": 533,
-        "hash": "bb8f17eb1123",
-        "bytes": 40176
+        "height": 450,
+        "hash": "ed4e1be2f3a0",
+        "bytes": 31208
       },
       {
         "src": "/images/editorial/web-2026-960.webp",
         "width": 960,
-        "height": 640,
-        "hash": "9451e04af982",
-        "bytes": 51104
+        "height": 540,
+        "hash": "0c28d78c1931",
+        "bytes": 39446
       },
       {
         "src": "/images/editorial/web-2026-1440.webp",
         "width": 1440,
-        "height": 960,
-        "hash": "270c0adc7f66",
-        "bytes": 84496
-      }
-    ],
-    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
-  },
-  "/images/editorial/planning-2026-1440.webp": {
-    "src": "/images/editorial/planning-2026-1440.webp",
-    "width": 1440,
-    "height": 960,
-    "alt": {
-      "de": "Hände und Planungskarten als Symbol für Beratung und Konzeption.",
-      "en": "Hands and planning cards illustrating consulting and planning."
-    },
-    "variants": [
-      {
-        "src": "/images/editorial/planning-2026-480.webp",
-        "width": 480,
-        "height": 320,
-        "hash": "7b8a81985c71",
-        "bytes": 21632
-      },
-      {
-        "src": "/images/editorial/planning-2026-800.webp",
-        "width": 800,
-        "height": 533,
-        "hash": "f84f7cea1de7",
-        "bytes": 43466
-      },
-      {
-        "src": "/images/editorial/planning-2026-960.webp",
-        "width": 960,
-        "height": 640,
-        "hash": "93cfb15804ef",
-        "bytes": 56904
-      },
-      {
-        "src": "/images/editorial/planning-2026-1440.webp",
-        "width": 1440,
-        "height": 960,
-        "hash": "c92f76dc29db",
-        "bytes": 97338
-      }
-    ],
-    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
-  },
-  "/images/editorial/process-2026-1440.webp": {
-    "src": "/images/editorial/process-2026-1440.webp",
-    "width": 1440,
-    "height": 960,
-    "alt": {
-      "de": "Geordnete Ablagen und Paket als Symbol für betriebliche Prozessoptimierung.",
-      "en": "Organised trays and a parcel illustrating business process optimisation."
-    },
-    "variants": [
-      {
-        "src": "/images/editorial/process-2026-480.webp",
-        "width": 480,
-        "height": 320,
-        "hash": "f10487ae27d7",
-        "bytes": 26880
-      },
-      {
-        "src": "/images/editorial/process-2026-800.webp",
-        "width": 800,
-        "height": 533,
-        "hash": "93a9d71708ab",
-        "bytes": 56254
-      },
-      {
-        "src": "/images/editorial/process-2026-960.webp",
-        "width": 960,
-        "height": 640,
-        "hash": "9eeddbe7050b",
-        "bytes": 71950
-      },
-      {
-        "src": "/images/editorial/process-2026-1440.webp",
-        "width": 1440,
-        "height": 960,
-        "hash": "542845c9e2f6",
-        "bytes": 131820
+        "height": 810,
+        "hash": "9702effeb22f",
+        "bytes": 67438
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
@@ -362,39 +242,279 @@
   "/images/editorial/legal-2026-1440.webp": {
     "src": "/images/editorial/legal-2026-1440.webp",
     "width": 1440,
-    "height": 960,
+    "height": 810,
     "alt": {
-      "de": "Dokumentmappen als Symbol für Website-Pflichtangaben.",
-      "en": "Document folders illustrating website compliance information."
+      "de": "Laptop mit Cookie-Banner und Paragrafenzeichen neben einer Dokumentmappe.",
+      "en": "A laptop with a cookie banner and a section sign beside a document folder."
     },
     "variants": [
       {
         "src": "/images/editorial/legal-2026-480.webp",
         "width": 480,
-        "height": 320,
-        "hash": "01bb349e6e27",
-        "bytes": 20590
+        "height": 270,
+        "hash": "b638ee9effd8",
+        "bytes": 16478
       },
       {
         "src": "/images/editorial/legal-2026-800.webp",
         "width": 800,
-        "height": 533,
-        "hash": "e93832123ec0",
-        "bytes": 41884
+        "height": 450,
+        "hash": "60aa8c0ba59c",
+        "bytes": 30580
       },
       {
         "src": "/images/editorial/legal-2026-960.webp",
         "width": 960,
-        "height": 640,
-        "hash": "2a766d73d178",
-        "bytes": 52682
+        "height": 540,
+        "hash": "8dd07e108de2",
+        "bytes": 38950
       },
       {
         "src": "/images/editorial/legal-2026-1440.webp",
         "width": 1440,
-        "height": 960,
-        "hash": "5d4c31dd6b2c",
-        "bytes": 91472
+        "height": 810,
+        "hash": "d042c6012ed9",
+        "bytes": 70514
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/seo-2026-1440.webp": {
+    "src": "/images/editorial/seo-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Laptop mit einer Suchergebnisseite, das oberste Ergebnis hervorgehoben.",
+      "en": "A laptop with a search results page, the top result highlighted."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/seo-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "9397de26ecad",
+        "bytes": 16740
+      },
+      {
+        "src": "/images/editorial/seo-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "dbe2adf49047",
+        "bytes": 34194
+      },
+      {
+        "src": "/images/editorial/seo-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "fcbcdd66ddd7",
+        "bytes": 42834
+      },
+      {
+        "src": "/images/editorial/seo-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "7b74db94772a",
+        "bytes": 74908
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/email-2026-1440.webp": {
+    "src": "/images/editorial/email-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Laptop mit Posteingang und Smartphone mit @-Benachrichtigung neben einem Briefumschlag.",
+      "en": "A laptop with an inbox and a smartphone with an @ notification beside an envelope."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/email-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "7dfa36df2234",
+        "bytes": 18716
+      },
+      {
+        "src": "/images/editorial/email-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "b04eade346db",
+        "bytes": 38776
+      },
+      {
+        "src": "/images/editorial/email-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "d7d16abcc606",
+        "bytes": 50220
+      },
+      {
+        "src": "/images/editorial/email-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "14530c9834d7",
+        "bytes": 90158
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/maintenance-2026-1440.webp": {
+    "src": "/images/editorial/maintenance-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Laptop mit Status-Übersicht und Schutzschild neben einem Werkzeugset.",
+      "en": "A laptop with a status overview and a shield beside a tool set."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/maintenance-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "d3f9db50a2d6",
+        "bytes": 18832
+      },
+      {
+        "src": "/images/editorial/maintenance-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "1b699fb96c85",
+        "bytes": 39032
+      },
+      {
+        "src": "/images/editorial/maintenance-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "a32d3ac7e8df",
+        "bytes": 50678
+      },
+      {
+        "src": "/images/editorial/maintenance-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "fc31fe1ca897",
+        "bytes": 93528
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/digital-2026-1440.webp": {
+    "src": "/images/editorial/digital-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Scanner, Laptop mit Ordnerstruktur und leere Ablage.",
+      "en": "A scanner, a laptop with a folder structure and an empty tray."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/digital-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "dfda8d00185d",
+        "bytes": 12614
+      },
+      {
+        "src": "/images/editorial/digital-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "a53cf367d9e8",
+        "bytes": 25964
+      },
+      {
+        "src": "/images/editorial/digital-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "0b022dc7519c",
+        "bytes": 34070
+      },
+      {
+        "src": "/images/editorial/digital-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "8525cd29c528",
+        "bytes": 62902
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/training-2026-1440.webp": {
+    "src": "/images/editorial/training-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Zwei Personen an einem Laptop, eine zeigt auf den Bildschirm.",
+      "en": "Two people at a laptop, one pointing at the screen."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/training-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "6538d3a62164",
+        "bytes": 18572
+      },
+      {
+        "src": "/images/editorial/training-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "12683bc43f6d",
+        "bytes": 36506
+      },
+      {
+        "src": "/images/editorial/training-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "9994e7b7061b",
+        "bytes": 46572
+      },
+      {
+        "src": "/images/editorial/training-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "724c18e3b7ee",
+        "bytes": 79780
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/packages-2026-1440.webp": {
+    "src": "/images/editorial/packages-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Laptop mit Prüfbericht, Klemmbrett mit Checkliste und Lupe.",
+      "en": "A laptop with a review report, a clipboard with a checklist and a magnifier."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/packages-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "29b270e3135c",
+        "bytes": 18138
+      },
+      {
+        "src": "/images/editorial/packages-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "f9157283f23e",
+        "bytes": 33878
+      },
+      {
+        "src": "/images/editorial/packages-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "6861a584a68c",
+        "bytes": 42886
+      },
+      {
+        "src": "/images/editorial/packages-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "848cb32dca85",
+        "bytes": 70524
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"

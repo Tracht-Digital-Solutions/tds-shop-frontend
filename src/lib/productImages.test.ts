@@ -6,7 +6,7 @@ import type {CatalogProduct} from './types';
 describe('unique service product images',()=>{
  it('ships one complete responsive image per published product in both languages',()=>{
   const unique=new Map(Object.values(productImageCatalog).map(r=>[r.slug,r]));
-  expect(unique.size).toBe(43);
+  expect(unique.size).toBe(55);
   for(const r of unique.values()){
    for(const lang of ['de','en'] as const){expect(productImageCatalog[r.slugs[lang]]).toEqual(r);expect(r.alt[lang].length).toBeGreaterThan(30);}
    for(const width of [480,960,1440])for(const ext of ['webp','avif']){

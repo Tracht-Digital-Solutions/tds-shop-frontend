@@ -292,7 +292,7 @@ const jsonLd = asGraph([
           {heroTiles.map((tile) => (
             <li>
               <a class="shop-hero__cat" href={categoryPath(tile.category, lang)} data-filter-category={tile.category} data-category={tile.category}>
-                <img class="shop-hero__img" src={editorialSrc(tile.art)} srcset={imageHints(editorialSrc(tile.art), lang)?.srcSet ?? editorialSrcset(tile.art)} sizes="(min-width: 64rem) 240px, 50vw" width="960" height="640" alt="" decoding="async" />
+                <img class="shop-hero__img" src={editorialSrc(tile.art)} srcset={imageHints(editorialSrc(tile.art), lang)?.srcSet ?? editorialSrcset(tile.art)} sizes="(min-width: 64rem) 240px, 50vw" width="1440" height="810" alt="" decoding="async" />
                 <span class="shop-hero__name">{tile.name}</span>
                 <span class="shop-hero__count">{t.filter.shown(tile.total)}</span>
               </a>
@@ -305,7 +305,7 @@ const jsonLd = asGraph([
       </nav>
     ) : category === null ? null : artwork ? (
       <aside class="shop-glance" data-category={category} aria-hidden="true">
-        <img class="shop-editorial" src={editorialSrc(artwork)} srcset={imageHints(editorialSrc(artwork), lang)?.srcSet ?? editorialSrcset(artwork)} sizes="(min-width: 64rem) 384px, 100vw" width="960" height="640" alt="" decoding="async" />
+        <img class="shop-editorial" src={editorialSrc(artwork)} srcset={imageHints(editorialSrc(artwork), lang)?.srcSet ?? editorialSrcset(artwork)} sizes="(min-width: 64rem) 384px, 100vw" width="1440" height="810" alt="" decoding="async" />
       </aside>
     ) : null}
   </section>
@@ -340,7 +340,7 @@ const jsonLd = asGraph([
           <ul class="shop-soon__grid">
             {t.soon.areas.map((area, index) => (
               <li class="shop-soon__tile">
-                <img class="shop-editorial" src={editorialSrc(soonArtwork[index])} srcset={imageHints(editorialSrc(soonArtwork[index]), lang)?.srcSet ?? editorialSrcset(soonArtwork[index])} sizes="(min-width: 64rem) 25vw, 50vw" width="960" height="640" alt="" loading="lazy" decoding="async" />
+                <img class="shop-editorial" src={editorialSrc(soonArtwork[index])} srcset={imageHints(editorialSrc(soonArtwork[index]), lang)?.srcSet ?? editorialSrcset(soonArtwork[index])} sizes="(min-width: 64rem) 25vw, 50vw" width="1440" height="810" alt="" loading="lazy" decoding="async" />
                 <h3 class="shop-soon__name">{area.name}</h3>
                 <p class="shop-soon__text">{area.text}</p>
               </li>
@@ -382,7 +382,7 @@ const jsonLd = asGraph([
       {shelves.map((shelf) => (
         <section class="shop-shelf" data-filter-shelf data-category={shelf.category} aria-labelledby={`shelf-${shelf.category}`}>
           {categoryArtwork(shelf.category) && (
-            <img class="shop-editorial shop-editorial--shelf" src={editorialSrc(categoryArtwork(shelf.category)!)} srcset={imageHints(editorialSrc(categoryArtwork(shelf.category)!), lang)?.srcSet ?? editorialSrcset(categoryArtwork(shelf.category)!)} sizes="100vw" width="1440" height="960" alt="" loading="lazy" decoding="async" />
+            <img class="shop-editorial shop-editorial--shelf" src={editorialSrc(categoryArtwork(shelf.category)!)} srcset={imageHints(editorialSrc(categoryArtwork(shelf.category)!), lang)?.srcSet ?? editorialSrcset(categoryArtwork(shelf.category)!)} sizes="100vw" width="1440" height="810" alt="" loading="lazy" decoding="async" />
           )}
           <div class="shop-shelf__head">
             <h2 class="shop-section-title shop-shelf__title" id={`shelf-${shelf.category}`}>
