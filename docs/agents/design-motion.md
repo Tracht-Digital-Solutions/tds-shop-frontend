@@ -64,7 +64,7 @@ rows, because a separator between two small targets makes both worse.
   tiles are `a[data-filter-category]` and ShopFilterBar wires them like the old chips. Category
   pages keep the chip nav and their artwork.
 - Own categories have one colour each (2026-11-04, `global.css` "Category colours", the table in
-  `stuff/03-Materialien/Bildserie-2026-11/doku/README.md`, `categoryColours.test.ts`). `data-category`
+  `stuff/03-Bilder/Bildserie-2026-11/doku/README.md`, `categoryColours.test.ts`). `data-category`
   (hero tiles, shelves, card slots, product page, glance, chips) or the filter value sets `--shop-cat`:
   12 % fill (22 % dark), 4px top band, square swatch before names. Muted ink is remixed into the fill
   for AA. Affiliate categories stay neutral. The image series is themed in the same colour.

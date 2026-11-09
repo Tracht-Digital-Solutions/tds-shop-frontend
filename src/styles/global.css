@@ -2169,7 +2169,7 @@ button[data-add-to-cart][data-added="true"] {
 
 /* ---- Category colours (2026-11-04) ----
    Each own category owns one shared colour token, the same table the image
-   series uses as its colour theme (stuff/03-Materialien/Bildserie-2026-11,
+   series uses as its colour theme (stuff/03-Bilder/Bildserie-2026-11,
    doku/README.md "Kategoriefarben im Shop"). Elements carry it as
    `--shop-cat` through `data-category` (hero tiles, shelves, card slots, the
    product page, the category glance) or through the filter's category value

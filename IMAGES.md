@@ -12,4 +12,4 @@ the catalog API. Generated scenes never stand in for an actual product.
 The new shop hero was generated with the built-in image tool; the remaining
 scenes reuse the coordinated editorial series. Original PNGs, WebP exports,
 prompts and the export script live in the workspace at
-`stuff/03-Materialien/Bildserie-2026-11/` (series 2026-11, groups 05 and 06).
+`stuff/03-Bilder/Bildserie-2026-11/` (series 2026-11, groups 05 and 06).

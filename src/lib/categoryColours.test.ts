@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 /**
  * Every own category has its colour, and it is the one the image series
- * paints its pictures in (stuff/03-Materialien/Bildserie-2026-11,
+ * paints its pictures in (stuff/03-Bilder/Bildserie-2026-11,
  * doku/README.md "Kategoriefarben im Shop"). A picture themed violet on a
  * card tinted blue is the drift this guards against.
  */
