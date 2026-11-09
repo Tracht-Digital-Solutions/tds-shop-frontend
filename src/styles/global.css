@@ -2166,3 +2166,81 @@ button[data-add-to-cart][data-added="true"] {
 #katalog {
   scroll-margin-top: 6rem;
 }
+
+/* ---- Category colours (2026-11-04) ----
+   Each own category owns one shared colour token, the same table the image
+   series uses as its colour theme (stuff/03-Materialien/Bildserie-2026-11,
+   doku/README.md "Kategoriefarben im Shop"). Elements carry it as
+   `--shop-cat` through `data-category` (hero tiles, shelves, card slots, the
+   product page, the category glance) or through the filter's category value
+   (chips, panel buttons), so a chip doubles as the legend. The pattern is the
+   tools site's: a clear fill, a 4px band along the top, a square swatch
+   before the name. Text never takes the colour; muted ink is mixed into the
+   tinted fill so it keeps AA on every tint. Affiliate categories stay
+   neutral: their pictures are the Ratgeber series. */
+:is([data-category="webauftritt"], [data-filter-category="webauftritt"], [data-filter-group="category"][data-value="webauftritt"]) { --shop-cat: var(--color-primary); }
+:is([data-category="seo-sichtbarkeit"], [data-filter-category="seo-sichtbarkeit"], [data-filter-group="category"][data-value="seo-sichtbarkeit"]) { --shop-cat: var(--color-cat-violet); }
+:is([data-category="e-mail-domain"], [data-filter-category="e-mail-domain"], [data-filter-group="category"][data-value="e-mail-domain"]) { --shop-cat: var(--color-cat-cyan); }
+:is([data-category="recht-datenschutz"], [data-filter-category="recht-datenschutz"], [data-filter-group="category"][data-value="recht-datenschutz"]) { --shop-cat: var(--color-info); }
+:is([data-category="schulung"], [data-filter-category="schulung"], [data-filter-group="category"][data-value="schulung"]) { --shop-cat: var(--color-accent-pink); }
+:is([data-category="wartung-betrieb"], [data-filter-category="wartung-betrieb"], [data-filter-group="category"][data-value="wartung-betrieb"]) { --shop-cat: var(--color-cat-teal); }
+:is([data-category="digitalisierung"], [data-filter-category="digitalisierung"], [data-filter-group="category"][data-value="digitalisierung"]) { --shop-cat: var(--color-cat-amber); }
+:is([data-category="leistungspakete"], [data-filter-category="leistungspakete"], [data-filter-group="category"][data-value="leistungspakete"]) { --shop-cat: var(--color-accent); }
+
+/* How strongly a surface takes its colour. Dark needs more: 12 % of a
+   colour on a near-black card disappears, as the intro band's tint did. The
+   themed-subtree pair keeps the theme toggle's hover preview right. */
+:root { --shop-cat-strength: 12%; }
+:root[data-theme="dark"],
+[data-theme="dark"]:not(:root) { --shop-cat-strength: 22%; }
+[data-theme="light"]:not(:root) { --shop-cat-strength: 12%; }
+
+/* The card slot is layout-transparent; the card stays the grid item. */
+.shop-card-slot {
+  display: contents;
+}
+
+/* Tinted surfaces: product cards (grid and product page), hero tiles and the
+   category glance. 12 % (22 % dark) keeps prices and teasers calm; the band says the
+   colour at full strength. */
+:is(.shop-card-slot, .shop-filter-item, .shop-product)[data-category] .tds-product-card,
+.shop-hero__cat[data-category],
+.shop-glance[data-category] {
+  --shop-cat-fill: color-mix(in srgb, var(--shop-cat, transparent) var(--shop-cat-strength), var(--shop-surface-card));
+  --color-muted: color-mix(in srgb, var(--color-ink) 72%, var(--shop-cat-fill));
+  background-color: var(--shop-cat-fill);
+  border-top: 4px solid var(--shop-cat, transparent);
+}
+/* The 16:9 picture box: the image series is themed in the same colour, so a
+   picture that does not fill the box sits on its own colour, not on grey. */
+:is(.shop-card-slot, .shop-filter-item, .shop-product)[data-category] .tds-product-card__media {
+  background: color-mix(in srgb, var(--shop-cat, transparent) calc(var(--shop-cat-strength) + 6%), var(--shop-surface-card));
+}
+.shop-hero__cat[data-category]:is(:hover, :focus-visible) {
+  --shop-cat-fill: color-mix(in srgb, var(--shop-cat, transparent) calc(var(--shop-cat-strength) + 8%), var(--shop-surface-card));
+}
+.shop-hero__cat[data-category]:hover .shop-hero__name {
+  color: var(--color-ink);
+}
+.shop-hero__cat[data-category][aria-current] {
+  border-color: var(--shop-cat, var(--color-accent));
+}
+
+/* Swatches: shelf titles, the catalogue's category chips and the filter
+   panel's category buttons. A square, like the tools site's legend. */
+.shop-shelf[data-category] .shop-shelf__title::before,
+.shop-chip[data-category]::before,
+button.chip[data-filter-group="category"]:not([data-value="all"])::before {
+  content: "";
+  display: inline-block;
+  flex: none;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-inline-end: 0.5rem;
+  vertical-align: 0.1em;
+  background: var(--shop-cat, var(--color-line));
+}
+/* The shelf band takes the colour as a rule under its picture. */
+.shop-shelf[data-category] .shop-editorial--shelf {
+  border-bottom: 4px solid var(--shop-cat, transparent);
+}

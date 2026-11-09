@@ -75,8 +75,10 @@ const ui = lang === "en" ? { net: "Net", gross: "Gross" } : { net: "Netto", gros
     width: 2.25rem;
     height: 1.25rem;
     border-radius: var(--tds-radius-pill);
-    background: var(--color-surface-navy);
-    border: 1px solid var(--color-surface-navy);
+    /* `--color-primary` flips light in dark mode; surface navy would vanish
+       into the dark bar. */
+    background: var(--color-primary);
+    border: 1px solid var(--color-primary);
   }
   .shop-price-switch__thumb {
     position: absolute;

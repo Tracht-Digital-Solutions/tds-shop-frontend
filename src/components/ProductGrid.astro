@@ -81,7 +81,9 @@ const searchOf = (product: CatalogProduct): string =>
             <ProductCard product={product} lang={lang} variant="card" quoteHref={quoteHref(lang)} image={productImageAttributes(product,lang)} />
           </div>
         ) : (
-          <ProductCard product={product} lang={lang} variant="card" quoteHref={quoteHref(lang)} image={productImageAttributes(product,lang)} />
+          <div class="shop-card-slot" data-category={products[i].category}>
+            <ProductCard product={product} lang={lang} variant="card" quoteHref={quoteHref(lang)} image={productImageAttributes(product,lang)} />
+          </div>
         ),
       )}
     </div>

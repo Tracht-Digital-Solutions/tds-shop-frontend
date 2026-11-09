@@ -63,6 +63,11 @@ rows, because a separator between two small targets makes both worse.
   the filter panel's own `[data-filter-search]` and fires `input`, so there is one search; the
   tiles are `a[data-filter-category]` and ShopFilterBar wires them like the old chips. Category
   pages keep the chip nav and their artwork.
+- Own categories have one colour each (2026-11-04, `global.css` "Category colours", the table in
+  `stuff/03-Materialien/Bildserie-2026-11/doku/README.md`, `categoryColours.test.ts`). `data-category`
+  (hero tiles, shelves, card slots, product page, glance, chips) or the filter value sets `--shop-cat`:
+  12 % fill (22 % dark), 4px top band, square swatch before names. Muted ink is remixed into the fill
+  for AA. Affiliate categories stay neutral. The image series is themed in the same colour.
 - In a grid the shared card clamps its teaser to two lines and shows a 16:9 picture
   (tds-shared ≥ 0.64.6); the full teaser stays in the DOM and on the product page.
 - The filter row sits directly under the hero (`.tds-filterbar.shop-filterrow`): product count left,

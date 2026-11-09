@@ -198,7 +198,7 @@ const revised = product.updatedAt
       assessment — someone who already knows the product should not have to
       scroll through our opinion to reach the price. Grid areas carry that
       reordering; the source order stays head → offers → assessment. */}
-  <div class="shop-product">
+  <div class="shop-product" data-category={product.category}>
     <div class="shop-product__head">
       <h1 class="shop-title">{product.title}</h1>
       <p class="shop-lede">{product.teaser}</p>
