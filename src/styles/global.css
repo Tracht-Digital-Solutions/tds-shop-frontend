@@ -257,7 +257,7 @@
 .shop-product__figure img { display:block; width:100%; height:auto; aspect-ratio:16 / 9; object-fit:cover; }
 .shop-product__figure figcaption { margin-top:.5rem; font-size:.8125rem; color:var(--color-muted); }
 .shop-editorial--hero { aspect-ratio: 16 / 9; margin-bottom: 1.25rem; }
-.shop-editorial--shelf { height: clamp(7rem, 12vw, 11rem); margin-bottom: 1.25rem; object-position: center 45%; }
+.shop-editorial--shelf { aspect-ratio: 4 / 1; margin-bottom: 1.25rem; }
 .shop-soon__tile > .shop-editorial { margin-bottom: .75rem; }
 .shop-glance__list {
   display: grid;

@@ -22,7 +22,7 @@ import { site, siteLinks } from "../lib/seo";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import { propertyContact } from "@tracht-digital-solutions/tds-shared/nav";
 import { imageHints, imageObject } from '../lib/imageCatalog';
-import { categoryArtwork, editorialSrc, editorialSrcset, soonArtwork } from '../lib/editorialImages';
+import { bandSrc, bandSrcset, categoryArtwork, editorialSrc, editorialSrcset, shelfBanner, soonArtwork } from '../lib/editorialImages';
 
 /**
  * The catalogue, shared by the German and English index routes.
@@ -381,8 +381,8 @@ const jsonLd = asGraph([
       </template>
       {shelves.map((shelf) => (
         <section class="shop-shelf" data-filter-shelf data-category={shelf.category} aria-labelledby={`shelf-${shelf.category}`}>
-          {categoryArtwork(shelf.category) && (
-            <img class="shop-editorial shop-editorial--shelf" src={editorialSrc(categoryArtwork(shelf.category)!)} srcset={imageHints(editorialSrc(categoryArtwork(shelf.category)!), lang)?.srcSet ?? editorialSrcset(categoryArtwork(shelf.category)!)} sizes="100vw" width="1440" height="810" alt="" loading="lazy" decoding="async" />
+          {shelfBanner(shelf.category) && (
+            <img class="shop-editorial shop-editorial--shelf" src={bandSrc(shelfBanner(shelf.category)!)} srcset={imageHints(bandSrc(shelfBanner(shelf.category)!), lang)?.srcSet ?? bandSrcset(shelfBanner(shelf.category)!)} sizes="(min-width: 90rem) 86rem, 100vw" width="1440" height="360" alt="" loading="lazy" decoding="async" />
           )}
           <div class="shop-shelf__head">
             <h2 class="shop-section-title shop-shelf__title" id={`shelf-${shelf.category}`}>

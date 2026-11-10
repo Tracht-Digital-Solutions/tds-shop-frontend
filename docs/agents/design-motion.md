@@ -68,6 +68,9 @@ rows, because a separator between two small targets makes both worse.
   (hero tiles, shelves, card slots, product page, glance, chips) or the filter value sets `--shop-cat`:
   12 % fill (22 % dark), 4px top band, square swatch before names. Muted ink is remixed into the fill
   for AA. Affiliate categories stay neutral. The image series is themed in the same colour.
+- Shelf banners on the front page are their own 4:1 files (`bandSrc`, `<id>-band-2026-*`, 2026-11-10).
+  Never put a 16:9 scene back into that strip: it showed only cut-off screens. Prompts and crop
+  plan: `stuff/03-Bilder/Shop-Regalbanner-2026-11/`.
 - In a grid the shared card clamps its teaser to two lines and shows a 16:9 picture
   (tds-shared ≥ 0.64.6); the full teaser stays in the DOM and on the product page.
 - The filter row sits directly under the hero (`.tds-filterbar.shop-filterrow`): product count left,

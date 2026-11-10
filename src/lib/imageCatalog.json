@@ -518,5 +518,325 @@
       }
     ],
     "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/legal-band-2026-1440.webp": {
+    "src": "/images/editorial/legal-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Dokumentmappen, Schloss, Laptop mit Paragrafenzeichen und Symbol für Barrierefreiheit auf einem Schreibtisch.",
+      "en": "Document folders, a padlock, a laptop showing a section sign and an accessibility symbol on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/legal-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "b674fa32c6d6",
+        "bytes": 5106
+      },
+      {
+        "src": "/images/editorial/legal-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "88361100d18a",
+        "bytes": 11766
+      },
+      {
+        "src": "/images/editorial/legal-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "26cc6dbcecd5",
+        "bytes": 20598
+      },
+      {
+        "src": "/images/editorial/legal-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "6d127aab58c5",
+        "bytes": 29528
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/maintenance-band-2026-1440.webp": {
+    "src": "/images/editorial/maintenance-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Feinwerkzeug, Laptop mit Schutzschild und Statusleiste, Sicherungsfestplatte und Pflanze auf einem Schreibtisch.",
+      "en": "Precision tools, a laptop with a shield and status row, a backup drive and a plant on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/maintenance-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "63b83da4ad33",
+        "bytes": 5718
+      },
+      {
+        "src": "/images/editorial/maintenance-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "9cd203f2f7e8",
+        "bytes": 14610
+      },
+      {
+        "src": "/images/editorial/maintenance-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "e1bfff85781b",
+        "bytes": 26724
+      },
+      {
+        "src": "/images/editorial/maintenance-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "aa6d5d09bd6b",
+        "bytes": 41896
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/web-band-2026-1440.webp": {
+    "src": "/images/editorial/web-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Smartphone, Tablet und Laptop zeigen dieselbe Website in passender Größe.",
+      "en": "A smartphone, tablet and laptop showing the same website at each size."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/web-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "48b3e79b9196",
+        "bytes": 6070
+      },
+      {
+        "src": "/images/editorial/web-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "2dcc17c8e430",
+        "bytes": 15202
+      },
+      {
+        "src": "/images/editorial/web-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "0483b5535335",
+        "bytes": 27904
+      },
+      {
+        "src": "/images/editorial/web-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "27b9da318102",
+        "bytes": 44998
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/digital-band-2026-1440.webp": {
+    "src": "/images/editorial/digital-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Dokumentenscanner, Laptop mit Ordnerstruktur, leere Ablage und Ordner auf einem Schreibtisch.",
+      "en": "A document scanner, a laptop with a folder tree, an empty tray and binders on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/digital-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "f3132f483111",
+        "bytes": 4772
+      },
+      {
+        "src": "/images/editorial/digital-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "7a86556013ec",
+        "bytes": 13302
+      },
+      {
+        "src": "/images/editorial/digital-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "2228902617da",
+        "bytes": 26238
+      },
+      {
+        "src": "/images/editorial/digital-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "08dbc9a1b229",
+        "bytes": 40174
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/seo-band-2026-1440.webp": {
+    "src": "/images/editorial/seo-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Lupe, Laptop mit Suchergebnis und Sternen, Smartphone mit Kartenpin und Lavendel auf einem Schreibtisch.",
+      "en": "A magnifying glass, a laptop with a starred search result, a phone with a map pin and lavender on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/seo-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "d8a8813b061e",
+        "bytes": 5896
+      },
+      {
+        "src": "/images/editorial/seo-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "af5d08fbfc88",
+        "bytes": 16498
+      },
+      {
+        "src": "/images/editorial/seo-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "92c4489aa6f1",
+        "bytes": 30166
+      },
+      {
+        "src": "/images/editorial/seo-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "15233fc230d1",
+        "bytes": 42838
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/email-band-2026-1440.webp": {
+    "src": "/images/editorial/email-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Briefumschläge, Laptop mit Posteingang und @-Zeichen, Smartphone und kleiner Briefkasten auf einem Schreibtisch.",
+      "en": "Envelopes, a laptop with an inbox and @ sign, a phone and a small postbox on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/email-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "7d01910f330d",
+        "bytes": 5048
+      },
+      {
+        "src": "/images/editorial/email-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "6d4834bccfd8",
+        "bytes": 11882
+      },
+      {
+        "src": "/images/editorial/email-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "28c7f346ac3b",
+        "bytes": 20714
+      },
+      {
+        "src": "/images/editorial/email-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "e899dca33255",
+        "bytes": 30192
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/training-band-2026-1440.webp": {
+    "src": "/images/editorial/training-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Notizbuch, Laptop mit Website-Editor unter einer Hand, Tasse und Unterlagen auf einem Schreibtisch.",
+      "en": "A notebook, a laptop with a website editor under one hand, a cup and handouts on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/training-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "46c9952ffc53",
+        "bytes": 4584
+      },
+      {
+        "src": "/images/editorial/training-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "d714da9057d5",
+        "bytes": 11274
+      },
+      {
+        "src": "/images/editorial/training-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "7fa4aab98bfa",
+        "bytes": 20950
+      },
+      {
+        "src": "/images/editorial/training-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "696a8e6ef860",
+        "bytes": 31786
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/packages-band-2026-1440.webp": {
+    "src": "/images/editorial/packages-band-2026-1440.webp",
+    "width": 1440,
+    "height": 360,
+    "alt": {
+      "de": "Klemmbrett mit Checkliste, Laptop mit Prüfbericht, Lupe und Ablagebox auf einem Schreibtisch.",
+      "en": "A clipboard with a checklist, a laptop with a check report, a magnifying glass and a box file on a desk."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/packages-band-2026-480.webp",
+        "width": 480,
+        "height": 120,
+        "hash": "7c0fed8940e9",
+        "bytes": 4654
+      },
+      {
+        "src": "/images/editorial/packages-band-2026-960.webp",
+        "width": 960,
+        "height": 240,
+        "hash": "1063ac2c2cd9",
+        "bytes": 11622
+      },
+      {
+        "src": "/images/editorial/packages-band-2026-1440.webp",
+        "width": 1440,
+        "height": 360,
+        "hash": "d4ffe67386e6",
+        "bytes": 20868
+      },
+      {
+        "src": "/images/editorial/packages-band-2026-1920.webp",
+        "width": 1920,
+        "height": 480,
+        "hash": "f9efa82ea2ea",
+        "bytes": 31100
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
   }
 }
