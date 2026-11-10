@@ -131,7 +131,7 @@ describe("the blend", () => {
   it("caps the product grid at four columns", () => {
     // The shared grid is auto-fill; on the 120rem shell an 18rem floor gave
     // five or six tracks, and a shelf of four left empty columns standing.
-    expect(code).toMatch(/--tds-product-grid-min:\s*max\(18rem,\s*calc\(\(100% - 3rem\) \/ 4\)\)/);
+    expect(code).toMatch(/--tds-product-grid-min:\s*max\(18rem,\s*calc\(\(100% - 3 \* var\(--shop-grid-gap\)\) \/ 4\)\)/);
   });
 
   it("keeps the decoration to one file", () => {

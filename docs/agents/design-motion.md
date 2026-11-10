@@ -49,9 +49,22 @@ rows, because a separator between two small targets makes both worse.
 
 ## No gaps, with or without products
 
-- `--tds-product-grid-min` is `max(18rem, (100% - 3rem) / 4)`: the shared grid is `auto-fill`, so an
-  18rem floor alone left empty tracks on the 120rem shell. Four columns at most; `surface.test.ts`
-  pins it.
+- `--tds-product-grid-min` is `max(18rem, (100% - 3 × --shop-grid-gap) / 4)`: the shared grid is
+  `auto-fill`, so an 18rem floor alone left empty tracks on the 120rem shell. Four columns at most;
+  `surface.test.ts` pins it. Inside `.shop-main` the grid gap is 1.5rem across and 2rem down
+  (2026-11-10): the 6px hard offset left only 10px of paper with the shared 1rem.
+- Shelf to shelf is `clamp(3.5rem, 7vw, 6rem)`, clearly more than banner → heading → cards inside a
+  shelf; with equal spacing the next banner read as the footer of the shelf above.
+- Product page buy box: for a single offer the price is the column's largest figure and the action
+  spans the box (`.tds-product-offer:only-of-type`); several affiliate offers keep the shared size.
+  The column is deliberately not sticky: an affiliate aside can be taller than the window.
+- Checkout: address and referral are heading-led groups without a frame; payment keeps its box and
+  offset. Legends are floated so they sit inside the padding as headings. `.checkout label` (0,1,1)
+  stacks every label as a column, so row labels need the qualified selector
+  (`.checkout .checkout__consent`, `.checkout .checkout__method`); the bare classes lost and stacked
+  the box above its text.
+- `.shop-hero__search .shop-hero__input` is qualified for the same reason: tds-shared's
+  `[data-flat] .field-boxed` painted a grey well inside the white search box.
 - An empty front page renders `.shop-soon` (eight service areas in 1/2/4 columns, the one CTA wash
   band, journal/tools cards), not a lone box. Keep the area count divisible by four.
 - An unlisted category is a 404 (`categoryExists`, fails open on an outage), never an empty grid.

@@ -405,11 +405,20 @@
    120rem shell it laid out five or six tracks: a front-page shelf of four
    cards (SHELF_SIZE) and every category with one to three products left empty
    columns standing at the end of the row. A quarter of the row (minus three
-   1rem gaps) as the floor caps the count at four; the shared rule's
+   1.5rem gaps) as the floor caps the count at four; the shared rule's
    `min(100%, …)` still drops it to one column on a phone. The percentage
-   resolves against the grid, where the variable is used. */
+   resolves against the grid, where the variable is used.
+
+   The gap (2026-11-10): every card wears a 6px hard offset (8px on hover), so
+   the shared 1rem gap left 10px of paper between one card's shadow and the
+   next card — the row read as one slab. 1.5rem across, 2rem down gives each
+   card its own air; the floor above subtracts the wider gaps. */
 :root {
-  --tds-product-grid-min: max(18rem, calc((100% - 3rem) / 4));
+  --shop-grid-gap: 1.5rem;
+  --tds-product-grid-min: max(18rem, calc((100% - 3 * var(--shop-grid-gap)) / 4));
+}
+.shop-main .tds-product-grid {
+  gap: 2rem var(--shop-grid-gap);
 }
 
 /* --- header ------------------------------------------------------------- */
@@ -784,8 +793,17 @@
 }
 
 /* The withdrawal confirmation. A row, so the checkbox stays beside the text
-   rather than above a paragraph it is meant to qualify. */
-.checkout__consent {
+   rather than above a paragraph it is meant to qualify.
+
+   `.checkout .checkout__consent`, not the bare class: `.checkout label` above
+   (0,1,1) out-ranked it (0,1,0) and stacked the box over its text on every
+   width — measured 2026-11-10. On the soft fill, like the information block
+   that stands in its place when there is nothing to agree to, so the one
+   precondition of the order button reads as a block of its own. */
+.checkout .checkout__consent {
+  padding: 0.875rem 1rem;
+  background: var(--color-soft);
+  cursor: pointer;
   flex-direction: row;
   align-items: flex-start;
   gap: 0.625rem;
@@ -796,6 +814,17 @@
 .checkout__consent input {
   margin-top: 0.2rem;
   flex: none;
+}
+
+/* The grand total is the figure the order button commits to: one step up
+   from the lines above it. */
+.checkout__total {
+  font-size: 1.0625rem;
+}
+.checkout__total dd {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .checkout__error {
@@ -1011,6 +1040,32 @@
 .shop-product__offers .tds-product-card__title,
 .shop-product__offers .tds-product-card__teaser {
   display: none;
+}
+
+/* The buy box (2026-11-10). On the product page the price is the decision,
+   so it is set as the column's largest figure, and the one action spans the
+   box — the 1.125rem grid price and a content-wide button read as a footnote
+   beside a 2.5rem title. The grids keep the shared sizes.
+
+   Only for a SINGLE offer (`:only-of-type` — the offers are the buy block's
+   only divs). An affiliate product listing several merchants stays at the
+   shared size: three 1.875rem prices stacked would read as a price list,
+   not a choice. No sticky column: the affiliate aside can outgrow the window,
+   and its lower offers would never come into view. */
+.shop-product__offers .tds-product-offer:only-of-type .tds-product-price {
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.shop-product__offers .tds-product-offer:only-of-type .tds-product-price__from {
+  font-size: 0.875rem;
+}
+.shop-product__offers .tds-product-offer:only-of-type .tds-product-offer__actions > .btn {
+  flex: 1 1 100%;
+  justify-content: center;
+}
+.shop-product__offers .shop-facts {
+  margin-top: 1.5rem;
 }
 
 /* The basket button under the offer card, for a product TDS sells itself —
@@ -1557,9 +1612,38 @@ button[data-add-to-cart][data-added="true"] {
   font-weight: 700;
 }
 
+/* Address and referral are groups of fields, not boxes (2026-11-10). On this
+   flat kit separation is colour and space, never a drawn line; the hairline
+   frame with its legend cut into the border was the one place the checkout
+   looked like a browser default. The legend becomes the group's heading.
+   Payment keeps its box and offset: it is the decision, not a form section. */
+.checkout__address,
+.checkout__referral {
+  padding: 0;
+  border: 0;
+}
+.checkout__payment {
+  border: 0;
+  background: var(--color-card);
+}
+/* `float` turns the legend from the border-straddling "rendered legend" into
+   an ordinary grid item, so it sits inside the padding as a heading and the
+   grid gap spaces it like every other row. Accessible name unchanged. */
+.checkout__address legend,
+.checkout__payment legend,
+.checkout__referral legend {
+  float: left;
+  width: 100%;
+  padding-inline: 0;
+  font-size: 1.0625rem;
+}
+
 /* The whole row is the target, not the 16px radio — WCAG 2.5.8, and the reason
    nobody mis-taps a payment method on a phone. */
-.checkout__method {
+.checkout .checkout__method {
+  /* Qualified for the same reason as the consent row: `.checkout label`
+     would otherwise stack the radio above its name (measured 2026-11-10). */
+  flex-direction: row;
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -1923,6 +2007,12 @@ button[data-add-to-cart][data-added="true"] {
 .shop-shelf {
   margin-top: 2.5rem;
 }
+/* Between two shelves the space has to be clearly larger than the space
+   inside one (banner → heading → cards), or the next banner reads as the
+   footer of the shelf above it. 2026-11-10: the two were equal. */
+.shop-shelf + .shop-shelf {
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+}
 
 .shop-shelf__head {
   display: flex;
@@ -2035,7 +2125,10 @@ button[data-add-to-cart][data-added="true"] {
   border: var(--tds-border-hairline) solid var(--color-line);
   box-shadow: var(--tds-shadow-hard);
 }
-.shop-hero__input {
+/* Qualified: tds-shared's `[data-flat] .field-boxed` (0,2,0) out-ranked the
+   bare class and painted a grey well inside the white search box, which read
+   as a disabled field (measured 2026-11-10). The box is the field. */
+.shop-hero__search .shop-hero__input {
   flex: 1 1 auto;
   min-width: 0;
   border-color: transparent;
