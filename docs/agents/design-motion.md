@@ -14,6 +14,7 @@ block of `global.css` uses the shared duration and easing tokens.
 | Total washes once when it changes | "Did the total move?" (it updates after a debounced round trip) |
 | Submit button pulses while busy | `aria-busy` for screen readers; this for everyone else |
 | Pages cross-fade (tds-shared `page-transitions.css`) | "Did I leave the shop?" Opacity only, off under reduced motion |
+| tds-shared 0.65 quality-of-life layer: controls dip while pressed, `<details>` glide open, links ease colour, a `:target` heading flashes once | "Did my press land?" / "Where did the jump take me?" Zero specificity, off under reduced motion |
 
 - The product card's hover bar lives in tds-shared's `primitives.css`, not here. A local `::before`
   on a shared class vanishes when that component is next touched.
