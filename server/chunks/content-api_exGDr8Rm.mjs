@@ -1,0 +1,2258 @@
+import { a as contentApiBase } from "./connection_QLkUKDfQ.mjs";
+import { c as imageRights, f as DEMO_MODE, h as demoProducts, m as demoProduct, n as readContentJson, p as demoCategories, r as siteKeyHeaders, t as assertKeyAccepted } from "./siteKey_D-mNvWq_.mjs";
+// src/lib/productImages.ts
+var productImageCatalog = {
+	"website-check-mit-massnahmenliste": {
+		"slug": "website-check-mit-massnahmenliste",
+		"slugs": {
+			"de": "website-check-mit-massnahmenliste",
+			"en": "website-check-with-action-list"
+		},
+		"title": {
+			"de": "Website-Check mit Maßnahmenliste",
+			"en": "Website check with action list"
+		},
+		"alt": {
+			"de": "Laptop mit gescannter Website und Ampelpunkten, daneben eine Maßnahmenliste.",
+			"en": "A laptop with a scanned website and traffic-light dots beside an action list."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-check-mit-massnahmenliste.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-check-with-action-list": {
+		"slug": "website-check-mit-massnahmenliste",
+		"slugs": {
+			"de": "website-check-mit-massnahmenliste",
+			"en": "website-check-with-action-list"
+		},
+		"title": {
+			"de": "Website-Check mit Maßnahmenliste",
+			"en": "Website check with action list"
+		},
+		"alt": {
+			"de": "Laptop mit gescannter Website und Ampelpunkten, daneben eine Maßnahmenliste.",
+			"en": "A laptop with a scanned website and traffic-light dots beside an action list."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-check-mit-massnahmenliste.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"digital-check-fuer-ihren-betrieb": {
+		"slug": "digital-check-fuer-ihren-betrieb",
+		"slugs": {
+			"de": "digital-check-fuer-ihren-betrieb",
+			"en": "digital-check-for-your-business"
+		},
+		"title": {
+			"de": "Digital-Check für Ihren Betrieb",
+			"en": "Digital check for your business"
+		},
+		"alt": {
+			"de": "Tablet mit Netzdiagramm und Checkliste auf einem Ladentisch.",
+			"en": "A tablet with a radar chart and a checklist on a shop counter."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/digital-check-fuer-ihren-betrieb.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"digital-check-for-your-business": {
+		"slug": "digital-check-fuer-ihren-betrieb",
+		"slugs": {
+			"de": "digital-check-fuer-ihren-betrieb",
+			"en": "digital-check-for-your-business"
+		},
+		"title": {
+			"de": "Digital-Check für Ihren Betrieb",
+			"en": "Digital check for your business"
+		},
+		"alt": {
+			"de": "Tablet mit Netzdiagramm und Checkliste auf einem Ladentisch.",
+			"en": "A tablet with a radar chart and a checklist on a shop counter."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/digital-check-fuer-ihren-betrieb.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-unternehmensprofil-einrichten": {
+		"slug": "google-unternehmensprofil-einrichten",
+		"slugs": {
+			"de": "google-unternehmensprofil-einrichten",
+			"en": "google-business-profile-setup"
+		},
+		"title": {
+			"de": "Google-Unternehmensprofil einrichten",
+			"en": "Google Business Profile setup"
+		},
+		"alt": {
+			"de": "Smartphone mit Karte, Standortnadel und Firmeneintrag vor einer Ladentür.",
+			"en": "A smartphone with a map, a location pin and a business entry in front of a shop door."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-unternehmensprofil-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-business-profile-setup": {
+		"slug": "google-unternehmensprofil-einrichten",
+		"slugs": {
+			"de": "google-unternehmensprofil-einrichten",
+			"en": "google-business-profile-setup"
+		},
+		"title": {
+			"de": "Google-Unternehmensprofil einrichten",
+			"en": "Google Business Profile setup"
+		},
+		"alt": {
+			"de": "Smartphone mit Karte, Standortnadel und Firmeneintrag vor einer Ladentür.",
+			"en": "A smartphone with a map, a location pin and a business entry in front of a shop door."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-unternehmensprofil-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"ablauf-analyse-ein-arbeitsablauf": {
+		"slug": "ablauf-analyse-ein-arbeitsablauf",
+		"slugs": {
+			"de": "ablauf-analyse-ein-arbeitsablauf",
+			"en": "workflow-analysis-one-process"
+		},
+		"title": {
+			"de": "Ablauf-Analyse für einen Arbeitsablauf",
+			"en": "Workflow analysis for one process"
+		},
+		"alt": {
+			"de": "Laptop mit Ablaufdiagramm, ein Schritt markiert, davor dieselben Schritte als Haftnotizen.",
+			"en": "A laptop with a process diagram, one step marked, the same steps as sticky notes in front."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ablauf-analyse-ein-arbeitsablauf.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"workflow-analysis-one-process": {
+		"slug": "ablauf-analyse-ein-arbeitsablauf",
+		"slugs": {
+			"de": "ablauf-analyse-ein-arbeitsablauf",
+			"en": "workflow-analysis-one-process"
+		},
+		"title": {
+			"de": "Ablauf-Analyse für einen Arbeitsablauf",
+			"en": "Workflow analysis for one process"
+		},
+		"alt": {
+			"de": "Laptop mit Ablaufdiagramm, ein Schritt markiert, davor dieselben Schritte als Haftnotizen.",
+			"en": "A laptop with a process diagram, one step marked, the same steps as sticky notes in front."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ablauf-analyse-ein-arbeitsablauf.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"machbarkeitspruefung-schnittstelle": {
+		"slug": "machbarkeitspruefung-schnittstelle",
+		"slugs": {
+			"de": "machbarkeitspruefung-schnittstelle",
+			"en": "integration-feasibility-check"
+		},
+		"title": {
+			"de": "Machbarkeitsprüfung für eine Schnittstelle",
+			"en": "Feasibility check for an integration"
+		},
+		"alt": {
+			"de": "Laptop mit zwei verbundenen App-Symbolen und Häkchen, davor zwei Stecker mit Adapter.",
+			"en": "A laptop with two connected app icons and a tick, two plugs with an adapter in front."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/machbarkeitspruefung-schnittstelle.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"integration-feasibility-check": {
+		"slug": "machbarkeitspruefung-schnittstelle",
+		"slugs": {
+			"de": "machbarkeitspruefung-schnittstelle",
+			"en": "integration-feasibility-check"
+		},
+		"title": {
+			"de": "Machbarkeitsprüfung für eine Schnittstelle",
+			"en": "Feasibility check for an integration"
+		},
+		"alt": {
+			"de": "Laptop mit zwei verbundenen App-Symbolen und Häkchen, davor zwei Stecker mit Adapter.",
+			"en": "A laptop with two connected app icons and a tick, two plugs with an adapter in front."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/machbarkeitspruefung-schnittstelle.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"onepager-website": {
+		"slug": "onepager-website",
+		"slugs": {
+			"de": "onepager-website",
+			"en": "one-page-website"
+		},
+		"title": {
+			"de": "Onepager-Website",
+			"en": "One-page website"
+		},
+		"alt": {
+			"de": "Smartphone mit einer langen Website, daneben dieselbe Seite als Papierstreifen in fünf Abschnitten.",
+			"en": "A smartphone with a long website, the same page beside it as a paper strip in five sections."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/onepager-website.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"one-page-website": {
+		"slug": "onepager-website",
+		"slugs": {
+			"de": "onepager-website",
+			"en": "one-page-website"
+		},
+		"title": {
+			"de": "Onepager-Website",
+			"en": "One-page website"
+		},
+		"alt": {
+			"de": "Smartphone mit einer langen Website, daneben dieselbe Seite als Papierstreifen in fünf Abschnitten.",
+			"en": "A smartphone with a long website, the same page beside it as a paper strip in five sections."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/onepager-website.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"firmenwebsite-bis-5-seiten": {
+		"slug": "firmenwebsite-bis-5-seiten",
+		"slugs": {
+			"de": "firmenwebsite-bis-5-seiten",
+			"en": "business-website-up-to-5-pages"
+		},
+		"title": {
+			"de": "Firmenwebsite bis 5 Seiten",
+			"en": "Business website up to 5 pages"
+		},
+		"alt": {
+			"de": "Laptop und Smartphone zeigen dieselbe Firmenwebsite mit mehreren Unterseiten.",
+			"en": "A laptop and a smartphone showing the same multi-page business website."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/firmenwebsite-bis-5-seiten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"business-website-up-to-5-pages": {
+		"slug": "firmenwebsite-bis-5-seiten",
+		"slugs": {
+			"de": "firmenwebsite-bis-5-seiten",
+			"en": "business-website-up-to-5-pages"
+		},
+		"title": {
+			"de": "Firmenwebsite bis 5 Seiten",
+			"en": "Business website up to 5 pages"
+		},
+		"alt": {
+			"de": "Laptop und Smartphone zeigen dieselbe Firmenwebsite mit mehreren Unterseiten.",
+			"en": "A laptop and a smartphone showing the same multi-page business website."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/firmenwebsite-bis-5-seiten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"landingpage-fuer-ein-angebot": {
+		"slug": "landingpage-fuer-ein-angebot",
+		"slugs": {
+			"de": "landingpage-fuer-ein-angebot",
+			"en": "landing-page-for-one-offer"
+		},
+		"title": {
+			"de": "Landingpage für ein Angebot",
+			"en": "Landing page for one offer"
+		},
+		"alt": {
+			"de": "Laptop mit einer Landingpage und einem großen Knopf.",
+			"en": "A laptop showing a landing page with one large button."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/landingpage-fuer-ein-angebot.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"landing-page-for-one-offer": {
+		"slug": "landingpage-fuer-ein-angebot",
+		"slugs": {
+			"de": "landingpage-fuer-ein-angebot",
+			"en": "landing-page-for-one-offer"
+		},
+		"title": {
+			"de": "Landingpage für ein Angebot",
+			"en": "Landing page for one offer"
+		},
+		"alt": {
+			"de": "Laptop mit einer Landingpage und einem großen Knopf.",
+			"en": "A laptop showing a landing page with one large button."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/landingpage-fuer-ein-angebot.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"zweite-sprache-fuer-ihre-website": {
+		"slug": "zweite-sprache-fuer-ihre-website",
+		"slugs": {
+			"de": "zweite-sprache-fuer-ihre-website",
+			"en": "second-language-for-your-website"
+		},
+		"title": {
+			"de": "Zweite Sprache für Ihre Website",
+			"en": "Second language for your website"
+		},
+		"alt": {
+			"de": "Website mit geöffnetem Sprachwähler auf Laptop und Smartphone.",
+			"en": "A website with an open language switcher on a laptop and a smartphone."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/zweite-sprache-fuer-ihre-website.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"second-language-for-your-website": {
+		"slug": "zweite-sprache-fuer-ihre-website",
+		"slugs": {
+			"de": "zweite-sprache-fuer-ihre-website",
+			"en": "second-language-for-your-website"
+		},
+		"title": {
+			"de": "Zweite Sprache für Ihre Website",
+			"en": "Second language for your website"
+		},
+		"alt": {
+			"de": "Website mit geöffnetem Sprachwähler auf Laptop und Smartphone.",
+			"en": "A website with an open language switcher on a laptop and a smartphone."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/zweite-sprache-fuer-ihre-website.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"relaunch-konzept": {
+		"slug": "relaunch-konzept",
+		"slugs": {
+			"de": "relaunch-konzept",
+			"en": "website-relaunch-plan"
+		},
+		"title": {
+			"de": "Relaunch-Konzept für Ihre Website",
+			"en": "Relaunch plan for your website"
+		},
+		"alt": {
+			"de": "Alte und neue Website nebeneinander, dazwischen ein Seitenplan.",
+			"en": "An old and a new website side by side with a sitemap between them."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/relaunch-konzept.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-relaunch-plan": {
+		"slug": "relaunch-konzept",
+		"slugs": {
+			"de": "relaunch-konzept",
+			"en": "website-relaunch-plan"
+		},
+		"title": {
+			"de": "Relaunch-Konzept für Ihre Website",
+			"en": "Relaunch plan for your website"
+		},
+		"alt": {
+			"de": "Alte und neue Website nebeneinander, dazwischen ein Seitenplan.",
+			"en": "An old and a new website side by side with a sitemap between them."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/relaunch-konzept.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"kontaktformular-mit-spamschutz": {
+		"slug": "kontaktformular-mit-spamschutz",
+		"slugs": {
+			"de": "kontaktformular-mit-spamschutz",
+			"en": "contact-form-with-spam-protection"
+		},
+		"title": {
+			"de": "Kontaktformular mit Spamschutz",
+			"en": "Contact form with spam protection"
+		},
+		"alt": {
+			"de": "Laptop mit Kontaktformular und Schutzschild, daneben Spam im Papierkorb.",
+			"en": "A laptop with a contact form and a shield, spam in the wastebasket beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/kontaktformular-mit-spamschutz.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"contact-form-with-spam-protection": {
+		"slug": "kontaktformular-mit-spamschutz",
+		"slugs": {
+			"de": "kontaktformular-mit-spamschutz",
+			"en": "contact-form-with-spam-protection"
+		},
+		"title": {
+			"de": "Kontaktformular mit Spamschutz",
+			"en": "Contact form with spam protection"
+		},
+		"alt": {
+			"de": "Laptop mit Kontaktformular und Schutzschild, daneben Spam im Papierkorb.",
+			"en": "A laptop with a contact form and a shield, spam in the wastebasket beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/kontaktformular-mit-spamschutz.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"online-terminbuchung-einbinden": {
+		"slug": "online-terminbuchung-einbinden",
+		"slugs": {
+			"de": "online-terminbuchung-einbinden",
+			"en": "online-booking-on-your-website"
+		},
+		"title": {
+			"de": "Online-Terminbuchung einbinden",
+			"en": "Online booking on your website"
+		},
+		"alt": {
+			"de": "Smartphone mit Buchungskalender und ausgewählter Uhrzeit.",
+			"en": "A smartphone with a booking calendar and a selected time slot."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/online-terminbuchung-einbinden.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"online-booking-on-your-website": {
+		"slug": "online-terminbuchung-einbinden",
+		"slugs": {
+			"de": "online-terminbuchung-einbinden",
+			"en": "online-booking-on-your-website"
+		},
+		"title": {
+			"de": "Online-Terminbuchung einbinden",
+			"en": "Online booking on your website"
+		},
+		"alt": {
+			"de": "Smartphone mit Buchungskalender und ausgewählter Uhrzeit.",
+			"en": "A smartphone with a booking calendar and a selected time slot."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/online-terminbuchung-einbinden.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"keyword-plan-fuer-ihre-leistungen": {
+		"slug": "keyword-plan-fuer-ihre-leistungen",
+		"slugs": {
+			"de": "keyword-plan-fuer-ihre-leistungen",
+			"en": "keyword-plan-for-your-services"
+		},
+		"title": {
+			"de": "Keyword-Plan für Ihre Leistungen",
+			"en": "Keyword plan for your services"
+		},
+		"alt": {
+			"de": "Suchleiste mit Vorschlägen auf dem Laptop, daneben sortierte Karteikarten.",
+			"en": "A search bar with suggestions on a laptop, sorted index cards beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/keyword-plan-fuer-ihre-leistungen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"keyword-plan-for-your-services": {
+		"slug": "keyword-plan-fuer-ihre-leistungen",
+		"slugs": {
+			"de": "keyword-plan-fuer-ihre-leistungen",
+			"en": "keyword-plan-for-your-services"
+		},
+		"title": {
+			"de": "Keyword-Plan für Ihre Leistungen",
+			"en": "Keyword plan for your services"
+		},
+		"alt": {
+			"de": "Suchleiste mit Vorschlägen auf dem Laptop, daneben sortierte Karteikarten.",
+			"en": "A search bar with suggestions on a laptop, sorted index cards beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/keyword-plan-fuer-ihre-leistungen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"ki-sichtbarkeit-geo-verbessern": {
+		"slug": "ki-sichtbarkeit-geo-verbessern",
+		"slugs": {
+			"de": "ki-sichtbarkeit-geo-verbessern",
+			"en": "improve-ai-visibility-geo"
+		},
+		"title": {
+			"de": "KI-Sichtbarkeit (GEO) verbessern",
+			"en": "Improve AI visibility (GEO)"
+		},
+		"alt": {
+			"de": "Smartphone mit einer KI-Antwort, die eine Website als Quelle nennt.",
+			"en": "A smartphone showing an AI answer that cites a website as its source."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ki-sichtbarkeit-geo-verbessern.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"improve-ai-visibility-geo": {
+		"slug": "ki-sichtbarkeit-geo-verbessern",
+		"slugs": {
+			"de": "ki-sichtbarkeit-geo-verbessern",
+			"en": "improve-ai-visibility-geo"
+		},
+		"title": {
+			"de": "KI-Sichtbarkeit (GEO) verbessern",
+			"en": "Improve AI visibility (GEO)"
+		},
+		"alt": {
+			"de": "Smartphone mit einer KI-Antwort, die eine Website als Quelle nennt.",
+			"en": "A smartphone showing an AI answer that cites a website as its source."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ki-sichtbarkeit-geo-verbessern.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"technische-seo-grundlagen": {
+		"slug": "technische-seo-grundlagen",
+		"slugs": {
+			"de": "technische-seo-grundlagen",
+			"en": "technical-seo-basics"
+		},
+		"title": {
+			"de": "Technische SEO-Grundlagen umsetzen",
+			"en": "Technical SEO basics"
+		},
+		"alt": {
+			"de": "Laptop mit Prüfliste, Tachoanzeige und Seitenbaum, daneben eine Wasserwaage.",
+			"en": "A laptop with a checklist, a gauge and a site tree, a spirit level beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/technische-seo-grundlagen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"technical-seo-basics": {
+		"slug": "technische-seo-grundlagen",
+		"slugs": {
+			"de": "technische-seo-grundlagen",
+			"en": "technical-seo-basics"
+		},
+		"title": {
+			"de": "Technische SEO-Grundlagen umsetzen",
+			"en": "Technical SEO basics"
+		},
+		"alt": {
+			"de": "Laptop mit Prüfliste, Tachoanzeige und Seitenbaum, daneben eine Wasserwaage.",
+			"en": "A laptop with a checklist, a gauge and a site tree, a spirit level beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/technische-seo-grundlagen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"strukturierte-daten-einbauen": {
+		"slug": "strukturierte-daten-einbauen",
+		"slugs": {
+			"de": "strukturierte-daten-einbauen",
+			"en": "add-structured-data"
+		},
+		"title": {
+			"de": "Strukturierte Daten (Schema.org) einbauen",
+			"en": "Add structured data (Schema.org)"
+		},
+		"alt": {
+			"de": "Suchergebnis mit Sternen und Fragen neben einem Codefeld.",
+			"en": "A search result with stars and questions beside a code panel."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/strukturierte-daten-einbauen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"add-structured-data": {
+		"slug": "strukturierte-daten-einbauen",
+		"slugs": {
+			"de": "strukturierte-daten-einbauen",
+			"en": "add-structured-data"
+		},
+		"title": {
+			"de": "Strukturierte Daten (Schema.org) einbauen",
+			"en": "Add structured data (Schema.org)"
+		},
+		"alt": {
+			"de": "Suchergebnis mit Sternen und Fragen neben einem Codefeld.",
+			"en": "A search result with stars and questions beside a code panel."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/strukturierte-daten-einbauen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"ladezeit-optimieren": {
+		"slug": "ladezeit-optimieren",
+		"slugs": {
+			"de": "ladezeit-optimieren",
+			"en": "website-speed-optimisation"
+		},
+		"title": {
+			"de": "Ladezeit optimieren",
+			"en": "Website speed optimisation"
+		},
+		"alt": {
+			"de": "Smartphone mit Website und Tachoanzeige im schnellen Bereich, daneben eine Stoppuhr.",
+			"en": "A smartphone with a website and a gauge in the fast zone, a stopwatch beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ladezeit-optimieren.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-speed-optimisation": {
+		"slug": "ladezeit-optimieren",
+		"slugs": {
+			"de": "ladezeit-optimieren",
+			"en": "website-speed-optimisation"
+		},
+		"title": {
+			"de": "Ladezeit optimieren",
+			"en": "Website speed optimisation"
+		},
+		"alt": {
+			"de": "Smartphone mit Website und Tachoanzeige im schnellen Bereich, daneben eine Stoppuhr.",
+			"en": "A smartphone with a website and a gauge in the fast zone, a stopwatch beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ladezeit-optimieren.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-search-console-einrichten": {
+		"slug": "google-search-console-einrichten",
+		"slugs": {
+			"de": "google-search-console-einrichten",
+			"en": "google-search-console-setup"
+		},
+		"title": {
+			"de": "Google Search Console einrichten",
+			"en": "Google Search Console setup"
+		},
+		"alt": {
+			"de": "Laptop mit steigender Kurve, Kennzahlkacheln und Suchbegriffen.",
+			"en": "A laptop with a rising line, summary tiles and search terms."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-search-console-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-search-console-setup": {
+		"slug": "google-search-console-einrichten",
+		"slugs": {
+			"de": "google-search-console-einrichten",
+			"en": "google-search-console-setup"
+		},
+		"title": {
+			"de": "Google Search Console einrichten",
+			"en": "Google Search Console setup"
+		},
+		"alt": {
+			"de": "Laptop mit steigender Kurve, Kennzahlkacheln und Suchbegriffen.",
+			"en": "A laptop with a rising line, summary tiles and search terms."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-search-console-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-wartung-12-monate": {
+		"slug": "website-wartung-12-monate",
+		"slugs": {
+			"de": "website-wartung-12-monate",
+			"en": "website-maintenance-12-months"
+		},
+		"title": {
+			"de": "Website-Wartung für 12 Monate",
+			"en": "Website maintenance for 12 months"
+		},
+		"alt": {
+			"de": "Laptop mit abgehakter Update-Liste und Schutzschild neben einer Werkzeugrolle.",
+			"en": "A laptop with a ticked update list and a shield beside a tool roll."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-wartung-12-monate.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-maintenance-12-months": {
+		"slug": "website-wartung-12-monate",
+		"slugs": {
+			"de": "website-wartung-12-monate",
+			"en": "website-maintenance-12-months"
+		},
+		"title": {
+			"de": "Website-Wartung für 12 Monate",
+			"en": "Website maintenance for 12 months"
+		},
+		"alt": {
+			"de": "Laptop mit abgehakter Update-Liste und Schutzschild neben einer Werkzeugrolle.",
+			"en": "A laptop with a ticked update list and a shield beside a tool roll."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-wartung-12-monate.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"externe-dienste-pruefen": {
+		"slug": "externe-dienste-pruefen",
+		"slugs": {
+			"de": "externe-dienste-pruefen",
+			"en": "external-services-check"
+		},
+		"title": {
+			"de": "Externe Dienste prüfen",
+			"en": "External services check"
+		},
+		"alt": {
+			"de": "Website in der Mitte, verbunden mit Symbolen externer Dienste, daneben eine Lupe.",
+			"en": "A website in the centre connected to icons of external services, a magnifier beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/externe-dienste-pruefen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"external-services-check": {
+		"slug": "externe-dienste-pruefen",
+		"slugs": {
+			"de": "externe-dienste-pruefen",
+			"en": "external-services-check"
+		},
+		"title": {
+			"de": "Externe Dienste prüfen",
+			"en": "External services check"
+		},
+		"alt": {
+			"de": "Website in der Mitte, verbunden mit Symbolen externer Dienste, daneben eine Lupe.",
+			"en": "A website in the centre connected to icons of external services, a magnifier beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/externe-dienste-pruefen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-wartung-3-monate": {
+		"slug": "website-wartung-3-monate",
+		"slugs": {
+			"de": "website-wartung-3-monate",
+			"en": "website-maintenance-3-months"
+		},
+		"title": {
+			"de": "Website-Wartung für 3 Monate",
+			"en": "Website maintenance for 3 months"
+		},
+		"alt": {
+			"de": "Laptop mit drei abgehakten Monaten, daneben eine kleine Werkzeugtasche.",
+			"en": "A laptop with three ticked months beside a small tool pouch."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-wartung-3-monate.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-maintenance-3-months": {
+		"slug": "website-wartung-3-monate",
+		"slugs": {
+			"de": "website-wartung-3-monate",
+			"en": "website-maintenance-3-months"
+		},
+		"title": {
+			"de": "Website-Wartung für 3 Monate",
+			"en": "Website maintenance for 3 months"
+		},
+		"alt": {
+			"de": "Laptop mit drei abgehakten Monaten, daneben eine kleine Werkzeugtasche.",
+			"en": "A laptop with three ticked months beside a small tool pouch."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-wartung-3-monate.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"sicherheits-update-wordpress": {
+		"slug": "sicherheits-update-wordpress",
+		"slugs": {
+			"de": "sicherheits-update-wordpress",
+			"en": "wordpress-security-update"
+		},
+		"title": {
+			"de": "Sicherheits-Update für WordPress",
+			"en": "WordPress security update"
+		},
+		"alt": {
+			"de": "Laptop mit vollem Fortschrittsbalken und Schild, daneben ein neues Schloss.",
+			"en": "A laptop with a full progress bar and a shield beside a new padlock."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/sicherheits-update-wordpress.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"wordpress-security-update": {
+		"slug": "sicherheits-update-wordpress",
+		"slugs": {
+			"de": "sicherheits-update-wordpress",
+			"en": "wordpress-security-update"
+		},
+		"title": {
+			"de": "Sicherheits-Update für WordPress",
+			"en": "WordPress security update"
+		},
+		"alt": {
+			"de": "Laptop mit vollem Fortschrittsbalken und Schild, daneben ein neues Schloss.",
+			"en": "A laptop with a full progress bar and a shield beside a new padlock."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/sicherheits-update-wordpress.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"backup-einrichten-und-testen": {
+		"slug": "backup-einrichten-und-testen",
+		"slugs": {
+			"de": "backup-einrichten-und-testen",
+			"en": "website-backup-setup-and-test"
+		},
+		"title": {
+			"de": "Website-Backup einrichten und testen",
+			"en": "Website backup setup and test"
+		},
+		"alt": {
+			"de": "Laptop mit Sicherungsliste und Wiederherstellen-Knopf, daneben eine angeschlossene Festplatte.",
+			"en": "A laptop with a backup list and a restore button beside a connected drive."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/backup-einrichten-und-testen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-backup-setup-and-test": {
+		"slug": "backup-einrichten-und-testen",
+		"slugs": {
+			"de": "backup-einrichten-und-testen",
+			"en": "website-backup-setup-and-test"
+		},
+		"title": {
+			"de": "Website-Backup einrichten und testen",
+			"en": "Website backup setup and test"
+		},
+		"alt": {
+			"de": "Laptop mit Sicherungsliste und Wiederherstellen-Knopf, daneben eine angeschlossene Festplatte.",
+			"en": "A laptop with a backup list and a restore button beside a connected drive."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/backup-einrichten-und-testen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-umzug-zu-neuem-hoster": {
+		"slug": "website-umzug-zu-neuem-hoster",
+		"slugs": {
+			"de": "website-umzug-zu-neuem-hoster",
+			"en": "website-move-to-new-host"
+		},
+		"title": {
+			"de": "Website-Umzug zu neuem Hoster",
+			"en": "Website move to a new host"
+		},
+		"alt": {
+			"de": "Laptop mit Website zwischen zwei Servern, daneben ein Umzugskarton.",
+			"en": "A laptop showing a website between two servers beside a moving box."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-umzug-zu-neuem-hoster.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-move-to-new-host": {
+		"slug": "website-umzug-zu-neuem-hoster",
+		"slugs": {
+			"de": "website-umzug-zu-neuem-hoster",
+			"en": "website-move-to-new-host"
+		},
+		"title": {
+			"de": "Website-Umzug zu neuem Hoster",
+			"en": "Website move to a new host"
+		},
+		"alt": {
+			"de": "Laptop mit Website zwischen zwei Servern, daneben ein Umzugskarton.",
+			"en": "A laptop showing a website between two servers beside a moving box."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-umzug-zu-neuem-hoster.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"gehackte-website-bereinigen": {
+		"slug": "gehackte-website-bereinigen",
+		"slugs": {
+			"de": "gehackte-website-bereinigen",
+			"en": "hacked-website-clean-up"
+		},
+		"title": {
+			"de": "Gehackte Website bereinigen",
+			"en": "Hacked website clean-up"
+		},
+		"alt": {
+			"de": "Laptop mit durchgestrichener Warnung und Schild, daneben ein Reinigungspinsel.",
+			"en": "A laptop with a crossed-out warning and a shield beside a cleaning brush."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/gehackte-website-bereinigen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"hacked-website-clean-up": {
+		"slug": "gehackte-website-bereinigen",
+		"slugs": {
+			"de": "gehackte-website-bereinigen",
+			"en": "hacked-website-clean-up"
+		},
+		"title": {
+			"de": "Gehackte Website bereinigen",
+			"en": "Hacked website clean-up"
+		},
+		"alt": {
+			"de": "Laptop mit durchgestrichener Warnung und Schild, daneben ein Reinigungspinsel.",
+			"en": "A laptop with a crossed-out warning and a shield beside a cleaning brush."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/gehackte-website-bereinigen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"https-umstellung": {
+		"slug": "https-umstellung",
+		"slugs": {
+			"de": "https-umstellung",
+			"en": "https-switch-with-ssl"
+		},
+		"title": {
+			"de": "HTTPS-Umstellung mit SSL-Zertifikat",
+			"en": "HTTPS switch with SSL certificate"
+		},
+		"alt": {
+			"de": "Vergrößerte Adresszeile mit geschlossenem Schloss, daneben ein Vorhängeschloss.",
+			"en": "An enlarged address bar with a closed padlock beside a real padlock."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/https-umstellung.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"https-switch-with-ssl": {
+		"slug": "https-umstellung",
+		"slugs": {
+			"de": "https-umstellung",
+			"en": "https-switch-with-ssl"
+		},
+		"title": {
+			"de": "HTTPS-Umstellung mit SSL-Zertifikat",
+			"en": "HTTPS switch with SSL certificate"
+		},
+		"alt": {
+			"de": "Vergrößerte Adresszeile mit geschlossenem Schloss, daneben ein Vorhängeschloss.",
+			"en": "An enlarged address bar with a closed padlock beside a real padlock."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/https-umstellung.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"impressum-und-datenschutz-einbinden": {
+		"slug": "impressum-und-datenschutz-einbinden",
+		"slugs": {
+			"de": "impressum-und-datenschutz-einbinden",
+			"en": "legal-notice-and-privacy-policy-setup"
+		},
+		"title": {
+			"de": "Impressum und Datenschutzerklärung einbinden",
+			"en": "Legal notice and privacy policy setup"
+		},
+		"alt": {
+			"de": "Website-Fußzeile mit Links und Paragrafenzeichen, daneben eine Rechtsmappe.",
+			"en": "A website footer with links and a section sign beside a legal folder."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/impressum-und-datenschutz-einbinden.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"legal-notice-and-privacy-policy-setup": {
+		"slug": "impressum-und-datenschutz-einbinden",
+		"slugs": {
+			"de": "impressum-und-datenschutz-einbinden",
+			"en": "legal-notice-and-privacy-policy-setup"
+		},
+		"title": {
+			"de": "Impressum und Datenschutzerklärung einbinden",
+			"en": "Legal notice and privacy policy setup"
+		},
+		"alt": {
+			"de": "Website-Fußzeile mit Links und Paragrafenzeichen, daneben eine Rechtsmappe.",
+			"en": "A website footer with links and a section sign beside a legal folder."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/impressum-und-datenschutz-einbinden.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"cookie-banner-einrichten": {
+		"slug": "cookie-banner-einrichten",
+		"slugs": {
+			"de": "cookie-banner-einrichten",
+			"en": "cookie-consent-banner-setup"
+		},
+		"title": {
+			"de": "Cookie-Banner einrichten",
+			"en": "Cookie consent banner setup"
+		},
+		"alt": {
+			"de": "Laptop mit Cookie-Banner am unteren Rand, daneben ein Keks.",
+			"en": "A laptop with a cookie banner at the bottom, a biscuit beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/cookie-banner-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"cookie-consent-banner-setup": {
+		"slug": "cookie-banner-einrichten",
+		"slugs": {
+			"de": "cookie-banner-einrichten",
+			"en": "cookie-consent-banner-setup"
+		},
+		"title": {
+			"de": "Cookie-Banner einrichten",
+			"en": "Cookie consent banner setup"
+		},
+		"alt": {
+			"de": "Laptop mit Cookie-Banner am unteren Rand, daneben ein Keks.",
+			"en": "A laptop with a cookie banner at the bottom, a biscuit beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/cookie-banner-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"barrierefreiheits-check-bfsg": {
+		"slug": "barrierefreiheits-check-bfsg",
+		"slugs": {
+			"de": "barrierefreiheits-check-bfsg",
+			"en": "accessibility-check"
+		},
+		"title": {
+			"de": "Barrierefreiheits-Check (BFSG)",
+			"en": "Accessibility check"
+		},
+		"alt": {
+			"de": "Laptop mit Barrierefreiheitssymbol und Prüfliste, daneben eine Lupe.",
+			"en": "A laptop with the accessibility symbol and a findings list, a magnifier beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/barrierefreiheits-check-bfsg.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"accessibility-check": {
+		"slug": "barrierefreiheits-check-bfsg",
+		"slugs": {
+			"de": "barrierefreiheits-check-bfsg",
+			"en": "accessibility-check"
+		},
+		"title": {
+			"de": "Barrierefreiheits-Check (BFSG)",
+			"en": "Accessibility check"
+		},
+		"alt": {
+			"de": "Laptop mit Barrierefreiheitssymbol und Prüfliste, daneben eine Lupe.",
+			"en": "A laptop with the accessibility symbol and a findings list, a magnifier beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/barrierefreiheits-check-bfsg.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"barrierefreiheit-verbessern": {
+		"slug": "barrierefreiheit-verbessern",
+		"slugs": {
+			"de": "barrierefreiheit-verbessern",
+			"en": "improve-accessibility"
+		},
+		"title": {
+			"de": "Barrierefreiheit verbessern",
+			"en": "Improve accessibility"
+		},
+		"alt": {
+			"de": "Website mit großen Knöpfen und Fokusrahmen, eine Hand an der Tastatur.",
+			"en": "A website with large buttons and a focus ring, a hand on the keyboard."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/barrierefreiheit-verbessern.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"improve-accessibility": {
+		"slug": "barrierefreiheit-verbessern",
+		"slugs": {
+			"de": "barrierefreiheit-verbessern",
+			"en": "improve-accessibility"
+		},
+		"title": {
+			"de": "Barrierefreiheit verbessern",
+			"en": "Improve accessibility"
+		},
+		"alt": {
+			"de": "Website mit großen Knöpfen und Fokusrahmen, eine Hand an der Tastatur.",
+			"en": "A website with large buttons and a focus ring, a hand on the keyboard."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/barrierefreiheit-verbessern.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-fonts-lokal-einbinden": {
+		"slug": "google-fonts-lokal-einbinden",
+		"slugs": {
+			"de": "google-fonts-lokal-einbinden",
+			"en": "host-google-fonts-locally"
+		},
+		"title": {
+			"de": "Google Fonts lokal einbinden",
+			"en": "Host Google Fonts locally"
+		},
+		"alt": {
+			"de": "Schriftdatei wandert von der Cloud auf den eigenen Server, daneben ein Setzkasten.",
+			"en": "A font file moving from the cloud to one's own server, a type case beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-fonts-lokal-einbinden.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"host-google-fonts-locally": {
+		"slug": "google-fonts-lokal-einbinden",
+		"slugs": {
+			"de": "google-fonts-lokal-einbinden",
+			"en": "host-google-fonts-locally"
+		},
+		"title": {
+			"de": "Google Fonts lokal einbinden",
+			"en": "Host Google Fonts locally"
+		},
+		"alt": {
+			"de": "Schriftdatei wandert von der Cloud auf den eigenen Server, daneben ein Setzkasten.",
+			"en": "A font file moving from the cloud to one's own server, a type case beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-fonts-lokal-einbinden.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"erklaerung-zur-barrierefreiheit": {
+		"slug": "erklaerung-zur-barrierefreiheit",
+		"slugs": {
+			"de": "erklaerung-zur-barrierefreiheit",
+			"en": "accessibility-statement-setup"
+		},
+		"title": {
+			"de": "Erklärung zur Barrierefreiheit einbinden",
+			"en": "Accessibility statement setup"
+		},
+		"alt": {
+			"de": "Website-Seite mit Barrierefreiheitssymbol, Textblöcken und Rückmeldeformular.",
+			"en": "A web page with the accessibility symbol, text blocks and a feedback form."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/erklaerung-zur-barrierefreiheit.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"accessibility-statement-setup": {
+		"slug": "erklaerung-zur-barrierefreiheit",
+		"slugs": {
+			"de": "erklaerung-zur-barrierefreiheit",
+			"en": "accessibility-statement-setup"
+		},
+		"title": {
+			"de": "Erklärung zur Barrierefreiheit einbinden",
+			"en": "Accessibility statement setup"
+		},
+		"alt": {
+			"de": "Website-Seite mit Barrierefreiheitssymbol, Textblöcken und Rückmeldeformular.",
+			"en": "A web page with the accessibility symbol, text blocks and a feedback form."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/erklaerung-zur-barrierefreiheit.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"domain-und-e-mail-einrichten": {
+		"slug": "domain-und-e-mail-einrichten",
+		"slugs": {
+			"de": "domain-und-e-mail-einrichten",
+			"en": "domain-and-email-setup"
+		},
+		"title": {
+			"de": "Domain und E-Mail einrichten",
+			"en": "Domain and email setup"
+		},
+		"alt": {
+			"de": "Adresszeile mit Schloss auf dem Laptop, Posteingang auf dem Smartphone, Visitenkarte mit @.",
+			"en": "An address bar with a padlock on a laptop, an inbox on a smartphone and a business card with an @."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/domain-und-e-mail-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"domain-and-email-setup": {
+		"slug": "domain-und-e-mail-einrichten",
+		"slugs": {
+			"de": "domain-und-e-mail-einrichten",
+			"en": "domain-and-email-setup"
+		},
+		"title": {
+			"de": "Domain und E-Mail einrichten",
+			"en": "Domain and email setup"
+		},
+		"alt": {
+			"de": "Adresszeile mit Schloss auf dem Laptop, Posteingang auf dem Smartphone, Visitenkarte mit @.",
+			"en": "An address bar with a padlock on a laptop, an inbox on a smartphone and a business card with an @."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/domain-und-e-mail-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"spf-dkim-dmarc-einrichten": {
+		"slug": "spf-dkim-dmarc-einrichten",
+		"slugs": {
+			"de": "spf-dkim-dmarc-einrichten",
+			"en": "spf-dkim-dmarc-setup"
+		},
+		"title": {
+			"de": "SPF, DKIM und DMARC einrichten",
+			"en": "SPF, DKIM and DMARC setup"
+		},
+		"alt": {
+			"de": "Posteingang mit geprüfter Mail und abgefangenem Spam, daneben ein versiegelter Umschlag.",
+			"en": "An inbox with a verified email and caught spam, a sealed envelope beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/spf-dkim-dmarc-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"spf-dkim-dmarc-setup": {
+		"slug": "spf-dkim-dmarc-einrichten",
+		"slugs": {
+			"de": "spf-dkim-dmarc-einrichten",
+			"en": "spf-dkim-dmarc-setup"
+		},
+		"title": {
+			"de": "SPF, DKIM und DMARC einrichten",
+			"en": "SPF, DKIM and DMARC setup"
+		},
+		"alt": {
+			"de": "Posteingang mit geprüfter Mail und abgefangenem Spam, daneben ein versiegelter Umschlag.",
+			"en": "An inbox with a verified email and caught spam, a sealed envelope beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/spf-dkim-dmarc-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"e-mail-umzug": {
+		"slug": "e-mail-umzug",
+		"slugs": {
+			"de": "e-mail-umzug",
+			"en": "email-migration"
+		},
+		"title": {
+			"de": "E-Mail-Umzug zu neuem Anbieter",
+			"en": "Email migration to a new provider"
+		},
+		"alt": {
+			"de": "Zwei Laptops, zwischen denen Briefsymbole umziehen.",
+			"en": "Two laptops with envelope icons moving between them."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/e-mail-umzug.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"email-migration": {
+		"slug": "e-mail-umzug",
+		"slugs": {
+			"de": "e-mail-umzug",
+			"en": "email-migration"
+		},
+		"title": {
+			"de": "E-Mail-Umzug zu neuem Anbieter",
+			"en": "Email migration to a new provider"
+		},
+		"alt": {
+			"de": "Zwei Laptops, zwischen denen Briefsymbole umziehen.",
+			"en": "Two laptops with envelope icons moving between them."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/e-mail-umzug.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"einheitliche-e-mail-signaturen": {
+		"slug": "einheitliche-e-mail-signaturen",
+		"slugs": {
+			"de": "einheitliche-e-mail-signaturen",
+			"en": "consistent-email-signatures"
+		},
+		"title": {
+			"de": "Einheitliche E-Mail-Signaturen",
+			"en": "Consistent email signatures"
+		},
+		"alt": {
+			"de": "Drei Geräte zeigen dieselbe E-Mail-Signatur.",
+			"en": "Three devices showing the same email signature."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/einheitliche-e-mail-signaturen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"consistent-email-signatures": {
+		"slug": "einheitliche-e-mail-signaturen",
+		"slugs": {
+			"de": "einheitliche-e-mail-signaturen",
+			"en": "consistent-email-signatures"
+		},
+		"title": {
+			"de": "Einheitliche E-Mail-Signaturen",
+			"en": "Consistent email signatures"
+		},
+		"alt": {
+			"de": "Drei Geräte zeigen dieselbe E-Mail-Signatur.",
+			"en": "Three devices showing the same email signature."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/einheitliche-e-mail-signaturen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"domain-umzug": {
+		"slug": "domain-umzug",
+		"slugs": {
+			"de": "domain-umzug",
+			"en": "domain-transfer"
+		},
+		"title": {
+			"de": "Domain-Umzug zu neuem Anbieter",
+			"en": "Domain transfer to a new provider"
+		},
+		"alt": {
+			"de": "Laptop mit Umzugspfeil zwischen zwei Servern, daneben ein Schlüssel am Anhänger.",
+			"en": "A laptop with a transfer arrow between two servers, a key on a tag beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/domain-umzug.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"domain-transfer": {
+		"slug": "domain-umzug",
+		"slugs": {
+			"de": "domain-umzug",
+			"en": "domain-transfer"
+		},
+		"title": {
+			"de": "Domain-Umzug zu neuem Anbieter",
+			"en": "Domain transfer to a new provider"
+		},
+		"alt": {
+			"de": "Laptop mit Umzugspfeil zwischen zwei Servern, daneben ein Schlüssel am Anhänger.",
+			"en": "A laptop with a transfer arrow between two servers, a key on a tag beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/domain-umzug.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"rechnungen-digital-schreiben": {
+		"slug": "rechnungen-digital-schreiben",
+		"slugs": {
+			"de": "rechnungen-digital-schreiben",
+			"en": "digital-invoicing-setup"
+		},
+		"title": {
+			"de": "Rechnungen digital schreiben",
+			"en": "Digital invoicing setup"
+		},
+		"alt": {
+			"de": "Laptop mit Rechnungsvorlage, daneben ein abgelöster Rechnungsblock.",
+			"en": "A laptop with an invoice template beside a retired invoice pad."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/rechnungen-digital-schreiben.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"digital-invoicing-setup": {
+		"slug": "rechnungen-digital-schreiben",
+		"slugs": {
+			"de": "rechnungen-digital-schreiben",
+			"en": "digital-invoicing-setup"
+		},
+		"title": {
+			"de": "Rechnungen digital schreiben",
+			"en": "Digital invoicing setup"
+		},
+		"alt": {
+			"de": "Laptop mit Rechnungsvorlage, daneben ein abgelöster Rechnungsblock.",
+			"en": "A laptop with an invoice template beside a retired invoice pad."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/rechnungen-digital-schreiben.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"kundendaten-zusammenfuehren": {
+		"slug": "kundendaten-zusammenfuehren",
+		"slugs": {
+			"de": "kundendaten-zusammenfuehren",
+			"en": "customer-data-consolidation"
+		},
+		"title": {
+			"de": "Kundendaten zusammenführen (CRM-Start)",
+			"en": "Customer data consolidation (CRM start)"
+		},
+		"alt": {
+			"de": "Visitenkarten, Telefon und Notizen fließen in eine Kontaktliste auf dem Laptop.",
+			"en": "Business cards, a phone and notes flowing into a contact list on a laptop."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/kundendaten-zusammenfuehren.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"customer-data-consolidation": {
+		"slug": "kundendaten-zusammenfuehren",
+		"slugs": {
+			"de": "kundendaten-zusammenfuehren",
+			"en": "customer-data-consolidation"
+		},
+		"title": {
+			"de": "Kundendaten zusammenführen (CRM-Start)",
+			"en": "Customer data consolidation (CRM start)"
+		},
+		"alt": {
+			"de": "Visitenkarten, Telefon und Notizen fließen in eine Kontaktliste auf dem Laptop.",
+			"en": "Business cards, a phone and notes flowing into a contact list on a laptop."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/kundendaten-zusammenfuehren.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"digitale-ablage-einrichten": {
+		"slug": "digitale-ablage-einrichten",
+		"slugs": {
+			"de": "digitale-ablage-einrichten",
+			"en": "digital-filing-system-setup"
+		},
+		"title": {
+			"de": "Digitale Ablage einrichten",
+			"en": "Digital filing system setup"
+		},
+		"alt": {
+			"de": "Laptop mit Ordnerbaum, daneben ein Scanner mit Blatt.",
+			"en": "A laptop with a folder tree beside a scanner with a sheet."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/digitale-ablage-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"digital-filing-system-setup": {
+		"slug": "digitale-ablage-einrichten",
+		"slugs": {
+			"de": "digitale-ablage-einrichten",
+			"en": "digital-filing-system-setup"
+		},
+		"title": {
+			"de": "Digitale Ablage einrichten",
+			"en": "Digital filing system setup"
+		},
+		"alt": {
+			"de": "Laptop mit Ordnerbaum, daneben ein Scanner mit Blatt.",
+			"en": "A laptop with a folder tree beside a scanner with a sheet."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/digitale-ablage-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"anfragen-automatisch-als-ticket": {
+		"slug": "anfragen-automatisch-als-ticket",
+		"slugs": {
+			"de": "anfragen-automatisch-als-ticket",
+			"en": "enquiries-as-tickets"
+		},
+		"title": {
+			"de": "Anfragen automatisch als Ticket",
+			"en": "Enquiries as tickets"
+		},
+		"alt": {
+			"de": "Ticket-Board mit drei Spalten, in das Mails und Formulare einlaufen.",
+			"en": "A ticket board with three columns that emails and forms flow into."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/anfragen-automatisch-als-ticket.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"enquiries-as-tickets": {
+		"slug": "anfragen-automatisch-als-ticket",
+		"slugs": {
+			"de": "anfragen-automatisch-als-ticket",
+			"en": "enquiries-as-tickets"
+		},
+		"title": {
+			"de": "Anfragen automatisch als Ticket",
+			"en": "Enquiries as tickets"
+		},
+		"alt": {
+			"de": "Ticket-Board mit drei Spalten, in das Mails und Formulare einlaufen.",
+			"en": "A ticket board with three columns that emails and forms flow into."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/anfragen-automatisch-als-ticket.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"einen-ablauf-automatisieren": {
+		"slug": "einen-ablauf-automatisieren",
+		"slugs": {
+			"de": "einen-ablauf-automatisieren",
+			"en": "automate-one-workflow"
+		},
+		"title": {
+			"de": "Einen Arbeitsablauf automatisieren",
+			"en": "Automate one workflow"
+		},
+		"alt": {
+			"de": "Laptop mit zwei verbundenen App-Symbolen und Schalter, daneben Zahnräder.",
+			"en": "A laptop with two connected app icons and a switch beside gears."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/einen-ablauf-automatisieren.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"automate-one-workflow": {
+		"slug": "einen-ablauf-automatisieren",
+		"slugs": {
+			"de": "einen-ablauf-automatisieren",
+			"en": "automate-one-workflow"
+		},
+		"title": {
+			"de": "Einen Arbeitsablauf automatisieren",
+			"en": "Automate one workflow"
+		},
+		"alt": {
+			"de": "Laptop mit zwei verbundenen App-Symbolen und Schalter, daneben Zahnräder.",
+			"en": "A laptop with two connected app icons and a switch beside gears."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/einen-ablauf-automatisieren.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"passwortmanager-fuer-das-team": {
+		"slug": "passwortmanager-fuer-das-team",
+		"slugs": {
+			"de": "passwortmanager-fuer-das-team",
+			"en": "password-manager-for-your-team"
+		},
+		"title": {
+			"de": "Passwortmanager für das Team",
+			"en": "Password manager for your team"
+		},
+		"alt": {
+			"de": "Laptop mit Passwort-Tresor und Teamsymbol, daneben ein zerknüllter Zettel.",
+			"en": "A laptop with a password vault and a team icon beside a crumpled note."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/passwortmanager-fuer-das-team.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"password-manager-for-your-team": {
+		"slug": "passwortmanager-fuer-das-team",
+		"slugs": {
+			"de": "passwortmanager-fuer-das-team",
+			"en": "password-manager-for-your-team"
+		},
+		"title": {
+			"de": "Passwortmanager für das Team",
+			"en": "Password manager for your team"
+		},
+		"alt": {
+			"de": "Laptop mit Passwort-Tresor und Teamsymbol, daneben ein zerknüllter Zettel.",
+			"en": "A laptop with a password vault and a team icon beside a crumpled note."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/passwortmanager-fuer-das-team.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"online-formular-statt-papier": {
+		"slug": "online-formular-statt-papier",
+		"slugs": {
+			"de": "online-formular-statt-papier",
+			"en": "online-form-instead-of-paper"
+		},
+		"title": {
+			"de": "Online-Formular statt Papier",
+			"en": "Online form instead of paper"
+		},
+		"alt": {
+			"de": "Tablet mit Online-Formular, daneben das abgelöste Papierformular.",
+			"en": "A tablet with an online form, the replaced paper form beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/online-formular-statt-papier.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"online-form-instead-of-paper": {
+		"slug": "online-formular-statt-papier",
+		"slugs": {
+			"de": "online-formular-statt-papier",
+			"en": "online-form-instead-of-paper"
+		},
+		"title": {
+			"de": "Online-Formular statt Papier",
+			"en": "Online form instead of paper"
+		},
+		"alt": {
+			"de": "Tablet mit Online-Formular, daneben das abgelöste Papierformular.",
+			"en": "A tablet with an online form, the replaced paper form beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/online-formular-statt-papier.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"referenzseite-anlegen": {
+		"slug": "referenzseite-anlegen",
+		"slugs": {
+			"de": "referenzseite-anlegen",
+			"en": "portfolio-page-setup"
+		},
+		"title": {
+			"de": "Referenzseite anlegen",
+			"en": "Portfolio page setup"
+		},
+		"alt": {
+			"de": "Laptop mit einem Raster aus Projektfotos und einer Kundenstimme mit Sternen.",
+			"en": "A laptop with a grid of project photos and a testimonial with stars."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/referenzseite-anlegen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"portfolio-page-setup": {
+		"slug": "referenzseite-anlegen",
+		"slugs": {
+			"de": "referenzseite-anlegen",
+			"en": "portfolio-page-setup"
+		},
+		"title": {
+			"de": "Referenzseite anlegen",
+			"en": "Portfolio page setup"
+		},
+		"alt": {
+			"de": "Laptop mit einem Raster aus Projektfotos und einer Kundenstimme mit Sternen.",
+			"en": "A laptop with a grid of project photos and a testimonial with stars."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/referenzseite-anlegen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"eintraege-in-branchenverzeichnissen": {
+		"slug": "eintraege-in-branchenverzeichnissen",
+		"slugs": {
+			"de": "eintraege-in-branchenverzeichnissen",
+			"en": "business-directory-listings"
+		},
+		"title": {
+			"de": "Einträge in Branchenverzeichnissen",
+			"en": "Business directory listings"
+		},
+		"alt": {
+			"de": "Gleicher Firmeneintrag auf Laptop und Smartphone, daneben eine Karte mit Stecknadel.",
+			"en": "The same business listing on a laptop and a smartphone with a pinned map beside them."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/eintraege-in-branchenverzeichnissen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"business-directory-listings": {
+		"slug": "eintraege-in-branchenverzeichnissen",
+		"slugs": {
+			"de": "eintraege-in-branchenverzeichnissen",
+			"en": "business-directory-listings"
+		},
+		"title": {
+			"de": "Einträge in Branchenverzeichnissen",
+			"en": "Business directory listings"
+		},
+		"alt": {
+			"de": "Gleicher Firmeneintrag auf Laptop und Smartphone, daneben eine Karte mit Stecknadel.",
+			"en": "The same business listing on a laptop and a smartphone with a pinned map beside them."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/eintraege-in-branchenverzeichnissen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"microsoft-365-einrichten": {
+		"slug": "microsoft-365-einrichten",
+		"slugs": {
+			"de": "microsoft-365-einrichten",
+			"en": "microsoft-365-setup"
+		},
+		"title": {
+			"de": "Microsoft 365 einrichten",
+			"en": "Microsoft 365 setup"
+		},
+		"alt": {
+			"de": "Laptop mit Mail, Kalender und Dateien in einem Fenster, daneben ein Smartphone.",
+			"en": "A laptop with mail, calendar and files in one window, a smartphone beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/microsoft-365-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"microsoft-365-setup": {
+		"slug": "microsoft-365-einrichten",
+		"slugs": {
+			"de": "microsoft-365-einrichten",
+			"en": "microsoft-365-setup"
+		},
+		"title": {
+			"de": "Microsoft 365 einrichten",
+			"en": "Microsoft 365 setup"
+		},
+		"alt": {
+			"de": "Laptop mit Mail, Kalender und Dateien in einem Fenster, daneben ein Smartphone.",
+			"en": "A laptop with mail, calendar and files in one window, a smartphone beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/microsoft-365-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-workspace-einrichten": {
+		"slug": "google-workspace-einrichten",
+		"slugs": {
+			"de": "google-workspace-einrichten",
+			"en": "google-workspace-setup"
+		},
+		"title": {
+			"de": "Google Workspace einrichten",
+			"en": "Google Workspace setup"
+		},
+		"alt": {
+			"de": "Tablet und Smartphone mit gemeinsamen Dokumenten, Kalender und Cloud-Ordner.",
+			"en": "A tablet and a smartphone with shared documents, calendar and a cloud folder."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-workspace-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-workspace-setup": {
+		"slug": "google-workspace-einrichten",
+		"slugs": {
+			"de": "google-workspace-einrichten",
+			"en": "google-workspace-setup"
+		},
+		"title": {
+			"de": "Google Workspace einrichten",
+			"en": "Google Workspace setup"
+		},
+		"alt": {
+			"de": "Tablet und Smartphone mit gemeinsamen Dokumenten, Kalender und Cloud-Ordner.",
+			"en": "A tablet and a smartphone with shared documents, calendar and a cloud folder."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-workspace-einrichten.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"website-selbst-pflegen-einweisung": {
+		"slug": "website-selbst-pflegen-einweisung",
+		"slugs": {
+			"de": "website-selbst-pflegen-einweisung",
+			"en": "maintain-your-website-yourself"
+		},
+		"title": {
+			"de": "Website selbst pflegen: Einweisung",
+			"en": "Maintain your website yourself"
+		},
+		"alt": {
+			"de": "Zwei Hände am Laptop mit Website-Editor, eine zeigt, eine bedient.",
+			"en": "Two people's hands at a laptop with a website editor, one pointing, one working."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-selbst-pflegen-einweisung.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"maintain-your-website-yourself": {
+		"slug": "website-selbst-pflegen-einweisung",
+		"slugs": {
+			"de": "website-selbst-pflegen-einweisung",
+			"en": "maintain-your-website-yourself"
+		},
+		"title": {
+			"de": "Website selbst pflegen: Einweisung",
+			"en": "Maintain your website yourself"
+		},
+		"alt": {
+			"de": "Zwei Hände am Laptop mit Website-Editor, eine zeigt, eine bedient.",
+			"en": "Two people's hands at a laptop with a website editor, one pointing, one working."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/website-selbst-pflegen-einweisung.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"ki-im-buero-workshop": {
+		"slug": "ki-im-buero-workshop",
+		"slugs": {
+			"de": "ki-im-buero-workshop",
+			"en": "ai-at-work-workshop"
+		},
+		"title": {
+			"de": "KI im Büro: Praxis-Workshop",
+			"en": "AI at work: hands-on workshop"
+		},
+		"alt": {
+			"de": "Workshop-Tisch mit Laptop im Chat-Fenster und Haftnotizen mit Aufgaben.",
+			"en": "A workshop table with a laptop showing a chat window and sticky notes with tasks."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ki-im-buero-workshop.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"ai-at-work-workshop": {
+		"slug": "ki-im-buero-workshop",
+		"slugs": {
+			"de": "ki-im-buero-workshop",
+			"en": "ai-at-work-workshop"
+		},
+		"title": {
+			"de": "KI im Büro: Praxis-Workshop",
+			"en": "AI at work: hands-on workshop"
+		},
+		"alt": {
+			"de": "Workshop-Tisch mit Laptop im Chat-Fenster und Haftnotizen mit Aufgaben.",
+			"en": "A workshop table with a laptop showing a chat window and sticky notes with tasks."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/ki-im-buero-workshop.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"it-sicherheit-fuer-mitarbeitende": {
+		"slug": "it-sicherheit-fuer-mitarbeitende",
+		"slugs": {
+			"de": "it-sicherheit-fuer-mitarbeitende",
+			"en": "it-security-awareness-training"
+		},
+		"title": {
+			"de": "IT-Sicherheit für Mitarbeitende",
+			"en": "IT security awareness training"
+		},
+		"alt": {
+			"de": "Laptop mit verdächtiger E-Mail und Warnsymbol, daneben Angelhaken und Schloss.",
+			"en": "A laptop with a suspicious email and a warning sign, a fishing hook and a padlock beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/it-sicherheit-fuer-mitarbeitende.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"it-security-awareness-training": {
+		"slug": "it-sicherheit-fuer-mitarbeitende",
+		"slugs": {
+			"de": "it-sicherheit-fuer-mitarbeitende",
+			"en": "it-security-awareness-training"
+		},
+		"title": {
+			"de": "IT-Sicherheit für Mitarbeitende",
+			"en": "IT security awareness training"
+		},
+		"alt": {
+			"de": "Laptop mit verdächtiger E-Mail und Warnsymbol, daneben Angelhaken und Schloss.",
+			"en": "A laptop with a suspicious email and a warning sign, a fishing hook and a padlock beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/it-sicherheit-fuer-mitarbeitende.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"google-unternehmensprofil-selbst-pflegen": {
+		"slug": "google-unternehmensprofil-selbst-pflegen",
+		"slugs": {
+			"de": "google-unternehmensprofil-selbst-pflegen",
+			"en": "maintain-your-google-business-profile"
+		},
+		"title": {
+			"de": "Google-Unternehmensprofil selbst pflegen",
+			"en": "Maintain your Google Business Profile"
+		},
+		"alt": {
+			"de": "Hand am Smartphone fügt einem Firmenprofil einen Beitrag hinzu.",
+			"en": "A hand on a smartphone adding a post to a business profile."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-unternehmensprofil-selbst-pflegen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"maintain-your-google-business-profile": {
+		"slug": "google-unternehmensprofil-selbst-pflegen",
+		"slugs": {
+			"de": "google-unternehmensprofil-selbst-pflegen",
+			"en": "maintain-your-google-business-profile"
+		},
+		"title": {
+			"de": "Google-Unternehmensprofil selbst pflegen",
+			"en": "Maintain your Google Business Profile"
+		},
+		"alt": {
+			"de": "Hand am Smartphone fügt einem Firmenprofil einen Beitrag hinzu.",
+			"en": "A hand on a smartphone adding a post to a business profile."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/google-unternehmensprofil-selbst-pflegen.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"social-media-grundlagen-fuer-betriebe": {
+		"slug": "social-media-grundlagen-fuer-betriebe",
+		"slugs": {
+			"de": "social-media-grundlagen-fuer-betriebe",
+			"en": "social-media-basics-for-businesses"
+		},
+		"title": {
+			"de": "Social-Media-Grundlagen für Betriebe",
+			"en": "Social media basics for businesses"
+		},
+		"alt": {
+			"de": "Smartphone mit Beitragsraster, daneben ein Wochenplan mit Post-Skizzen.",
+			"en": "A smartphone with a grid of posts beside a weekly planner with post sketches."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/social-media-grundlagen-fuer-betriebe.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"social-media-basics-for-businesses": {
+		"slug": "social-media-grundlagen-fuer-betriebe",
+		"slugs": {
+			"de": "social-media-grundlagen-fuer-betriebe",
+			"en": "social-media-basics-for-businesses"
+		},
+		"title": {
+			"de": "Social-Media-Grundlagen für Betriebe",
+			"en": "Social media basics for businesses"
+		},
+		"alt": {
+			"de": "Smartphone mit Beitragsraster, daneben ein Wochenplan mit Post-Skizzen.",
+			"en": "A smartphone with a grid of posts beside a weekly planner with post sketches."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/social-media-grundlagen-fuer-betriebe.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"e-mail-postfach-im-griff": {
+		"slug": "e-mail-postfach-im-griff",
+		"slugs": {
+			"de": "e-mail-postfach-im-griff",
+			"en": "get-your-inbox-under-control"
+		},
+		"title": {
+			"de": "E-Mail-Postfach im Griff",
+			"en": "Get your inbox under control"
+		},
+		"alt": {
+			"de": "Laptop mit farbig sortierten Ordnern und leerem Posteingang.",
+			"en": "A laptop with colour-sorted folders and an empty inbox."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/e-mail-postfach-im-griff.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"get-your-inbox-under-control": {
+		"slug": "e-mail-postfach-im-griff",
+		"slugs": {
+			"de": "e-mail-postfach-im-griff",
+			"en": "get-your-inbox-under-control"
+		},
+		"title": {
+			"de": "E-Mail-Postfach im Griff",
+			"en": "Get your inbox under control"
+		},
+		"alt": {
+			"de": "Laptop mit farbig sortierten Ordnern und leerem Posteingang.",
+			"en": "A laptop with colour-sorted folders and an empty inbox."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/e-mail-postfach-im-griff.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"microsoft-teams-einfuehrung": {
+		"slug": "microsoft-teams-einfuehrung",
+		"slugs": {
+			"de": "microsoft-teams-einfuehrung",
+			"en": "microsoft-teams-introduction"
+		},
+		"title": {
+			"de": "Microsoft 365 und Teams: Einführung",
+			"en": "Microsoft 365 and Teams: introduction"
+		},
+		"alt": {
+			"de": "Laptop mit Videobesprechung, Chat und Dateien, daneben ein Konferenzlautsprecher.",
+			"en": "A laptop with a video meeting, chat and files, a conference speaker beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/microsoft-teams-einfuehrung.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	},
+	"microsoft-teams-introduction": {
+		"slug": "microsoft-teams-einfuehrung",
+		"slugs": {
+			"de": "microsoft-teams-einfuehrung",
+			"en": "microsoft-teams-introduction"
+		},
+		"title": {
+			"de": "Microsoft 365 und Teams: Einführung",
+			"en": "Microsoft 365 and Teams: introduction"
+		},
+		"alt": {
+			"de": "Laptop mit Videobesprechung, Chat und Dateien, daneben ein Konferenzlautsprecher.",
+			"en": "A laptop with a video meeting, chat and files, a conference speaker beside it."
+		},
+		"width": 1440,
+		"height": 810,
+		"src": "/images/products/microsoft-teams-einfuehrung.webp",
+		"digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+	}
+};
+var productImage = (slug) => productImageCatalog[slug];
+var origin = "https://shop.tracht-digital.de";
+function withProductImage(product) {
+	const image = productImage(product.slug);
+	const own = product.offers.some((o) => o.kind === "own");
+	const existing = product.imageUrl;
+	const generic = !existing || /^https:\/\/tracht-digital\.de\/images\/services\//.test(existing);
+	return image && own && generic ? {
+		...product,
+		imageUrl: origin + image.src
+	} : product;
+}
+function productImageAttributes(product, lang, detail = false) {
+	const image = productImage(product.slug);
+	if (!image || product.imageUrl !== origin + image.src) return void 0;
+	return {
+		alt: image.alt[lang],
+		width: image.width,
+		height: image.height,
+		srcSet: productImageSrcset(image.src),
+		sizes: detail ? "(min-width: 64rem) 60vw, 100vw" : "(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw",
+		loading: detail ? "eager" : "lazy",
+		decoding: "async"
+	};
+}
+function productImageSrcset(src, format = "webp") {
+	return [
+		480,
+		960,
+		1440
+	].map((w) => `${origin}${src.replace(".webp", (w === 1440 ? "" : "-" + w) + "." + format)} ${w}w`).join(", ");
+}
+function productImageSchema(product, lang) {
+	const image = productImage(product.slug);
+	if (!image || product.imageUrl !== origin + image.src) return null;
+	return {
+		"@type": "ImageObject",
+		"@id": product.url + "#product-image",
+		contentUrl: product.imageUrl,
+		url: product.imageUrl,
+		name: product.title,
+		caption: image.alt[lang],
+		description: lang === "de" ? `KI-generiertes Symbolbild zur Leistung: ${product.title}.` : `AI-generated illustration of the service: ${product.title}.`,
+		width: image.width,
+		height: image.height,
+		encodingFormat: "image/webp",
+		representativeOfPage: true,
+		...imageRights(lang),
+		digitalSourceType: image.digitalSourceType,
+		about: { "@id": product.url }
+	};
+}
+// src/lib/content-api.ts
+async function readJson(path, fallback, label) {
+	if (DEMO_MODE) return fallback;
+	try {
+		return await readContentJson(`${contentApiBase()}${path}`);
+	} catch (err) {
+		if (err instanceof Error && err.name === "SiteKeyRejectedError") throw err;
+		console.warn(`[tds-shop] ${label} unreachable — serving fallback:`, err);
+		return fallback;
+	}
+}
+async function listProducts(query) {
+	const params = new URLSearchParams({ lang: query.lang });
+	if (query.limit) params.set("limit", String(query.limit));
+	if (query.cursor) params.set("cursor", query.cursor);
+	if (query.category) params.set("category", query.category);
+	if (query.tag) params.set("tag", query.tag);
+	const page = await readJson(`/shop?${params}`, {
+		products: demoProducts(query.lang, query.category ?? void 0),
+		nextCursor: null
+	}, "catalogue");
+	return {
+		...page,
+		products: page.products.map(withProductImage)
+	};
+}
+/** Safety stop for `listAllProducts`: 20 pages × 48 is far beyond the catalogue. */
+var MAX_PAGES = 20;
+/**
+* Every product, following `nextCursor` to the end.
+*
+* The catalogue, the sitemap and `/llms.txt` used to read ONE page (24 or 48)
+* and drop the cursor, so a product past that point was in no listing, no
+* sitemap and no crawler file — reachable only by a direct link. The page
+* cache keys on the path alone (a query string is dropped), so a `?cursor=`
+* pager could never work here; reading the whole list is the honest option.
+*/
+async function listAllProducts(query) {
+	const products = [];
+	let cursor = null;
+	for (let i = 0; i < MAX_PAGES; i++) {
+		const page = await listProducts({
+			...query,
+			limit: 48,
+			cursor
+		});
+		products.push(...page.products);
+		cursor = page.nextCursor;
+		if (!cursor) break;
+	}
+	return products;
+}
+async function getProduct(slug, lang) {
+	if (DEMO_MODE) return demoProduct(slug, lang);
+	const url = `${contentApiBase()}/shop/${encodeURIComponent(slug)}?lang=${lang}`;
+	try {
+		const res = await fetch(url, { headers: siteKeyHeaders() });
+		assertKeyAccepted(res, url);
+		if (res.status === 404) return null;
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		return withProductImage(await res.json());
+	} catch (err) {
+		if (err instanceof Error && err.name === "SiteKeyRejectedError") throw err;
+		console.warn(`[tds-shop] product ${slug} unreachable — serving fallback:`, err);
+		return demoProduct(slug, lang);
+	}
+}
+async function listCategories(lang) {
+	return (await readJson(`/shop/categories?lang=${lang}`, { categories: demoCategories(lang) }, "categories")).categories;
+}
+/**
+* Whether a category page should exist: the API lists it, so it holds at least
+* one published product in this language.
+*
+* Every valid-looking slug used to render a 200 catalogue with an empty grid,
+* a soft 404 under any address somebody typed. Fails OPEN: when the API
+* cannot be reached the answer is "yes", because a real category must not
+* turn into a 404 during an outage. A demo build checks its own fixtures.
+*/
+async function categoryExists(category, lang) {
+	if (DEMO_MODE) return demoCategories(lang).some((c) => c.category === category);
+	const body = await readJson(`/shop/categories?lang=${lang}`, null, "categories");
+	return body === null || body.categories.some((c) => c.category === category);
+}
+/**
+* Resolve an offer's outbound target, counting the click on the way.
+*
+* Returns null when the offer is unknown, so `/go/{id}` can 404 rather than
+* redirect somewhere arbitrary. Deliberately NOT fail-soft to a guessed URL:
+* an affiliate redirect that goes to the wrong place is worse than one that
+* does not go at all.
+*/
+async function resolveOfferTarget(id, attribution) {
+	if (DEMO_MODE) return null;
+	const params = new URLSearchParams({ lang: attribution.lang });
+	if (attribution.source) params.set("source", attribution.source);
+	if (attribution.placement) params.set("placement", attribution.placement);
+	const url = `${contentApiBase()}/shop/offer/${id}/target?${params}`;
+	try {
+		const res = await fetch(url, { headers: siteKeyHeaders() });
+		assertKeyAccepted(res, url);
+		if (!res.ok) return null;
+		const target = ((await res.json()).url ?? "").trim();
+		return /^https?:\/\//i.test(target) ? target : null;
+	} catch (err) {
+		if (err instanceof Error && err.name === "SiteKeyRejectedError") throw err;
+		console.warn(`[tds-shop] offer ${id} unreachable:`, err);
+		return null;
+	}
+}
+export { listProducts as a, productImageAttributes as c, listCategories as i, productImageSchema as l, getProduct as n, resolveOfferTarget as o, listAllProducts as r, productImage as s, categoryExists as t, productImageSrcset as u };
