@@ -15,7 +15,7 @@ import "@fontsource-variable/jetbrains-mono/index.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { API_BASE_META } from "@tracht-digital-solutions/tds-shared/api";
-import { ConsentBanner } from "@tracht-digital-solutions/tds-shared/consent";
+import { consentBannerHostMarkup } from "@tracht-digital-solutions/tds-shared/dom";
 import { translations } from "@tracht-digital-solutions/tds-shared/i18n";
 import {
   errorBounceScript,
@@ -280,12 +280,20 @@ const image = ogImage ?? `${site.url}/og-default.png`;
       marketing domain, which sent a shop visitor to a document that does not
       describe the shop's own processing.
     */}
-    <ConsentBanner
-      client:idle
-      lang={lang}
-      categories={["analytics"]}
-      privacyUrl={legalPath("datenschutz", lang)}
-      imprintUrl={legalPath("impressum", lang)}
+    {/* Plain DOM since tds-shared 0.64.11 (same markup as the React island
+        it replaced, without the React runtime); mounted at idle below. */}
+    <Fragment
+      set:html={consentBannerHostMarkup({
+        lang,
+        categories: ["analytics"],
+        privacyUrl: legalPath("datenschutz", lang),
+        imprintUrl: legalPath("impressum", lang),
+      })}
     />
+    <script>
+      import { mountConsentBannerHost } from "@tracht-digital-solutions/tds-shared/dom";
+
+      mountConsentBannerHost();
+    </script>
   </body>
 </html>
