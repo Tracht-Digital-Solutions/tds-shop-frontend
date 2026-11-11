@@ -1,0 +1,1 @@
+import{t as e}from"./pwa.BgPl0ufR.js";document.getElementById(`offline-retry`)?.addEventListener(`click`,()=>location.reload());var t=document.getElementById(`offline-list`);t&&e(t,{english:!1,match:e=>/\/(produkt|product)\//.test(e),linkClass:`link-underline`,empty:document.getElementById(`offline-none`)});
